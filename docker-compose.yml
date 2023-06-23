@@ -1,0 +1,36 @@
+version: "3"
+
+services:
+  db:
+    image: postgres
+    restart: always
+    env_file:
+      - .env
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+  nestjs:
+    build:
+      context: .
+      dockerfile_inline: |
+        FROM node
+        WORKDIR /goinfre
+        COPY package*.json ./
+        USER node
+        RUN npm install
+        COPY --chown=node:node . .
+        RUN npm run build
+        CMD ["node", "dist/main.js"]
+    ports:
+      - 3000:3000
+
+volumes:
+  postgres:
