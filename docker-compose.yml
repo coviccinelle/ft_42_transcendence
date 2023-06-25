@@ -3,17 +3,17 @@ version: "3"
 services:
   db:
     image: postgres
-    restart: always
+    # restart: always
     env_file:
       - .env
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
 
   adminer:
     image: adminer
-    restart: always
+    # restart: always
     ports:
       - 8080:8080
 
@@ -22,15 +22,19 @@ services:
       context: .
       dockerfile_inline: |
         FROM node
-        WORKDIR /goinfre
-        COPY package*.json ./
+        RUN mkdir /app && chown node:node /app
+        WORKDIR /app
+        COPY --chown=node:node package*.json ./
         USER node
         RUN npm install
         COPY --chown=node:node . .
         RUN npm run build
-        CMD ["node", "dist/main.js"]
+        CMD ["npm", "run", "start"]
+    volumes:
+      - ./:/app
+      - /app/node_modules
     ports:
       - 3000:3000
 
 volumes:
-  postgres:
+  postgres_data:
