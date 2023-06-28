@@ -2,6 +2,7 @@ version: "3"
 
 services:
   db:
+    container_name: db
     image: postgres
     # restart: always
     env_file:
@@ -12,12 +13,14 @@ services:
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
 
   adminer:
+    container_name: adminer
     image: adminer
     # restart: always
     ports:
       - 8080:8080
 
   nestjs:
+    container_name: nestjs
     build:
       context: .
       dockerfile_inline: |
