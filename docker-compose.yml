@@ -25,7 +25,7 @@ services:
       context: .
       dockerfile_inline: |
         FROM node
-        RUN mkdir /app && chown node:node /app
+        RUN mkdir -p /app && chown node:node /app
         WORKDIR /app
         COPY --chown=node:node package*.json ./
         USER node
@@ -33,9 +33,10 @@ services:
         COPY --chown=node:node . .
         RUN npm run build
         CMD ["npm", "run", "start"]
-    volumes:
-      - ./:/app
-      - /app/node_modules
+    # bind-mount volumes (ne pas utiliser a 42)
+    # volumes:
+    #   - ./:/app
+    #   - /app/node_modules
     ports:
       - 3000:3000
 
