@@ -11,6 +11,9 @@ services:
       - postgres_data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+    # ports a retirer plus tard
+    ports:
+      - 5432:5432
 
   adminer:
     container_name: adminer
@@ -32,6 +35,7 @@ services:
         RUN npm install
         COPY --chown=node:node . .
         RUN npm run build
+        RUN npx prisma generate
         CMD ["npm", "run", "start"]
     # bind-mount volumes (ne pas utiliser a 42)
     # volumes:
