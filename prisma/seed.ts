@@ -8,8 +8,10 @@ async function main() {
 		update: {},
 		create: {
 			email: "jmolvaut@student.42.fr",
+			nickname: "jmolvaut",
 			firstName: "Jeremy",
-			lastName: "Molvaut"
+			lastName: "Molvaut",
+			password: "test"
 		}
 	});
 

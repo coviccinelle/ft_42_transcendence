@@ -34,8 +34,8 @@ services:
         USER node
         RUN npm install
         COPY --chown=node:node . .
-        RUN npm run build
         RUN npx prisma generate
+        RUN npm run build
         CMD ["npm", "run", "start"]
     # bind-mount volumes (ne pas utiliser a 42)
     # volumes:
