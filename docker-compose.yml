@@ -4,11 +4,11 @@ services:
   db:
     container_name: db
     image: postgres
-    # restart: always
+    restart: unless-stopped
     env_file:
       - .env
     volumes:
-      - postgres_data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     environment:
       POSTGRES_PASSWORD: $POSTGRES_PASSWORD
     # ports a retirer plus tard
@@ -20,12 +20,13 @@ services:
   adminer:
     container_name: adminer
     image: adminer
-    # restart: always
+    restart: unless-stopped
     ports:
       - 8080:8080
 
   nestjs:
     container_name: nestjs
+    restart: unless-stopped
     build:
       context: .
       dockerfile_inline: |
@@ -37,11 +38,9 @@ services:
         RUN npm install
         COPY --chown=node:node . .
         RUN npm run build
-        CMD ["npm", "run", "start"]
-    # bind-mount volumes (ne pas utiliser a 42)
-    # volumes:
-    #   - ./:/app
-    #   - /app/node_modules
+        CMD ["npm", "run", "start:dev"]
+    volumes:
+      - back-volume:/app
     ports:
       - 3001:3001
     networks:
@@ -50,6 +49,7 @@ services:
 
   nextjs:
     container_name: nextjs
+    restart: unless-stopped
     build:
       context: ./frontend
       dockerfile_inline: |
@@ -61,7 +61,9 @@ services:
         RUN npm install
         COPY --chown=node:node . .
         RUN npm run build
-        CMD ["npm", "run", "start"]
+        CMD ["npm", "run", "start:dev"]
+    volumes:
+      - front-volume:/app
     ports:
       - 3000:3000
     networks:
@@ -74,4 +76,14 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data:
+  postgres-data:
+    external: true
+    driver: local
+# dev only
+  front-volume:
+    external: true
+    driver: local
+  back-volume:
+    external: true
+    driver: local
+
