@@ -46,6 +46,8 @@ services:
     networks:
       - api-network
       - front-network
+    volumes:
+      - ./backend/src:/app/src
 
   nextjs:
     container_name: nextjs
@@ -68,6 +70,8 @@ services:
       - 3000:3000
     networks:
       - front-network
+    volumes:
+      - ./frontend/src:/app/src
 
 networks:
   api-network:
