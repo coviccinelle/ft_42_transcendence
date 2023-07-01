@@ -28,7 +28,7 @@ services:
     container_name: nestjs
     restart: unless-stopped
     build:
-      context: .
+      context: ./backend
       dockerfile_inline: |
         FROM node
         RUN mkdir -p /app && chown node:node /app
@@ -39,8 +39,8 @@ services:
         COPY --chown=node:node . .
         RUN npm run build
         CMD ["npm", "run", "start:dev"]
-    volumes:
-      - back-volume:/app
+    # volumes:
+    #   - back-volume:/app
     ports:
       - 3001:3001
     networks:
@@ -61,9 +61,9 @@ services:
         RUN npm install
         COPY --chown=node:node . .
         RUN npm run build
-        CMD ["npm", "run", "start:dev"]
-    volumes:
-      - front-volume:/app
+        CMD ["npm", "run", "start"]
+    # volumes:
+    #   - front-volume:/app
     ports:
       - 3000:3000
     networks:
@@ -77,13 +77,13 @@ networks:
 
 volumes:
   postgres-data:
-    external: true
-    driver: local
-# dev only
-  front-volume:
-    external: true
-    driver: local
-  back-volume:
-    external: true
-    driver: local
+    # external: true
+    # driver: local
+## dev only
+  # front-volume:
+  #   external: true
+  #   driver: local
+  # back-volume:
+  #   external: true
+  #   driver: local
 
