@@ -1,28 +1,35 @@
 import { PrismaClient } from "@prisma/client";
+import { hash } from "bcrypt";
 
 const prisma = new PrismaClient();
 
-async function main() {
-	const user1 = await prisma.user.upsert({
-		where: { id: 1 },
-		update: {},
-		create: {
-			email: "jmolvaut@student.42.fr",
-			nickname: "jmolvaut",
-			firstName: "Jeremy",
-			lastName: "Molvaut",
-			password: "test"
-		}
-	});
+const roundsOfHashing = 10;
 
-	console.log({user1});
+async function main() {
+  const passwordUser1 = await hash("jmolvaut", roundsOfHashing);
+
+  const user1 = await prisma.user.upsert({
+    where: { id: 1 },
+    update: {
+      password: passwordUser1
+    },
+    create: {
+      email: "jmolvaut@student.42.fr",
+      nickname: "jmolvaut",
+      firstName: "Jeremy",
+      lastName: "Molvaut",
+      password: passwordUser1
+    }
+  });
+
+  console.log({user1});
 }
 
 main()
-	.catch((e) => {
-		console.error(e);
-		process.exit(1);
-	})
-	.finally(async () => {
-		await prisma.$disconnect();
-	});
+  .catch((e) => {
+    console.error(e);
+    process.exit(1);
+  })
+  .finally(async () => {
+    await prisma.$disconnect();
+  });
