@@ -1,89 +1,17 @@
-version: "3"
-
+version: "3.8"
 services:
-  db:
-    container_name: db
-    image: postgres
-    restart: unless-stopped
-    env_file:
-      - .env
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-    # ports a retirer plus tard
-    ports:
-      - 5432:5432
-    networks:
-      - api-network
 
-  adminer:
-    container_name: adminer
-    image: adminer
-    restart: unless-stopped
-    ports:
-      - 8080:8080
-
-  nestjs:
-    container_name: nestjs
-    restart: unless-stopped
+  nginx:
     build:
-      context: ./backend
-      dockerfile_inline: |
-        FROM node
-        RUN mkdir -p /app && chown node:node /app
-        WORKDIR /app
-        COPY --chown=node:node package*.json ./
-        USER node
-        RUN npm install
-        COPY --chown=node:node . .
-        RUN npm run build
-        CMD ["npm", "run", "start:dev"]
-    # volumes:
-    #   - back-volume:/app
+      context: ./nginx
+    restart: always
     ports:
-      - 3001:3001
+      - 80:80
     networks:
-      - api-network
-      - front-network
-
-  nextjs:
-    container_name: nextjs
-    restart: unless-stopped
-    build:
-      context: ./frontend
-      dockerfile_inline: |
-        FROM node
-        RUN mkdir -p /app && chown node:node /app
-        WORKDIR /app
-        COPY --chown=node:node package*.json ./
-        USER node
-        RUN npm install
-        COPY --chown=node:node . .
-        RUN npm run build
-        CMD ["npm", "run", "start"]
-    # volumes:
-    #   - front-volume:/app
-    ports:
-      - 3000:3000
-    networks:
-      - front-network
+      - backend
 
 networks:
-  api-network:
-    driver: bridge
-  front-network:
-    driver: bridge
+  backend:
 
 volumes:
-  postgres-data:
-    # external: true
-    # driver: local
-## dev only
-  # front-volume:
-  #   external: true
-  #   driver: local
-  # back-volume:
-  #   external: true
-  #   driver: local
-
+  db-data:
