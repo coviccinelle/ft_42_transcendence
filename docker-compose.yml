@@ -12,6 +12,17 @@ services:
     networks:
       - backend
 
+  nest:
+    container_name: nest
+    build:
+      context: ./nest
+    env_file: .env
+    restart: always
+    volumes:
+      - ./nest:/usr/src/app
+    networks:
+      - backend
+
   nginx:
     container_name: nginx
     build:
