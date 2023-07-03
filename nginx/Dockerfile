@@ -1,2 +1,6 @@
 FROM nginx:1.25-alpine
-COPY nginx.conf /etc/nginx/nginx.conf
+COPY launch.sh .
+COPY nginx.conf .
+COPY nginx.conf.dev .
+EXPOSE 8080
+CMD [ "./launch.sh" ]
