@@ -31,41 +31,42 @@ services:
       context: ./backend
       dockerfile_inline: |
         FROM node
-        RUN mkdir -p /app && chown node:node /app
-        WORKDIR /app
-        COPY --chown=node:node package*.json ./
-        USER node
+        WORKDIR /home/node/app
+        COPY package*.json ./
         RUN npm install
-        COPY --chown=node:node . .
-        RUN npm run build
+        COPY tsconfig*.json ./
+        COPY src ./src
+        COPY .env_dev ./.env
+        COPY prisma ./prisma
+        RUN npx prisma generate
         CMD ["npm", "run", "start:dev"]
-    # volumes:
-    #   - back-volume:/app
+      # CMD ["npm", "run", "start"]
+    volumes:
+      - ./backend:/home/node/app
     ports:
-      - 3001:3001
+      - 3000:3000
     networks:
       - api-network
       - front-network
 
-  nextjs:
-    container_name: nextjs
+  vite:
+    container_name: vite
     restart: unless-stopped
     build:
       context: ./frontend
       dockerfile_inline: |
         FROM node
-        RUN mkdir -p /app && chown node:node /app
-        WORKDIR /app
-        COPY --chown=node:node package*.json ./
-        USER node
+        WORKDIR /home/node/app
+        COPY package*.json ./
         RUN npm install
-        COPY --chown=node:node . .
-        RUN npm run build
-        CMD ["npm", "run", "start"]
-    # volumes:
-    #   - front-volume:/app
+        COPY tsconfig*.json ./
+        COPY src ./src
+        CMD ["npm", "run", "dev"]
+      # CMD ["npm", "run", "build"]
+    volumes:
+      - ./frontend:/home/node/app
     ports:
-      - 3000:3000
+      - 5173:5173
     networks:
       - front-network
 
@@ -77,13 +78,5 @@ networks:
 
 volumes:
   postgres-data:
-    # external: true
-    # driver: local
-## dev only
-  # front-volume:
-  #   external: true
-  #   driver: local
-  # back-volume:
-  #   external: true
-  #   driver: local
-
+  vite-modules:
+  nest-modules:
