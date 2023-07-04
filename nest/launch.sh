@@ -1,7 +1,10 @@
 #!/bin/sh
 
 #Recover node modules from parent directory
-mv ../node_modules .
+cp -r ../node_modules .
+
+# npx prisma generate
+npx prisma migrate dev
 
 if [ "$NODE_ENV" == "development" ]
 then

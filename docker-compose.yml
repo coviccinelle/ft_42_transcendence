@@ -10,7 +10,19 @@ services:
     volumes:
       - ./vite:/usr/src/app
     networks:
-      - backend
+      - transcendence
+
+  postgres:
+    container_name: postgres
+    image: postgres:alpine
+    env_file: .env
+    restart: unless-stopped
+    volumes:
+      - postgres-dat:/var/lib/postgresql/data
+    networks:
+      - transcendence
+    ports:
+      - 5432:5432
 
   nest:
     container_name: nest
@@ -21,7 +33,7 @@ services:
     volumes:
       - ./nest:/usr/src/app
     networks:
-      - backend
+      - transcendence
 
   nginx:
     container_name: nginx
@@ -34,7 +46,10 @@ services:
     ports:
       - 8080:8080
     networks:
-      - backend
+      - transcendence
+
+volumes:
+  postgres-dat:
 
 networks:
-  backend:
+  transcendence:
