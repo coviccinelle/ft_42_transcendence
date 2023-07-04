@@ -17,7 +17,7 @@ services:
     build:
       context: ./nest
     env_file: .env
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./nest:/usr/src/app
     networks:
@@ -28,7 +28,7 @@ services:
     build:
       context: ./nginx
     env_file: .env
-    restart: always
+    restart: unless-stopped
     volumes:
       - ./vite/dist:/var/www/dist
     ports:

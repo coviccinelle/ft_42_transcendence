@@ -1,7 +1,11 @@
 #!/bin/sh
+
+#Recover node modules from parent directory
+mv ../node_modules .
+
 if [ "$NODE_ENV" == "development" ]
 then
-	npm run start:dev
+	exec npm run start:dev
 else
-	npm run start:prod
+	exec npm run start:prod
 fi

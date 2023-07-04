@@ -12,7 +12,7 @@ RUN npm install
 # If you are building your code for production
 # RUN npm ci --omit=dev
 
-# Bundle app source
-COPY . .
+# Move node modules to parent directory so it isn't overwritten when volume is mounted
+RUN mv node_modules ..
 
 CMD [ "./launch.sh" ]

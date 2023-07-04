@@ -5,4 +5,4 @@ then
 else
 	cp nginx.conf /etc/nginx/nginx.conf
 fi
-nginx -g 'daemon off;'
+exec nginx -g 'daemon off;'
