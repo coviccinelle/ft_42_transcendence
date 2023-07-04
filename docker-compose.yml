@@ -43,6 +43,7 @@ services:
       # CMD ["npm", "run", "start"]
     volumes:
       - ./backend:/home/node/app
+  #   - ./backend/src:/app/src -> mine version, didn't work haha
     ports:
       - 3000:3000
     networks:
@@ -65,6 +66,7 @@ services:
       # CMD ["npm", "run", "build"]
     volumes:
       - ./frontend:/home/node/app
+  #   - ./frontend/src:/app/src
     ports:
       - 5173:5173
     networks:
