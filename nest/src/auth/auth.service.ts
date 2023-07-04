@@ -8,11 +8,11 @@ import { compare } from 'bcrypt';
 export class AuthService {
   constructor(private prisma: PrismaService, private jwt: JwtService) {}
 
-  async login(email: string, password: string): Promise<AuthEntity> {
-    const user = this.prisma.user.findUnique({ where: { email: email }});
+  async login(lemail: string, password: string): Promise<AuthEntity> {
+    const user = await this.prisma.user.findUnique({ where: { email: lemail } });
 
     if (!user) {
-      throw new NotFoundException(`No user found with email: ${email}`);
+      throw new NotFoundException(`No user found with email: ${lemail}`);
     }
 
     const isPasswordValid = await compare(password, (await user).password);

@@ -15,7 +15,7 @@ function Login() {
       password: password,
     }
 
-    axios.post<LoginResponse>('http://127.0.0.1:3000/auth/login', formData)
+    axios.post<LoginResponse>('http://127.0.0.1:8080/api/auth/login', formData)
       .then((response: AxiosResponse<LoginResponse>) => {
         const accessToken = response.data.accessToken;
         console.log('response: %s', accessToken)
