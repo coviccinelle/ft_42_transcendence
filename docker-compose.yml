@@ -18,11 +18,9 @@ services:
     env_file: .env
     restart: unless-stopped
     volumes:
-      - postgres-dat:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - transcendence
-    ports:
-      - 5432:5432
 
   nest:
     container_name: nest
@@ -49,7 +47,7 @@ services:
       - transcendence
 
 volumes:
-  postgres-dat:
+  postgres-data:
 
 networks:
   transcendence:

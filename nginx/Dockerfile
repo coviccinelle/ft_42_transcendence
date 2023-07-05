@@ -1,4 +1,4 @@
-FROM nginx:1.25-alpine
+FROM nginx:alpine
 COPY launch.sh .
 COPY nginx.conf .
 COPY nginx.conf.dev .
