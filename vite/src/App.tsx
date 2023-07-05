@@ -1,6 +1,6 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Home from './Home'
-import Login from './Login'
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import Home from './Home';
+import Login from './Login';
 
 function App() {
   return (
@@ -10,7 +10,7 @@ function App() {
         <Route path="/login" element={<Login />} />
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;
