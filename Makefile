@@ -4,4 +4,4 @@ dev:
 
 clean:
 	docker compose down
-	docker system prune -afdev:
+	docker system prune -af
