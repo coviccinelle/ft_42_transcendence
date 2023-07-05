@@ -30,8 +30,6 @@ services:
     restart: unless-stopped
     volumes:
       - ./nest:/usr/src/app
-    environment:
-      - NODE_ENV="development"
     networks:
       - transcendence
 

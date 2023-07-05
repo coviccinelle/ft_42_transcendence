@@ -1,10 +1,10 @@
 #!/bin/sh
 
 #Recover node modules from parent directory
-mv -f ../node_modules .
+cp -r ../node_modules .
 
 npx prisma generate
-npx prisma migrate dev
+# npx prisma migrate dev # `prisma migrate dev` is an interactive command designed to create new migrations and evolve the database in development.
 npx prisma db seed
 
 if [ "$NODE_ENV" == "development" ]
