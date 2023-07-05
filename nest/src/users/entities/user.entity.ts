@@ -13,14 +13,14 @@ export class UserEntity implements User {
   @ApiProperty()
   email: string;
 
-  @ApiProperty()
-  nickname: string;
-
   @ApiProperty({ required: false, nullable: true })
   firstName: string;
 
   @ApiProperty({ required: false, nullable: true })
   lastName: string;
+
+  @ApiProperty({ required: false, nullable: true })
+  picture: string;
 
   @Exclude()
   password: string;

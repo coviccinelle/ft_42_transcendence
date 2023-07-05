@@ -1,9 +1,9 @@
 #!/bin/sh
 
 #Recover node modules from parent directory
-cp -r ../node_modules .
+mv -f ../node_modules .
 
-# npx prisma generate
+npx prisma generate
 npx prisma migrate dev
 npx prisma db seed
 

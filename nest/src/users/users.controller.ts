@@ -45,8 +45,16 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    return new UserEntity(await this.usersService.findOne(id));
+  async findOneById(@Param('id', ParseIntPipe) id: number) {
+    return new UserEntity(await this.usersService.findOneById(id));
+  }
+
+  @Get(':email')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserEntity })
+  async findOneByEmail(@Param('email', ParseIntPipe) email: string) {
+    return new UserEntity(await this.usersService.findOneByEmail(email));
   }
 
   @Patch(':id')

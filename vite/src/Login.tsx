@@ -27,6 +27,11 @@ function Login() {
       });
   };
 
+  const handleLoginGoogle = () => {
+    // TODO: nom de domaine/ip variable
+    location.href = 'http://localhost:8080/api/auth/google/login'
+  };
+
   return (
     <div>
       <input
@@ -42,6 +47,7 @@ function Login() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={handleLogin}>Login</button>
+      <button onClick={handleLoginGoogle}>Google Login</button>
     </div>
   );
 }

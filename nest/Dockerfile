@@ -9,7 +9,6 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 
 RUN npm install
-RUN npx prisma generate
 # If you are building your code for production
 # RUN npm ci --omit=dev
 
