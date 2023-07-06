@@ -110,6 +110,23 @@ ul li:last-child::after
   color: white;
 }
 
+.mode {
+  float:right;
+}
+.change {
+  cursor: pointer;
+  border: 1px solid #555;
+  border-radius: 40%;
+  width: 20px;
+  text-align: center;
+  padding: 5px;
+  margin-left: 8px;
+}
+.dark{
+  background-color: #222;
+  color: #e6e6e6;
+}
+
 .logo {
   height: 6em;
   padding: 1.5em;

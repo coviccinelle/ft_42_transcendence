@@ -8,15 +8,27 @@
   <body>
       <!-- <h2>Dark/light mode</h2>
       <p>Click the button to active the Dark/Light mode</p> -->
-      <button onclick="myFunction()">🔦</button>
+      <div class="mode">
+        ⚡
+        <span class="change">🌙</span>
+      </div>
       <div id="root"></div>
       <script type="module" src="/src/main.tsx"></script>
   
       <script>
-        function myFunction() {
-          let element = document.body;
-          element.classList.toggle("dark-mode");
-        }
+        $( ".change" ).on("click", function() {
+            if( $( "body" ).hasClass( "dark" )) {
+                $( "body" ).removeClass( "dark" );
+                $( ".change" ).text( "🌙" );
+            } else {
+                $( "body" ).addClass( "dark" );
+                $( ".change" ).text( "☀️" );
+            }
+        });
+        // function myFunction() {
+        //   let element = document.body;
+        //   element.classList.toggle("dark-mode");
+        // }
       </script>
   </body>
 </html>
