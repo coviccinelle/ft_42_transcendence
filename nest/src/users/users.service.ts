@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { hash } from 'bcrypt';
 
-export const roundsOfHashing = 10; // TODO: mettre dans le .env
+export const roundsOfHashing = 10;
 
 @Injectable()
 export class UsersService {

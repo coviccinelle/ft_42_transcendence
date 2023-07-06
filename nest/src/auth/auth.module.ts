@@ -9,6 +9,7 @@ import { UsersModule } from 'src/users/users.module';
 import { JwtStrategy } from './jwt.strategy';
 import { GoogleStrategy } from './google.strategy';
 import { SessionSerializer } from './session.serializer';
+import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -20,12 +21,13 @@ import { SessionSerializer } from './session.serializer';
       useFactory: async (configService: ConfigService) => {
         return {
           secret: configService.get<string>('JWT_SECRET'),
-          signOptions: { expiresIn: '5m' },
+          signOptions: { expiresIn: configService.get<string>('JWT_EXPIRE_IN') },
         };
       },
       inject: [ConfigService],
     }),
     UsersModule,
+    HttpModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, GoogleStrategy, SessionSerializer],

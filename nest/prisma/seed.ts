@@ -3,7 +3,7 @@ import { hash } from "bcrypt";
 
 const prisma = new PrismaClient();
 
-const roundsOfHashing = 10;
+export const roundsOfHashing = 10;
 
 async function main() {
   const passwordUser1 = await hash("jmolvaut", roundsOfHashing);

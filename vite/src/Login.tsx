@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { useState } from 'react';
+import { domainName } from './main';
 
 type LoginResponse = {
   accessToken: string;
@@ -16,11 +17,11 @@ function Login() {
     };
 
     axios
-      .post<LoginResponse>('http://127.0.0.1:8080/api/auth/login', formData)
+      .post<LoginResponse>(`http://${domainName}/api/auth/login`, formData)
       .then((response: AxiosResponse<LoginResponse>) => {
         const accessToken = response.data.accessToken;
         console.log('response: %s', accessToken);
-        // stockage dans un cookie
+        // ? stockage dans un cookie
       })
       .catch((error: AxiosError) => {
         console.log('error axios: ' + error);
@@ -28,8 +29,15 @@ function Login() {
   };
 
   const handleLoginGoogle = () => {
-    // TODO: nom de domaine/ip variable
-    location.href = 'http://localhost:8080/api/auth/google/login'
+    location.href = `http://${domainName}/api/auth/google/login`;
+  };
+
+  const handleLoginFt = () => {
+    const redirect_uri = encodeURIComponent(`http://${domainName}/api/auth/ft/redirect`);
+    const state = import.meta.env.VITE_FT_STATE;
+    const client_id = import.meta.env.VITE_FT_CLIENT_ID;
+    
+    location.href = `https://api.intra.42.fr/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}&response_type=code`
   };
 
   return (
@@ -47,7 +55,8 @@ function Login() {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={handleLogin}>Login</button>
-      <button onClick={handleLoginGoogle}>Google Login</button>
+      <button onClick={handleLoginGoogle}>Login with Google</button>
+      <button onClick={handleLoginFt}>Login with 42</button>
     </div>
   );
 }
