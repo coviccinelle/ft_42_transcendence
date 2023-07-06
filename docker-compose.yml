@@ -23,7 +23,7 @@ services:
       - db
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"]
-      interval: 5s
+      interval: 10s
       timeout: 5s
       retries: 10
 
@@ -41,18 +41,20 @@ services:
     networks:
       - db
       - nest
-    healthcheck:
-      test: ["CMD-SHELL", "wget --spider http://localhost:3000"]
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 10s
+    # healthcheck:
+    #   test: ["CMD-SHELL", "wget --spider http://localhost:3000"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 10
+    #   start_period: 10s
 
   nginx:
     container_name: nginx
-    depends_on:
-      nest: # restart deja quand nest n'est pas encore lance mais plus propre
-        condition: service_healthy
+    # * Restart deja quand nest n'est pas encore lance mais plus propre
+    # ! Ne pas utiliser pour le dev (s'arrete a la moindre erreur si le health_check se fait)
+    # depends_on:
+    #   nest:
+    #     condition: service_healthy
     build:
       context: ./nginx
     env_file: .env
