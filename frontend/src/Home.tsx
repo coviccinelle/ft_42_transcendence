@@ -9,7 +9,7 @@ function Home() {
         <li style={{ "--i": 2}}><a href="#">Don't click me</a></li>
         <li style={{ "--i": 1}} ><a href="#">Nope, still not</a></li>
         <li style={{ "--i": 0}}><Link to="/login">Login</Link></li>
-    </ul>
+      </ul>
     </div>
   );
 }

@@ -13,4 +13,9 @@ function App() {
   )
 }
 
+// function myFunction() {
+//   let element = document.body;
+//   element.classList.toggle("dark-mode");
+// }
+
 export default App

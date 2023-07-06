@@ -6,7 +6,17 @@
     <title>🏓 Pong42 - Homepage🕹️</title>
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+      <!-- <h2>Dark/light mode</h2>
+      <p>Click the button to active the Dark/Light mode</p> -->
+      <button onclick="myFunction()">🔦</button>
+      <div id="root"></div>
+      <script type="module" src="/src/main.tsx"></script>
+  
+      <script>
+        function myFunction() {
+          let element = document.body;
+          element.classList.toggle("dark-mode");
+        }
+      </script>
   </body>
 </html>
