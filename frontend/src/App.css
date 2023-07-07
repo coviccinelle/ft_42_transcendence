@@ -150,8 +150,9 @@ h2 {
 
 .sticker {
   position: absolute;
-  width: 100px; /* Adjust the size of the stickers as needed */
-  height: 100px;
+  max-width: 100%;
+  width: 200px;
+  height: 200px;
   /* Additional styles for the stickers */
 }
 
@@ -167,6 +168,9 @@ h2 {
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
+  }
+  .sticker{
+    width: 50%;
   }
 }
 
