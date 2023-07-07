@@ -148,6 +148,13 @@ h2 {
   position: center;
 }
 
+.sticker {
+  position: absolute;
+  width: 100px; /* Adjust the size of the stickers as needed */
+  height: 100px;
+  /* Additional styles for the stickers */
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
