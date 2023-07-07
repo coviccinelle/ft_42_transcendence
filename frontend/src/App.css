@@ -101,7 +101,7 @@ ul li:last-child::after
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background: #67564A;
+  background: #FCEEB5;
 }
 
 .dark-mode {
