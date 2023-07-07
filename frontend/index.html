@@ -7,45 +7,20 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
-
       <div id="root"></div>
-      <span class="change">🌙</span>
+      <span id="span" class="change">🌙</span>
+      <div id="images"> </div>
       <script type="module" src="/src/main.tsx"></script>
-      <img src="./src/assets/duckie_bg_rm/sticker1.png" alt="Sticker 1" class="sticker sticker1" />
-      <!-- <img src="sticker2.png" alt="Sticker 2" class="sticker sticker2" />
-      <img src="sticker3.png" alt="Sticker 3" class="sticker sticker3" />
-      <img src="sticker4.png" alt="Sticker 4" class="sticker sticker4" />
-      <img src="sticker5.png" alt="Sticker 5" class="sticker sticker5" />
-      <img src="sticker6.png" alt="Sticker 6" class="sticker sticker6" />
-      <img src="sticker7.png" alt="Sticker 7" class="sticker sticker7" />
-      <img src="sticker8.png" alt="Sticker 8" class="sticker sticker8" />
-      <img src="sticker9.png" alt="Sticker 9" class="sticker sticker9" />
-      <img src="sticker10.png" alt="Sticker 10" class="sticker sticker10" />
-      <img src="sticker11.png" alt="Sticker 11" class="sticker sticker11" />
-      <img src="sticker12.png" alt="Sticker 12" class="sticker sticker12" />
-      <img src="sticker13.png" alt="Sticker 13" class="sticker sticker13" />
-      <img src="sticker14.png" alt="Sticker 14" class="sticker sticker24" />
-      <img src="sticker15.png" alt="Sticker 15" class="sticker sticker15" />
-      <img src="sticker16.png" alt="Sticker 16" class="sticker sticker16" />
-      <img src="sticker17.png" alt="Sticker 17" class="sticker sticker17" />
-      <img src="sticker18.png" alt="Sticker 18" class="sticker sticker18" />
-      <img src="sticker19.png" alt="Sticker 19" class="sticker sticker19" />
-      <img src="sticker20.png" alt="Sticker 20" class="sticker sticker20" />
-      <img src="sticker21.png" alt="Sticker 21" class="sticker sticker21" />
-      <img src="sticker22.png" alt="Sticker 22" class="sticker sticker22" />
-      <img src="sticker23.png" alt="Sticker 23" class="sticker sticker23" />
-      <img src="sticker24.png" alt="Sticker 24" class="sticker sticker24" />
-      <img src="sticker25.png" alt="Sticker 25" class="sticker sticker25" />
-      <img src="sticker26.png" alt="Sticker 26" class="sticker sticker26" />
-      <img src="sticker27.png" alt="Sticker 27" class="sticker sticker27" />
-      <img src="sticker28.png" alt="Sticker 28" class="sticker sticker28" />
-      <img src="sticker29.png" alt="Sticker 29" class="sticker sticker29" />
-      <img src="sticker30.png" alt="Sticker 30" class="sticker sticker30" />
-      <img src="sticker31.png" alt="Sticker 31" class="sticker sticker31" />
-      <img src="sticker32.png" alt="Sticker 32" class="sticker sticker32" />
-      <img src="sticker33.png" alt="Sticker 33" class="sticker sticker33" />
-      <img src="sticker34.png" alt="Sticker 34" class="sticker sticker34" />
-      <img src="sticker35.png" alt="Sticker 35" class="sticker sticker35" /> -->
+      <script>
+        
+        for (let i = 1; i < 36; i++) {
+          const img = document.createElement("img");
+          img.classList.add("sticker");
+          img.src = `./src/assets/duckie_bg_rm/sticker${i}.png`;
+          document.body.appendChild(img);
+        }
+      </script>
+      <!-- <img src="./src/assets/duckie_bg_rm/sticker1.png" alt="a funny duck image" class="sticker" /> -->
 
   
       <script>
