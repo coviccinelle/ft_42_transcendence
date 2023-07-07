@@ -33,11 +33,7 @@ function Login() {
   };
 
   const handleLoginFt = () => {
-    const redirect_uri = encodeURIComponent(`http://${domainName}/api/auth/ft/redirect`);
-    const state = import.meta.env.VITE_FT_STATE;
-    const client_id = import.meta.env.VITE_FT_CLIENT_ID;
-    
-    location.href = `https://api.intra.42.fr/oauth/authorize?client_id=${client_id}&redirect_uri=${redirect_uri}&state=${state}&response_type=code`
+    location.href = `http://${domainName}/api/auth/ft/login`;
   };
 
   return (

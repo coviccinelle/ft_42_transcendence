@@ -7,18 +7,15 @@ import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthEntity } from './entities/auth.entity';
 import { compare } from 'bcrypt';
-import { HttpService } from '@nestjs/axios';
-import { lastValueFrom, map, tap } from 'rxjs';
+import axios from 'axios';
 import { ConfigService } from '@nestjs/config';
 import { domainName } from 'src/main';
-import { response } from 'express';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly prisma: PrismaService,
     private readonly jwt: JwtService,
-    private readonly httpService: HttpService,
     private readonly configService: ConfigService,
   ) {}
 
@@ -42,32 +39,26 @@ export class AuthService {
     };
   }
 
-  async loginFt(code: string, state: string) {
+  async loginFt(code: string): Promise<any> {
     const client_secret = this.configService.get<string>('FT_CLIENT_SECRET');
-    const client_id = this.configService.get<string>('FT_CLIENT_ID');
-    const redirect_uri = `http://${domainName}/api/auth/status`;
+    const client_id = this.configService.get<string>('VITE_FT_CLIENT_ID');
+    const redirect_uri = `http://${domainName}/api/auth/ft/callback`;
+    const data = {
+      grant_type: "authorization_code",
+      code: code,
+      client_id: client_id,
+      client_secret: client_secret,
+      redirect_uri: redirect_uri,
+    }
+    console.log(data);
 
     console.log("Posting to oauth/token...")
-    const data = await lastValueFrom(
-      this.httpService.post(
-        'https://api.intra.42.fr/oauth/token',
-        {
-          grant_type: "authorization_code",
-          client_id: client_id,
-          client_secret: client_secret,
-          code: code,
-          redirect_uri: redirect_uri,
-          state: state,
-        }
-      ).pipe(
-        map((response) => {
-          return response.data;
-        }),
-      ),
-    );
-    console.log(`result: ${data}`); // TODO: get response from post
-    // return {
-    //   accessToken: response.json,
-    // };
+    try
+    {
+      const response = await axios.post('https://api.intra.42.fr/oauth/token', data);
+      return response.data;
+    } catch (e) {
+      throw new Error('Erreur lors de l\'authentification : ' + e.message);
+    }
   }
 }
