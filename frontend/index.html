@@ -4,15 +4,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>🏓 Pong42 - Homepage🕹️</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
-      <!-- <h2>Dark/light mode</h2>
-      <p>Click the button to active the Dark/Light mode</p> -->
-      <div class="mode">
-        ⚡
-        <span class="change">🌙</span>
-      </div>
+
       <div id="root"></div>
+      <span class="change">🌙</span>
       <script type="module" src="/src/main.tsx"></script>
   
       <script>
@@ -25,10 +22,6 @@
                 $( ".change" ).text( "☀️" );
             }
         });
-        // function myFunction() {
-        //   let element = document.body;
-        //   element.classList.toggle("dark-mode");
-        // }
       </script>
   </body>
 </html>
