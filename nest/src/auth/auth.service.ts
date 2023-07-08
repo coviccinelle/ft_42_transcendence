@@ -41,7 +41,7 @@ export class AuthService {
 
   async loginFt(code: string): Promise<any> {
     const client_secret = this.configService.get<string>('FT_CLIENT_SECRET');
-    const client_id = this.configService.get<string>('VITE_FT_CLIENT_ID');
+    const client_id = this.configService.get<string>('FT_CLIENT_ID');
     const redirect_uri = `http://${domainName}/api/auth/ft/callback`;
     const data = {
       grant_type: "authorization_code",

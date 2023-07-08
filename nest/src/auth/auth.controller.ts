@@ -3,7 +3,7 @@ import { AuthService } from './auth.service';
 import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 import { AuthEntity } from './entities/auth.entity';
 import { LoginDto } from './dto/login.dto';
-import { GoogleAuthGuard } from './google-auth.guard';
+import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { User } from 'src/users/users.decorator';
@@ -64,7 +64,7 @@ export class AuthController {
     session.oauthState = state;
 
     const redirect_uri = encodeURIComponent(`http://${domainName}/api/auth/ft/callback`);
-    const redirectUrl = `https://api.intra.42.fr/oauth/authorize?client_id=${this.configService.get<string>('VITE_FT_CLIENT_ID') || 'client_id_undefined'}&redirect_uri=${redirect_uri}&response_type=code&state=${state}`
+    const redirectUrl = `https://api.intra.42.fr/oauth/authorize?client_id=${this.configService.get<string>('FT_CLIENT_ID') || 'client_id_undefined'}&redirect_uri=${redirect_uri}&response_type=code&state=${state}`
 
     response.redirect(redirectUrl);
   }
@@ -96,7 +96,7 @@ export class AuthController {
       return { auth: true, msg: 'User authenticated' };
     } else {
       console.log('Requesting status for non authenticated user');
-      return { auth: false, msg: 'User authenticated' };
+      return { auth: false, msg: 'User not authenticated' };
     }
   }
 }

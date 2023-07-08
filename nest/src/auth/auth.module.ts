@@ -6,8 +6,8 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { UsersModule } from 'src/users/users.module';
-import { JwtStrategy } from './jwt.strategy';
-import { GoogleStrategy } from './google.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { GoogleStrategy } from './strategies/google.strategy';
 import { SessionSerializer } from './session.serializer';
 import { HttpModule } from '@nestjs/axios';
 
