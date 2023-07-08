@@ -7,23 +7,24 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   </head>
   <body>
-      <div id="root"></div>
       <span id="span" class="change">🌙</span>
+      <div id="root"></div>
       <div id="images"> </div>
       <script type="module" src="/src/main.tsx"></script>
-      <script>
-        
-        for (let i = 1; i < 36; i++) {
+      <!-- <script> // Add stickers
+        for (let i = 1; i < 25; i++) {
           const img = document.createElement("img");
           img.classList.add("sticker");
           img.src = `./src/assets/duckie_bg_rm/sticker${i}.png`;
           document.body.appendChild(img);
         }
-      </script>
-      <!-- <img src="./src/assets/duckie_bg_rm/sticker1.png" alt="a funny duck image" class="sticker" /> -->
+      </script> -->
 
-  
-      <script>
+      <img src="./src/assets/duckie_bg_rm/sticker1.png" alt="sticker 1" class="sticker sticker1" />
+      <img src="./src/assets/duckie_bg_rm/sticker2.png" alt="sticker 2" class="sticker sticker2" />
+      <img src="./src/assets/duckie_bg_rm/sticker3.png" alt="sticker 3" class="sticker sticker3" />
+
+      <script> // Darkmode
         $( ".change" ).on("click", function() {
             if( $( "body" ).hasClass( "dark" )) {
                 $( "body" ).removeClass( "dark" );
