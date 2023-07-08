@@ -29,6 +29,12 @@ body {
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
+  background: #67564A;
+}
+
+.dark-mode {
+  background-color: #282c34;
+  color: white;
 }
 
 h1 {
@@ -54,6 +60,8 @@ button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
+
+
 
 @media (prefers-color-scheme: light) {
   :root {
