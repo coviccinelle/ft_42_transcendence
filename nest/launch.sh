@@ -4,7 +4,7 @@
 cp -r ../node_modules .
 
 npx prisma generate
-npx prisma db push
+npx prisma db push --accept-data-loss
 # npx prisma migrate dev # `prisma migrate dev` is an interactive command designed to create new migrations and evolve the database in development.
 npx prisma db seed
 

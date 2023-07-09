@@ -29,8 +29,7 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     if (user) {
       console.log(user);
       return user;
-    }
-    else { // If no user -> Create new user
+    } else { // If no user -> Create new user
       const newUserDto: CreateUserDto = {
         email: emails[0].value,
         firstName: name.givenName,

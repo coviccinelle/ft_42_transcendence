@@ -10,6 +10,7 @@ import { User } from 'src/users/users.decorator';
 import { ConfigService } from '@nestjs/config';
 import { domainName } from 'src/main';
 import { Request, Response } from 'express';
+import axios from 'axios';
 
 function generateRandomString(length: number = 10): string {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -70,13 +71,11 @@ export class AuthController {
     console.log("Ft state OK.");
     delete session.oauthState;
 
-    const responseData = await this.authService.loginFt(code);
-
-    console.log(responseData); // ? donne un access_token etc
-    console.log(session);
+    const user = this.authService.loginFt(code);
     // TODO: requests pour avoir les info profil et ajouter a la db
 
-    response.redirect('http://localhost:8080/')
+    response.redirect('http://localhost:8080/profile');
+    // return user;
   }
 
   @Get('status')

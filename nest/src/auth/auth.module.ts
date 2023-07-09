@@ -9,7 +9,6 @@ import { UsersModule } from 'src/users/users.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { SessionSerializer } from './session.serializer';
-import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [
@@ -27,7 +26,6 @@ import { HttpModule } from '@nestjs/axios';
       inject: [ConfigService],
     }),
     UsersModule,
-    HttpModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, GoogleStrategy, SessionSerializer],
