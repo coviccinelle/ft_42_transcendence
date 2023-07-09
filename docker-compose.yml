@@ -10,7 +10,7 @@ services:
     volumes:
       - ./vite:/usr/src/app
     networks:
-      - vite
+      - tr
 
   postgres:
     container_name: postgres
@@ -20,7 +20,7 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
-      - db
+      - tr
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"]
       interval: 5s
@@ -39,8 +39,7 @@ services:
     volumes:
       - ./nest:/usr/src/app
     networks:
-      - db
-      - nest
+      - tr
     # healthcheck:
     #   test: ["CMD-SHELL", "wget --spider http://localhost:3000"]
     #   interval: 5s
@@ -64,13 +63,10 @@ services:
     ports:
       - 8080:8080
     networks:
-      - vite
-      - nest
+      - tr
 
 volumes:
   postgres-data:
 
 networks:
-  vite:
-  nest:
-  db:
+  tr:

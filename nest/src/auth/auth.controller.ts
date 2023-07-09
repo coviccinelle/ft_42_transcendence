@@ -48,16 +48,6 @@ export class AuthController {
     return 'Google logged !'
   }
 
-  // @Get('ft/login')
-  // @UseGuards(FtAuthGuard)
-  // loginFt() {}
-
-  // @Get('ft/redirect')
-  // @UseGuards(FtAuthGuard)
-  // redirectFt() {
-  //   return '42 logged !'
-  // }
-
   @Get('ft/login')
   loginFt(@Res() response: Response, @Session() session) {
     const state = generateRandomString();
@@ -83,6 +73,7 @@ export class AuthController {
     const responseData = await this.authService.loginFt(code);
 
     console.log(responseData); // ? donne un access_token etc
+    console.log(session);
     // TODO: requests pour avoir les info profil et ajouter a la db
 
     response.redirect('http://localhost:8080/')

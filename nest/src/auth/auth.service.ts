@@ -50,7 +50,7 @@ export class AuthService {
       client_secret: client_secret,
       redirect_uri: redirect_uri,
     }
-    console.log(data);
+    // console.log(data);
 
     console.log("Posting to oauth/token...")
     try
