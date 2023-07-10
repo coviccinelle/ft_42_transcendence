@@ -8,7 +8,7 @@ export class ChannelsService {
   constructor(private prisma: PrismaService) {}
 
   create(createChannelDto: CreateChannelDto) {
-    return 'This action adds a new channel';
+    return `This action adds a new channel named ${createChannelDto.name}`;
   }
 
   findPublic() {
@@ -16,9 +16,9 @@ export class ChannelsService {
       where: { isPublic: true },
     });
   }
-  
+
   findJoined(id: number) {
-    return `This action returns channels in which user is a member`;
+    return `This action returns channels in which user #${id} is a member`;
   }
 
   findOne(id: number) {
@@ -26,7 +26,7 @@ export class ChannelsService {
   }
 
   update(id: number, updateChannelDto: UpdateChannelDto) {
-    return `This action updates a #${id} channel`;
+    return `This action updates a #${id} channel named ${updateChannelDto.name}`;
   }
 
   remove(id: number) {

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ChannelsService } from './channels.service';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { UpdateChannelDto } from './dto/update-channel.dto';
@@ -17,7 +25,7 @@ export class ChannelsController {
   }
 
   @Get()
-  @ApiOkResponse({ type: ChannelEntity, isArray: true})
+  @ApiOkResponse({ type: ChannelEntity, isArray: true })
   findPublic() {
     return this.channelsService.findPublic();
   }

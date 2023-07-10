@@ -1,13 +1,20 @@
-import { SubscribeMessage, WebSocketGateway, WebSocketServer, MessageBody, ConnectedSocket, OnGatewayConnection } from '@nestjs/websockets';
+import {
+  SubscribeMessage,
+  WebSocketGateway,
+  WebSocketServer,
+  MessageBody,
+  ConnectedSocket,
+  OnGatewayConnection,
+} from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 
 interface MessageInterface {
-  channel: string,
-  text: string,
-};
+  channel: string;
+  text: string;
+}
 
 @WebSocketGateway({ namespace: 'chat' })
-export class ChatGateway implements OnGatewayConnection{
+export class ChatGateway implements OnGatewayConnection {
   @WebSocketServer() wss: Server;
 
   handleConnection(socket: Socket) {
@@ -15,15 +22,13 @@ export class ChatGateway implements OnGatewayConnection{
   }
 
   @SubscribeMessage('message')
-  handleMessage(
-    @MessageBody() data: MessageInterface,
-  ) {
+  handleMessage(@MessageBody() data: MessageInterface) {
     console.log(data.channel + ': ' + data.text);
     this.wss.in(data.channel).emit('message', data);
   }
   @SubscribeMessage('join')
   handleJoin(
-    @MessageBody() [ oldRoom, newRoom ],
+    @MessageBody() [oldRoom, newRoom],
     @ConnectedSocket() socket: Socket,
   ) {
     socket.leave(oldRoom);

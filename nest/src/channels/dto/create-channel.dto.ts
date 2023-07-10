@@ -1,12 +1,12 @@
-import { ApiProperty } from "@nestjs/swagger";
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateChannelDto {
-	@ApiProperty()
-	name: string
+  @ApiProperty()
+  name: string;
 
-	@ApiProperty()
-	isGroup: boolean
+  @ApiProperty()
+  isGroup: boolean;
 
-	@ApiProperty()
-	isPublic: boolean
+  @ApiProperty()
+  isPublic: boolean;
 }
