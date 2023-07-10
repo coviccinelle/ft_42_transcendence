@@ -5,7 +5,7 @@ function Profile() {
   const getPicture = (): string => {
     let pictureUrl: string = '';
 
-    axios.get(`http://${domainName}/api/profile`)
+    axios.get(`http://${domainName}/api/users/me`)
     .then((response) => {
       console.log(response.data.picture);
       pictureUrl = response.data.picture;

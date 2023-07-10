@@ -32,6 +32,7 @@ async function bootstrap() {
     .setDescription('Game of Pong')
     .setVersion('0.1')
     .addBearerAuth()
+    .addServer('/api')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
