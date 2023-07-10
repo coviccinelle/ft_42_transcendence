@@ -51,9 +51,10 @@ export class UsersController {
   }
 
   @Get('me')
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: UserEntity })
+  // @ApiBearerAuth()
   findMe(@User() user: UserEntity) {
+    console.log("find current session user:");
+    console.log(user);
     if (user)
       return user;
     return null;

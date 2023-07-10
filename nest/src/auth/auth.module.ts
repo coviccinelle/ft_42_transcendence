@@ -9,6 +9,7 @@ import { UsersModule } from 'src/users/users.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { SessionSerializer } from './session.serializer';
+import { FtStrategy } from './strategies/ft.strategy';
 
 @Module({
   imports: [
@@ -28,6 +29,6 @@ import { SessionSerializer } from './session.serializer';
     UsersModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy, GoogleStrategy, SessionSerializer],
+  providers: [AuthService, JwtStrategy, GoogleStrategy, FtStrategy, SessionSerializer],
 })
 export class AuthModule {}

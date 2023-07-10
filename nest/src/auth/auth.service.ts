@@ -47,12 +47,11 @@ export class AuthService {
       console.log(user);
       return user;
     } else { // If no user => Create new user
-      const names = profileData.displayName.split(" ");
       const newUserDto: CreateUserDto = {
         email: profileData.email,
-        firstName: names[0],
-        lastName: names[1],
-        picture: profileData.image_url,
+        firstName: profileData.first_name,
+        lastName: profileData.last_name,
+        picture: profileData.image.versions.medium,
         password: null,
       };
       console.log(newUserDto);

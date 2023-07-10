@@ -2,13 +2,14 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 import { domainName } from './main';
 
 function Profile() {
-  const getPicture = (): string => {
+  function getPicture(): string {
     let pictureUrl: string = '';
-
-    axios.get(`http://${domainName}/api/users/me`)
+    console.log("getpicture")
+    axios.get(`http://${domainName}/api/auth/status`)
     .then((response) => {
-      console.log(response.data.picture);
-      pictureUrl = response.data.picture;
+      console.log(response.data);
+      console.log(response.data.user.picture);
+      pictureUrl = response.data.user.picture;
     })
     .catch((error) => {
       console.log(error);
@@ -18,6 +19,7 @@ function Profile() {
     return pictureUrl;
   }
   const imageSrc: string = getPicture();
+  console.log(imageSrc);
 
   return (
     <div>

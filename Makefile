@@ -1,10 +1,10 @@
 dev:
 	docker compose up --build
 
-clean:
+clean: # !!!!!! Removes the db !!!!!!
 	docker compose down -v
 
-clean_cache:
+clean_cache: # !!!!!! Removes the db !!!!!!
 	docker compose down --rmi all --remove-orphans
 	docker system prune -af
 
