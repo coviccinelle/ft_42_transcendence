@@ -3,8 +3,8 @@
 #Recover node modules from parent directory
 cp -r ../node_modules .
 
-# npx prisma generate
-npx prisma migrate dev
+npx prisma generate
+npx prisma db push --accept-data-loss
 npx prisma db seed
 
 if [ "$NODE_ENV" == "development" ]
