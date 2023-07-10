@@ -97,15 +97,10 @@ ul li:last-child::after
 
 .body {
   margin: 0;
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  grid-template-rows: repeat(7, 1fr);
-  height: 100vh;
-  margin: 0;
-  padding: 0;
-  /* place-items: center; */
-  /* min-width: 320px;
-  min-height: 100vh; */
+  display: flex;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
   background: #FCEEB5;
 }
 
@@ -154,15 +149,10 @@ h2 {
 }
 
 .sticker {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-}
-
-.sticker:hover {
-  transform: scale(2.1);
-  transition: transform 0.5s ease-in-out;
+  position: absolute;
+  width: 100px; /* Adjust the size of the stickers as needed */
+  height: 100px;
+  /* Additional styles for the stickers */
 }
 
 @keyframes logo-spin {
@@ -177,9 +167,6 @@ h2 {
 @media (prefers-reduced-motion: no-preference) {
   a:nth-of-type(2) .logo {
     animation: logo-spin infinite 20s linear;
-  }
-  .sticker{
-    width: 25%;
   }
 }
 

@@ -11,10 +11,7 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
-    const hashedPassword = await hash(
-      createUserDto.password,
-      roundsOfHashing,
-    );
+    const hashedPassword = await hash(createUserDto.password, roundsOfHashing);
 
     createUserDto.password = hashedPassword;
 
@@ -34,7 +31,7 @@ export class UsersService {
       updateUserDto.password = await hash(
         updateUserDto.password,
         roundsOfHashing,
-      )
+      );
     }
     return this.prisma.user.update({ where: { id }, data: updateUserDto });
   }

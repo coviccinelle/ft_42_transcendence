@@ -1,84 +1,53 @@
-version: "3"
-
+version: "3.8"
 services:
-  db:
-    container_name: db
-    image: postgres
-    restart: unless-stopped
-    env_file:
-      - .env
-    volumes:
-      - postgres-data:/var/lib/postgresql/data
-    environment:
-      POSTGRES_PASSWORD: $POSTGRES_PASSWORD
-    # ports a retirer plus tard
-    ports:
-      - 5432:5432
-    networks:
-      - api-network
-
-  adminer:
-    container_name: adminer
-    image: adminer
-    restart: unless-stopped
-    ports:
-      - 8080:8080
-
-  nestjs:
-    container_name: nestjs
-    restart: unless-stopped
-    build:
-      context: ./backend
-      dockerfile_inline: |
-        FROM node
-        WORKDIR /home/node/app
-        COPY package*.json ./
-        RUN npm install
-        COPY tsconfig*.json ./
-        COPY src ./src
-        COPY .env_dev ./.env
-        COPY prisma ./prisma
-        RUN npx prisma generate
-        CMD ["npm", "run", "start:dev"]
-      # CMD ["npm", "run", "start"]
-    volumes:
-      - ./backend:/home/node/app
-  #   - ./backend/src:/app/src -> mine version, didn't work haha
-    ports:
-      - 3000:3000
-    networks:
-      - api-network
-      - front-network
 
   vite:
     container_name: vite
-    restart: unless-stopped
     build:
-      context: ./frontend
-      dockerfile_inline: |
-        FROM node
-        WORKDIR /home/node/app
-        COPY package*.json ./
-        RUN npm install
-        COPY tsconfig*.json ./
-        COPY src ./src
-        CMD ["npm", "run", "dev"]
-      # CMD ["npm", "run", "build"]
+      context: ./vite
+    env_file: .env
+    restart: on-failure
     volumes:
-      - ./frontend:/home/node/app
-  #   - ./frontend/src:/app/src
-    ports:
-      - 5173:5173
+      - ./vite:/usr/src/app
     networks:
-      - front-network
+      - transcendence
 
-networks:
-  api-network:
-    driver: bridge
-  front-network:
-    driver: bridge
+  postgres:
+    container_name: postgres
+    image: postgres:alpine
+    env_file: .env
+    restart: unless-stopped
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - transcendence
+
+  nest:
+    container_name: nest
+    build:
+      context: ./nest
+    env_file: .env
+    restart: unless-stopped
+    volumes:
+      - ./nest:/usr/src/app
+    networks:
+      - transcendence
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./nginx
+    env_file: .env
+    restart: unless-stopped
+    volumes:
+      - ./vite/dist:/var/www/dist
+    ports:
+      - 8080:8080
+    networks:
+      - transcendence
 
 volumes:
   postgres-data:
-  vite-modules:
-  nest-modules:
+
+networks:
+  transcendence:
