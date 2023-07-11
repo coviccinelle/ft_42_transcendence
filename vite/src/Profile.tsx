@@ -22,12 +22,17 @@ function Profile() {
     })
   };
 
+  const handleLogout = () => {
+    location.href = `http://${domainName}/api/auth/logout`;
+  }
+
   useEffect(() => {
     fetchProfile();
   }, []);
 
   return (
     <div>
+      <button onClick={handleLogout}>Logout</button>
       <p>{firstName} {lastName}</p>
       <img src={img}></img>
     </div>

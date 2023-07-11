@@ -21,12 +21,14 @@ import {
 import { UserEntity } from './entities/user.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { User } from './users.decorator';
+import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
 
 @Controller('users')
 @ApiTags('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  // TODO: general and admin guards or restrict for all
   @Post()
   @ApiCreatedResponse({ type: UserEntity })
   async create(@Body() createUserDto: CreateUserDto) {
@@ -50,22 +52,25 @@ export class UsersController {
     return new UserEntity(await this.usersService.findOneById(id));
   }
 
-  @Get('me')
-  // @ApiBearerAuth()
-  findMe(@User() user: UserEntity) {
-    console.log("find current session user:");
-    console.log(user);
-    if (user)
-      return user;
-    return null;
-  }
-
   @Get(':email')
   @UseGuards(JwtAuthGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
   async findOneByEmail(@Param('email', ParseIntPipe) email: string) {
     return new UserEntity(await this.usersService.findOneByEmail(email));
+  }
+
+  @Get('me')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserEntity })
+  findMe(@User() user: UserEntity) {
+    // TODO: test la fonction
+    // console.log("find current session user:");
+    // console.log(user);
+    if (user)
+      return user;
+    return null;
   }
 
   @Patch(':id')

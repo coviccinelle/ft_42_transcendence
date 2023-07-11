@@ -7,8 +7,6 @@ import { JwtService } from '@nestjs/jwt';
 import { AuthEntity } from './entities/auth.entity';
 import { compare } from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
-import { CreateUserDto } from 'src/users/dto/create-user.dto';
-import { getTokenFt, getProfileFt} from './utils/ft.utils';
 
 @Injectable()
 export class AuthService {
@@ -35,28 +33,5 @@ export class AuthService {
     return {
       accessToken: this.jwt.sign({ userId: (await user).id }),
     };
-  }
-
-  async loginFt(code: string) {
-    const tokenData = await getTokenFt(code);
-    const profileData = await getProfileFt(tokenData.access_token);
-
-    const user = await this.usersService.findOneByEmail(profileData.email);
-
-    if (user) {
-      console.log(user);
-      return user;
-    } else { // If no user => Create new user
-      const newUserDto: CreateUserDto = {
-        email: profileData.email,
-        firstName: profileData.first_name,
-        lastName: profileData.last_name,
-        picture: profileData.image.versions.medium,
-        password: null,
-      };
-      console.log(newUserDto);
-      return this.usersService.create(newUserDto);
-    }
-
   }
 }
