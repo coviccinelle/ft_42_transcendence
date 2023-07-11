@@ -19,6 +19,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
+import { ChannelEntity } from '../channels/entities/channel.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('users')
@@ -66,5 +67,11 @@ export class UsersController {
   @ApiOkResponse({ type: UserEntity })
   async remove(@Param('id', ParseIntPipe) id: number) {
     return new UserEntity(await this.usersService.remove(id));
+  }
+
+  @Get(':id/channels')
+  @ApiOkResponse({ type: ChannelEntity, isArray: true })
+  async getChannels(@Param('id', ParseIntPipe) id: number) {
+    return await this.usersService.getChannels(id);
   }
 }

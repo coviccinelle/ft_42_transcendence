@@ -30,11 +30,6 @@ export class ChannelsController {
     return this.channelsService.findPublic();
   }
 
-  @Get('joined/:id')
-  findJoined(@Param('id') id: string) {
-    return this.channelsService.findJoined(+id);
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.channelsService.findOne(+id);

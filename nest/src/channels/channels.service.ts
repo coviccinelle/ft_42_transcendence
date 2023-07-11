@@ -17,10 +17,6 @@ export class ChannelsService {
     });
   }
 
-  findJoined(id: number) {
-    return `This action returns channels in which user #${id} is a member`;
-  }
-
   findOne(id: number) {
     return `This action returns a #${id} channel`;
   }
