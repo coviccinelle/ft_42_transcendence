@@ -1,29 +1,35 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios from "axios";
 import { domainName } from './main';
+import { useEffect, useState } from 'react';
+import { useNavigate } from "react-router-dom";
 
 function Profile() {
-  function getPicture(): string {
-    let pictureUrl: string = '';
-    console.log("getpicture")
+  const [firstName, setFirstName] = useState();
+  const [lastName, setLastName] = useState();
+  const [img, setImg] = useState();
+  const navigate = useNavigate();
+
+  const fetchProfile = async () => {
     axios.get(`http://${domainName}/api/auth/status`)
-    .then((response) => {
-      console.log(response.data);
-      console.log(response.data.user.picture);
-      pictureUrl = response.data.user.picture;
+    .then((res) => {
+      setImg(res.data.user.picture);
+      setFirstName(res.data.user.firstName);
+      setLastName(res.data.user.lastName);
     })
-    .catch((error) => {
-      console.log(error);
-      // TODO: redirect to login page if not authenticated
-      // TODO: random image if no picture
-    });
-    return pictureUrl;
-  }
-  const imageSrc: string = getPicture();
-  console.log(imageSrc);
+    .catch((e) => {
+      console.log(e);
+      navigate("/");
+    })
+  };
+
+  useEffect(() => {
+    fetchProfile();
+  }, []);
 
   return (
     <div>
-      <img src={imageSrc}></img>
+      <p>{firstName} {lastName}</p>
+      <img src={img}></img>
     </div>
   );
 }
