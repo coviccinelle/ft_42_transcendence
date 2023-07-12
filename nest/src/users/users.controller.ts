@@ -36,7 +36,7 @@ export class UsersController {
   }
 
   @Get()
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthenticatedGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity, isArray: true })
   async findAll() {
@@ -44,8 +44,37 @@ export class UsersController {
     return users.map((user) => new UserEntity(user));
   }
 
+  @Get('me')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserEntity })
+  async findMe(@User() user: UserEntity) {
+    if (user) {
+      console.log("REQUESTING user data for: " + user.email);
+      return user;
+    } else {
+      throw new Error("USERS ERROR: No user found user/me (findMe())");
+    }
+  }
+
+  @Patch('me')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserEntity })
+  async updateMe(
+    @User() user: UserEntity,
+    @Body() updateUserDto: UpdateUserDto
+  ) {
+    if (user) {
+      console.log("UPDATING user data for: " + user.email);
+      return new UserEntity(await this.usersService.update(user.id, updateUserDto));
+    } else {
+      throw new Error("USERS ERROR: No user found to update (updateMe())");
+    }
+  }
+
   @Get(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthenticatedGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
   async findOneById(@Param('id', ParseIntPipe) id: number) {
@@ -53,28 +82,15 @@ export class UsersController {
   }
 
   @Get(':email')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthenticatedGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
   async findOneByEmail(@Param('email', ParseIntPipe) email: string) {
     return new UserEntity(await this.usersService.findOneByEmail(email));
   }
 
-  @Get('me')
-  @UseGuards(AuthenticatedGuard)
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: UserEntity })
-  findMe(@User() user: UserEntity) {
-    // TODO: test la fonction
-    // console.log("find current session user:");
-    // console.log(user);
-    if (user)
-      return user;
-    return null;
-  }
-
   @Patch(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthenticatedGuard)
   @ApiBearerAuth()
   @ApiCreatedResponse({ type: UserEntity })
   async update(
@@ -85,7 +101,7 @@ export class UsersController {
   }
 
   @Delete(':id')
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(AuthenticatedGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
   async remove(@Param('id', ParseIntPipe) id: number) {

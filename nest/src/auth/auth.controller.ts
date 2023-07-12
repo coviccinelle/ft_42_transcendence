@@ -30,8 +30,8 @@ export class AuthController {
 
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
-  redirectGoogle() {
-    return 'Google logged !'
+  redirectGoogle(@Res() response: Response) {
+    response.redirect(`http://${domainName}/profile`);
   }
 
   @Get('ft/login')
@@ -42,17 +42,5 @@ export class AuthController {
   @UseGuards(FtAuthGuard)
   redirectFt(@Res() response: Response) {
     response.redirect(`http://${domainName}/profile`);
-  }
-
-  @Get('status')
-  @UseGuards(AuthenticatedGuard)
-  statusUser(@User() user: UserEntity) {
-    // console.log(user)
-    if (user) {
-      console.log('Requesting status for user ' + user.email);
-      return { auth: true, user: user, msg: 'User authenticated' };
-    } else { // Should be useless
-      throw new Error("AUTH ERROR: No user found in statusUser()");
-    }
   }
 }
