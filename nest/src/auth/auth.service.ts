@@ -3,22 +3,25 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { PrismaService } from 'src/prisma/prisma.service';
-import { AuthEntity } from './entity/auth.entity';
+import { JwtService } from '@nestjs/jwt';
+import { AuthEntity } from './entities/auth.entity';
 import { compare } from 'bcrypt';
+import { UsersService } from 'src/users/users.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService, private jwt: JwtService) {}
+  constructor(
+    private readonly usersService: UsersService,
+    private readonly jwt: JwtService,
+  ) {}
 
-  async login(lemail: string, password: string): Promise<AuthEntity> {
-    const user = await this.prisma.user.findUnique({
-      where: { email: lemail },
-    });
+  // TODO: signup/register
+
+  async login(email: string, password: string): Promise<AuthEntity> {
+    const user = await this.usersService.findOneByEmail(email);
 
     if (!user) {
-      throw new NotFoundException(`No user found with email: ${lemail}`);
+      throw new NotFoundException(`No user found with email: ${email}`);
     }
 
     const isPasswordValid = await compare(password, (await user).password);

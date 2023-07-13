@@ -10,7 +10,7 @@ services:
     volumes:
       - ./vite:/usr/src/app
     networks:
-      - transcendence
+      - tr
 
   postgres:
     container_name: postgres
@@ -20,10 +20,18 @@ services:
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
-      - transcendence
+      - tr
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -d ${POSTGRES_DB} -U ${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   nest:
     container_name: nest
+    depends_on:
+      postgres:
+        condition: service_healthy
     build:
       context: ./nest
     env_file: .env
@@ -31,10 +39,21 @@ services:
     volumes:
       - ./nest:/usr/src/app
     networks:
-      - transcendence
+      - tr
+    # healthcheck:
+    #   test: ["CMD-SHELL", "wget --spider http://localhost:3000"]
+    #   interval: 5s
+    #   timeout: 5s
+    #   retries: 10
+    #   start_period: 10s
 
   nginx:
     container_name: nginx
+    # * Restart deja quand nest n'est pas encore lance mais plus propre
+    # ! Ne pas utiliser pour le dev (s'arrete a la moindre erreur si le health_check se fait)
+    # depends_on:
+    #   nest:
+    #     condition: service_healthy
     build:
       context: ./nginx
     env_file: .env
@@ -44,10 +63,10 @@ services:
     ports:
       - 8080:8080
     networks:
-      - transcendence
+      - tr
 
 volumes:
   postgres-data:
 
 networks:
-  transcendence:
+  tr:

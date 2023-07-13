@@ -3,21 +3,21 @@ import { hash } from "bcrypt";
 
 const prisma = new PrismaClient();
 
-const roundsOfHashing = 10;
+export const roundsOfHashing = 10;
 
 async function main() {
-  const passwordUser1 = await hash("jmolvaut", roundsOfHashing);
+  const passwordUser1 = await hash("testpassword", roundsOfHashing);
 
   const user1 = await prisma.user.upsert({
     where: { id: 1 },
     update: {
-      password: passwordUser1
+      password: passwordUser1,
     },
     create: {
-      email: "jmolvaut@student.42.fr",
-      nickname: "jmolvaut",
-      firstName: "Jeremy",
-      lastName: "Molvaut",
+      email: "test@test.com",
+      firstName: "Test1",
+      lastName: "TestNom",
+      picture: "",
       password: passwordUser1
     }
   });
