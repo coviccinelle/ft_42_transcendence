@@ -19,7 +19,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { UserEntity } from './entities/user.entity';
-import { ChannelEntity } from '../channels/entities/channel.entity';
+import { ChannelEntity } from '../chat/channels/entities/channel.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 @Controller('users')
