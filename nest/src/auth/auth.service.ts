@@ -1,27 +1,45 @@
 import {
+  ConflictException,
   Injectable,
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import { AuthEntity } from './entities/auth.entity';
 import { compare } from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
+import { UserEntity } from 'src/users/entities/user.entity';
+import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly jwt: JwtService,
   ) {}
 
-  // TODO: signup/register
+  async signup(firstName: string, lastName: string, email: string, password: string): Promise<UserEntity> {
+    console.log("Signup request: creating new user...");
+    const lowerEmail = email.toLowerCase();
+    const user = await this.usersService.findOneByEmail(lowerEmail);
 
-  async login(email: string, password: string): Promise<AuthEntity> {
-    const user = await this.usersService.findOneByEmail(email);
+    if (user) {
+      throw new ConflictException(`User found while registering with email: ${lowerEmail}`);
+    }
+    const newUserDto: CreateUserDto = {
+      email: lowerEmail,
+      firstName: firstName,
+      lastName: lastName,
+      picture: "",
+      password: password,
+    }
+    return new UserEntity(await this.usersService.create(newUserDto));
+  }
+
+  async login(email: string, password: string): Promise<UserEntity> {
+    console.log(`login ${email}`);
+    const lowerEmail = email.toLowerCase();
+    const user = await this.usersService.findOneByEmail(lowerEmail);
 
     if (!user) {
-      throw new NotFoundException(`No user found with email: ${email}`);
+      throw new NotFoundException(`No user found with email: ${lowerEmail}`);
     }
 
     const isPasswordValid = await compare(password, (await user).password);
@@ -30,8 +48,6 @@ export class AuthService {
       throw new UnauthorizedException(`Invalid password`);
     }
 
-    return {
-      accessToken: this.jwt.sign({ userId: (await user).id }),
-    };
+    return user;
   }
 }
