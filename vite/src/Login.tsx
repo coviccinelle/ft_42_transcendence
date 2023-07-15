@@ -3,10 +3,6 @@ import { useState } from 'react';
 import { domainName } from './main';
 import { useNavigate } from 'react-router-dom';
 
-type LoginResponse = {
-  accessToken: string;
-};
-
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -23,12 +19,14 @@ function Login() {
     };
 
     axios
-      .post<LoginResponse>(`http://${domainName}/api/auth/local/signup`, formData)
+      .post(`http://${domainName}/api/auth/local/signup`, formData)
       .then((res) => {
-        navigate("/login");
+        console.log("Sign up OK !")
+        return navigate("/login");
       })
-      .catch((res) => {
+      .catch((e) => {
         // * when user is already in db (conflictException) or other errors
+        console.log(e);
       });
   };
 
@@ -39,9 +37,13 @@ function Login() {
     };
 
     axios
-      .post<LoginResponse>(`http://${domainName}/api/auth/local/login`, formData)
+      .post(`http://${domainName}/api/auth/local/login`, formData)
       .then((res) => {
-        navigate("/profile");
+        console.log("GOGOGOGOGOGOGO TO PROFILE")
+        return navigate("/profile");
+      })
+      .catch((e) => {
+        console.log(e);
       });
   };
 

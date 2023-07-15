@@ -27,7 +27,7 @@ export class AuthService {
       email: lowerEmail,
       firstName: firstName,
       lastName: lastName,
-      picture: "",
+      picture: "https://i.pinimg.com/originals/a4/97/d7/a497d78803c0821e1f0cdb8b8b8a6d32.jpg",
       password: password,
     }
     return new UserEntity(await this.usersService.create(newUserDto));

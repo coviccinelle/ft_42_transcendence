@@ -18,10 +18,8 @@ export class AuthController {
 
   @Post('local/login')
   @UseGuards(LocalAuthGuard)
-  login(@Request() req, @Res() response: Response) {
-    console.log("login");
-    response.redirect(`http://${domainName}/profile`);
-    // return { user: req.user, msg: "Logged in" }
+  login(@Request() req) {
+    return req.user;
   }
 
   @Post('local/signup')
