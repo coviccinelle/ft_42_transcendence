@@ -6,14 +6,14 @@
     font-family: 'Oswald', sans-serif;
 }
 
-ul
+#home-menu
 {
     position: relative;
     transform: skewY(-15deg);
 
 }
 
-ul li
+#home-menu li
 {
     position: relative;
     list-style: none;
@@ -24,13 +24,13 @@ ul li
     transition: 0.5s;
 }
 
-ul li:hover
+#home-menu li:hover
 {
     background: #33a3ee;
     transform: translateX(50px);
 }
 
-ul li::before
+#home-menu li::before
 {
     content: '';
     position: absolute;
@@ -44,12 +44,12 @@ ul li::before
     transition: 0.5s;
 }
 
-ul li:hover::before
+#home-menu li:hover::before
 {
     background: #1f5378;
 }
 
-ul li::after
+#home-menu li::after
 {
     content: '';
     position: absolute;
@@ -63,12 +63,12 @@ ul li::after
     transition: 0.5s;
 }
 
-ul li:hover::after
+#home-menu li:hover::after
 {
     background: #33a3ee;
 }
 
-ul li a
+#home-menu li a
 {
     text-decoration: none;
     color: #999;
@@ -78,12 +78,12 @@ ul li a
     transition: 0.5s;
 }
 
-ul li:hover a
+#home-menu li:hover a
 {
     color: #fff;
 }
 
-ul li:last-child::after
+#home-menu li:last-child::after
 {
     box-shadow: -120px 120px 20px rgba(0,0,0,0.25);
 }
@@ -146,13 +146,6 @@ h2 {
   font-size: 2em;
   margin: 0.5em 0;
   position: center;
-}
-
-.sticker {
-  position: absolute;
-  width: 100px; /* Adjust the size of the stickers as needed */
-  height: 100px;
-  /* Additional styles for the stickers */
 }
 
 @keyframes logo-spin {

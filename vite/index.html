@@ -11,28 +11,6 @@
       <span id="span" class="change">🌙</span>
       <div id="images"> </div>
       <script type="module" src="/src/main.tsx"></script>
-      <script>
-        
-        for (let i = 1; i < 36; i++) {
-          const img = document.createElement("img");
-          img.classList.add("sticker");
-          img.src = `./src/assets/duckie_bg_rm/sticker${i}.png`;
-          document.body.appendChild(img);
-        }
-      </script>
       <!-- <img src="./src/assets/duckie_bg_rm/sticker1.png" alt="a funny duck image" class="sticker" /> -->
-
-  
-      <script>
-        $( ".change" ).on("click", function() {
-            if( $( "body" ).hasClass( "dark" )) {
-                $( "body" ).removeClass( "dark" );
-                $( ".change" ).text( "🌙" );
-            } else {
-                $( "body" ).addClass( "dark" );
-                $( ".change" ).text( "☀️" );
-            }
-        });
-      </script>
   </body>
 </html>
