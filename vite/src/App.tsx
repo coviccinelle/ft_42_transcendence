@@ -1,7 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from './Home';
-import Login from './Login';
-import Chat from './Chat';
+import Home from './views/Home';
+import Login from './views/Login';
+import Chat from './views/Chat';
 
 function App() {
   return (
