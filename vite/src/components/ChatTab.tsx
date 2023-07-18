@@ -1,13 +1,15 @@
-function ChatTabs(props: {
+function ChatTab(props: {
   name: string;
   lastMessage: string;
   avatar: string;
+  id: number;
+  setCurrentChannel: React.Dispatch<React.SetStateAction<number>>;
 }) {
   return (
     <div
       className="flex flex-row py-4 px-2 items-center border-b-2"
       onClick={() => {
-        console.log('display chat');
+        props.setCurrentChannel(props.id);
       }}
     >
       <div className="w-1/4">
@@ -25,4 +27,4 @@ function ChatTabs(props: {
   );
 }
 
-export default ChatTabs;
+export default ChatTab;

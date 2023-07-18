@@ -1,68 +1,93 @@
-import { PrismaClient } from "@prisma/client";
-import { hash } from "bcrypt";
-import { use } from "passport";
+import { PrismaClient } from '@prisma/client';
+import { hash } from 'bcrypt';
+import { use } from 'passport';
 
 const prisma = new PrismaClient();
 
 const roundsOfHashing = 10;
 
 async function main() {
-  const passwordUser1 = await hash("jmolvaut", roundsOfHashing);
+  const passwordUser1 = await hash('jmolvaut', roundsOfHashing);
 
   const user1 = await prisma.user.upsert({
     where: { id: 1 },
     update: {
-      password: passwordUser1
+      password: passwordUser1,
     },
     create: {
-      email: "jmolvaut@student.42.fr",
-      nickname: "jmolvaut",
-      firstName: "Jeremy",
-      lastName: "Molvaut",
-      password: passwordUser1
-    }
+      email: 'jmolvaut@student.42.fr',
+      nickname: 'jmolvaut',
+      firstName: 'Jeremy',
+      lastName: 'Molvaut',
+      password: passwordUser1,
+    },
   });
 
   const generalChannel = await prisma.channel.upsert({
-    where: {id: 1},
+    where: { id: 1 },
     update: {},
     create: {
       name: 'General',
       isGroup: true,
-      isPublic: true
-    }
+      isPublic: true,
+    },
   });
 
-  const member = await prisma.member.upsert({
-    where: {id: 1},
+  const randomChannel = await prisma.channel.upsert({
+    where: { id: 2 },
+    update: {},
+    create: {
+      name: 'Random',
+      isGroup: true,
+      isPublic: true,
+    },
+  });
+
+  const memberGeneral = await prisma.member.upsert({
+    where: { id: 1 },
     update: {},
     create: {
       role: 'OWNER',
       left: false,
       user: {
-        connect: { id: user1.id }
+        connect: { id: user1.id },
       },
       channel: {
-        connect: { id: generalChannel.id }
-      }
-    }
+        connect: { id: generalChannel.id },
+      },
+    },
+  });
+
+  const memberRandom = await prisma.member.upsert({
+    where: { id: 2 },
+    update: {},
+    create: {
+      role: 'OWNER',
+      left: false,
+      user: {
+        connect: { id: user1.id },
+      },
+      channel: {
+        connect: { id: randomChannel.id },
+      },
+    },
   });
 
   const message = await prisma.message.upsert({
-    where: {id: 1},
+    where: { id: 1 },
     update: {},
     create: {
-      content: "Hello world",
+      content: 'Hello world',
       author: {
-        connect: { id: member.id }
+        connect: { id: memberGeneral.id },
       },
       channel: {
-        connect: { id: generalChannel.id }
-      }
-    }
-  })
+        connect: { id: generalChannel.id },
+      },
+    },
+  });
 
-  console.log({user1});
+  console.log({ user1 });
 }
 
 main()
