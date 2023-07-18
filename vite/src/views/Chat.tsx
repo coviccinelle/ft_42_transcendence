@@ -3,9 +3,13 @@ import SearchChat from '../components/SearchChat';
 import ChatTab from '../components/ChatTab';
 import { useEffect, useState } from 'react';
 import api from '../api/chat';
+import { Socket, io } from 'socket.io-client';
 
 function ChatPage() {
   const [channels, setChannels] = useState([]); // need to map channels from server
+  const [currentChannel, setCurrentChannel] = useState(1);
+  const [messages, setMessages] = useState([]);
+  const [socket, setSocket] = useState<Socket | undefined>();
   useEffect(() => {
     const fetchChannels = async () => {
       const channels = await api.getChannels(1);
@@ -13,7 +17,40 @@ function ChatPage() {
     };
     fetchChannels();
   }, []);
-  const [currentChannel, setCurrentChannel] = useState(1);
+
+  const handleIncomingMessage = (message: any) => {
+    if (message.channelId === currentChannel) {
+      setMessages([...messages, message]);
+    }
+  };
+
+  useEffect(() => {
+    setSocket(io('/chat'));
+    if (!socket) return;
+    let newSocket = socket;
+    newSocket.on('connect', () => {
+      for (const channel of channels) {
+        newSocket.emit('join', channel.id);
+      }
+    });
+    setSocket(newSocket);
+    return () => {
+      socket.disconnect();
+      setSocket(undefined);
+    };
+  }, [channels]);
+
+  useEffect(() => {
+    if (!socket) return;
+    let newSocket = socket;
+    newSocket.on('message', handleIncomingMessage);
+    setSocket(newSocket);
+    return () => {
+      let newSocket = socket;
+      newSocket.off('message', handleIncomingMessage);
+      setSocket(newSocket);
+    };
+  }, [socket, currentChannel, messages, handleIncomingMessage]);
   // const [tabs, setTabs] = useState([
   //   'Anniv',
   //   'Noel',
@@ -60,7 +97,11 @@ function ChatPage() {
             );
           })}
         </div>
-        <Channel channelId={currentChannel} />
+        <Channel
+          channelId={currentChannel}
+          messages={messages}
+          setMessages={setMessages}
+        />
       </div>
     </>
   );

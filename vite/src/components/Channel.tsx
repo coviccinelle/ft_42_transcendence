@@ -3,14 +3,17 @@ import { useEffect, useState } from 'react';
 import Messages from './Messages';
 import api from '../api/chat';
 
-function Channel(props: { channelId: number }) {
-  const [messages, setMessages] = useState([]); // need to map messages from server
+function Channel(props: {
+  channelId: number;
+  messages: any;
+  setMessages: any;
+}) {
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     const fetchMessages = async () => {
       const messages = await api.getMessages(props.channelId);
-      setMessages(messages);
+      props.setMessages(messages);
     };
     fetchMessages();
   }, [props.channelId]);
@@ -26,7 +29,7 @@ function Channel(props: { channelId: number }) {
       content: message,
       authorId: 1,
     };
-    setMessages([...messages, newMessage]); // send message to database
+    // props.setMessages([...props.messages, newMessage]); // send message to database
     api.postMessage(message, props.channelId, 1); // need to get channelId and authorId from server
     // console.log(messages);
     setMessage('');
@@ -35,7 +38,7 @@ function Channel(props: { channelId: number }) {
   return (
     <div className="w-full px-5 flex flex-col justify-between">
       <div className="flex flex-col mt-5">
-        {messages.map((message) => {
+        {props.messages.map((message: any) => {
           return (
             <Messages
               message={message.content}

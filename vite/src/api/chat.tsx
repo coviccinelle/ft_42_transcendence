@@ -8,7 +8,7 @@ const postMessage = async (
   authorId: number,
 ) => {
   try {
-    const response = await axios.post(`${API}/channels/${channelId}/message`, {
+    const response = await axios.post(`${API}/chat/${channelId}/message`, {
       content: message,
       authorId: authorId,
     });
@@ -20,7 +20,7 @@ const postMessage = async (
 
 const getMessages = async (channelId: number) => {
   try {
-    const response = await axios.get(`${API}/channels/${channelId}/messages`);
+    const response = await axios.get(`${API}/chat/${channelId}/messages`);
     return response.data;
   } catch (error) {
     console.error(error);
