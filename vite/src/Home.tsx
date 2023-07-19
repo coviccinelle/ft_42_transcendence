@@ -36,7 +36,7 @@ function Carrousel(): JSX.Element {
     	return {
       		width: window.innerWidth,
       		height: window.innerHeight,
-			radius: Math.min(window.innerWidth, window.innerHeight) / 2,
+			radius: Math.min(window.innerWidth-100, window.innerHeight-100) / 2,
     	}
   	}
   
