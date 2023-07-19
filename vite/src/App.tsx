@@ -2,8 +2,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './Home';
 import Login from './Login';
 import Profile from './Profile';
-
-import './App.css'
+import './App.css';
 
 function App() {
   return (
@@ -14,7 +13,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
       </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;
