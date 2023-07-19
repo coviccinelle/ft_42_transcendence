@@ -1,15 +1,13 @@
-import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Request, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
-import { AuthEntity } from './entities/auth.entity';
+import { ApiTags } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
-import { UserEntity } from 'src/users/entities/user.entity';
-import { User } from 'src/users/users.decorator';
 import { domainName } from 'src/main';
 import { Response } from 'express';
-import { AuthenticatedGuard } from './guards/authenticated.guard';
 import { FtAuthGuard } from './guards/ft-auth.guard';
+import { LocalAuthGuard } from './guards/local-auth.guard';
+import { UserEntity } from 'src/users/entities/user.entity';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -18,10 +16,15 @@ export class AuthController {
     private readonly authService: AuthService,
   ) {}
 
-  @Post('login')
-  @ApiOkResponse({ type: AuthEntity })
-  login(@Body() { email, password }: LoginDto) {
-    return this.authService.login(email, password);
+  @Post('local/login')
+  @UseGuards(LocalAuthGuard)
+  login(@Request() req) {
+    return req.user;
+  }
+
+  @Post('local/signup')
+  async signup(@Body() { email, firstName, lastName, password }: LoginDto): Promise<UserEntity> {
+    return await this.authService.signup(firstName, lastName, email, password);
   }
 
   @Get('google/login')
@@ -42,5 +45,13 @@ export class AuthController {
   @UseGuards(FtAuthGuard)
   redirectFt(@Res() response: Response) {
     response.redirect(`http://${domainName}/profile`);
+  }
+
+  @Get('logout')
+  logout(@Request() req, @Res() response: Response): any {
+    req.session.destroy();
+    console.log("Successful logout");
+    response.redirect(`http://${domainName}/login`);
+    // return { msg: 'The user session ended'};
   }
 }

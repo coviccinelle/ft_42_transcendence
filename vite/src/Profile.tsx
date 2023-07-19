@@ -10,15 +10,16 @@ function Profile() {
   const navigate = useNavigate();
 
   const fetchProfile = async () => {
-    axios.get(`http://${domainName}/api/auth/status`)
+    axios.get(`http://${domainName}/api/users/me`)
     .then((res) => {
-      setImg(res.data.user.picture);
-      setFirstName(res.data.user.firstName);
-      setLastName(res.data.user.lastName);
+      console.log(res);
+      setImg(res.data.picture);
+      setFirstName(res.data.firstName);
+      setLastName(res.data.lastName);
     })
     .catch((e) => {
       console.log(e);
-      navigate("/");
+      navigate("/login");
     })
   };
 
