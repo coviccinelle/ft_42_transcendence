@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
+import { GihamburgerMenu } from 'react-icons/gi';
+import SideMenu from './components/SideMenu';
 
 interface ScreenSize {
 	width: number;
@@ -63,10 +65,14 @@ function Carrousel(): JSX.Element {
   	)
 }
 
-function Home() {
-
+function Home(): JSX.Element {
+  const [hideSideMenu, setHideSideMenu] = useState(true);
+  const handleClick = () => {
+    setHideSideMenu(!hideSideMenu);
+  };
 
 	return (
+    <>
 		<div>
 		<h1>Pooong?</h1> <br></br>
 		<ul id="home-menu">
@@ -78,6 +84,7 @@ function Home() {
 
 
 		</div>
+    </>
 	);
 }
 
