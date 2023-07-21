@@ -58,8 +58,8 @@ function Carrousel(): JSX.Element {
     	<div>
 			{stickers}
       		<ul>
-        		<li>Width: <strong>{screenSize.width}</strong></li>
-        		<li>Height: <strong>{screenSize.height}</strong></li>
+        		{/* <li>Width: <strong>{screenSize.width}</strong></li>
+        		<li>Height: <strong>{screenSize.height}</strong></li> */}
       		</ul>    
     	</div>
   	)
@@ -74,7 +74,7 @@ function Home(): JSX.Element {
 	return (
     <>
 		<div>
-		<h1>Pooong?</h1> <br></br>
+		<h1>Pooong?</h1> <br></br> <br></br> <br></br> 
 		<ul id="home-menu">
 			<li style={{ "--i": 2}}><a href="#">Don't click me</a></li>
 			<li style={{ "--i": 1}} ><a href="#">Nope, still not</a></li>
