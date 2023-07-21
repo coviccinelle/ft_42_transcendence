@@ -49,8 +49,8 @@ function Channel(props: {
 
   return (
     <div className="w-full flex flex-col">
-      <div className="flex border-b-2 py-4 px-2 justify-between">
-        <div className="py-2 px-3 text-lg font-semibold">
+      <div className="flex border-b-2 border-gray-700 py-4 px-2 justify-between">
+        <div className="py-2 px-3 text-lg font-semibold text-gray-200">
           {props.channelName}
         </div>
         <MyMenu channelName={props.channelName} />
@@ -72,7 +72,7 @@ function Channel(props: {
       <div className="pt-auto pb-3 px-4">
         <form action="submit" onSubmit={handleSubmit}>
           <input
-            className="w-full bg-gray-200 py-5 px-3 rounded-xl"
+            className="w-full border border-gray-700 bg-gray-950 py-5 px-3 rounded-xl text-gray-300 placeholder-gray-300"
             type="text"
             value={message}
             onChange={handleChange}

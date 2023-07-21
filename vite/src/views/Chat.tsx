@@ -60,8 +60,8 @@ function ChatPage() {
 
   return (
     <>
-      <div className="flex flex-row h-screen">
-        <div className="flex flex-col w-2/5 border-r-2 overflow-y-auto">
+      <div className="flex flex-row h-screen bg-gray-950">
+        <div className="flex flex-col w-2/5 border-r-2 border-gray-700 overflow-y-auto">
           <SearchChat search={search} setSearch={setSearch} />
           {filteredTabs.map((tab) => {
             return (

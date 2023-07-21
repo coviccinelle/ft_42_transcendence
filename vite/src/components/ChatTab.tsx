@@ -7,7 +7,7 @@ function ChatTab(props: {
 }) {
   return (
     <div
-      className="flex flex-row py-4 px-2 items-center border-b-2 hover:bg-gray-100 cursor-pointer"
+      className="flex flex-row py-4 px-2 items-center text-white border-b-2 border-gray-700 hover:bg-gradient-to-r hover:from-sky-950 hover:to-violet-900 cursor-pointer"
       onClick={() => {
         props.setCurrentChannel(props.id);
       }}
@@ -21,7 +21,7 @@ function ChatTab(props: {
       </div>
       <div className="w-full">
         <div className="text-lg font-semibold">{props.name}</div>{' '}
-        <span className="text-gray-500">{props.lastMessage}</span>{' '}
+        <span className="text-gray-300">{props.lastMessage}</span>{' '}
       </div>
     </div>
   );
