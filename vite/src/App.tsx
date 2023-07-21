@@ -1,7 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Home from './Home';
-import Login from './Login';
-import Profile from './Profile';
+import Home from './views/Home';
+import Login from './views/Login';
+import Profile from './views/Profile';
+import Chat from './views/Chat';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/chat" element={<Chat />} />
       </Routes>
     </BrowserRouter>
   );

@@ -45,4 +45,14 @@ export class UsersService {
   remove(id: number) {
     return this.prisma.user.delete({ where: { id } });
   }
+  
+  async getChannels(id: number) {
+    return this.prisma.channel.findMany({
+      where: {
+        members: {
+          some: {userId: id}
+        }
+      }
+    })
+  } 
 }

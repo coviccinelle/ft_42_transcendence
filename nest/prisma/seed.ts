@@ -1,5 +1,6 @@
-import { PrismaClient } from "@prisma/client";
-import { hash } from "bcrypt";
+import { PrismaClient } from '@prisma/client';
+import { hash } from 'bcrypt';
+import { use } from 'passport';
 
 const prisma = new PrismaClient();
 
@@ -22,7 +23,71 @@ async function main() {
     }
   });
 
-  console.log({user1});
+  const generalChannel = await prisma.channel.upsert({
+    where: { id: 1 },
+    update: {},
+    create: {
+      name: 'General',
+      isGroup: true,
+      isPublic: true,
+    },
+  });
+
+  const randomChannel = await prisma.channel.upsert({
+    where: { id: 2 },
+    update: {},
+    create: {
+      name: 'Random',
+      isGroup: true,
+      isPublic: true,
+    },
+  });
+
+  const memberGeneral = await prisma.member.upsert({
+    where: { id: 1 },
+    update: {},
+    create: {
+      role: 'OWNER',
+      left: false,
+      user: {
+        connect: { id: user1.id },
+      },
+      channel: {
+        connect: { id: generalChannel.id },
+      },
+    },
+  });
+
+  const memberRandom = await prisma.member.upsert({
+    where: { id: 2 },
+    update: {},
+    create: {
+      role: 'OWNER',
+      left: false,
+      user: {
+        connect: { id: user1.id },
+      },
+      channel: {
+        connect: { id: randomChannel.id },
+      },
+    },
+  });
+
+  const message = await prisma.message.upsert({
+    where: { id: 1 },
+    update: {},
+    create: {
+      content: 'Hello world',
+      author: {
+        connect: { id: memberGeneral.id },
+      },
+      channel: {
+        connect: { id: generalChannel.id },
+      },
+    },
+  });
+
+  console.log({ user1 });
 }
 
 main()

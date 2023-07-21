@@ -21,6 +21,7 @@ import {
 import { UserEntity } from './entities/user.entity';
 import { User } from './users.decorator';
 import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
+import { ChannelEntity } from '../chat/entities/channel.entity';
 
 @Controller('users')
 @ApiTags('users')
@@ -105,5 +106,11 @@ export class UsersController {
   @ApiOkResponse({ type: UserEntity })
   async remove(@Param('id', ParseIntPipe) id: number) {
     return new UserEntity(await this.usersService.remove(id));
+  }
+
+  @Get(':id/channels')
+  @ApiOkResponse({ type: ChannelEntity, isArray: true })
+  async getChannels(@Param('id', ParseIntPipe) id: number) {
+    return await this.usersService.getChannels(id);
   }
 }

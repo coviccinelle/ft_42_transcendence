@@ -6,6 +6,7 @@ import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { PassportModule } from '@nestjs/passport';
     UsersModule,
     AuthModule,
     PassportModule.register({ session: true }),
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [AppService],
