@@ -10,6 +10,7 @@ function ChatPage() {
   const [currentChannel, setCurrentChannel] = useState(1);
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState<Socket | undefined>();
+
   useEffect(() => {
     const fetchChannels = async () => {
       const channels = await api.getChannels(1);
@@ -51,34 +52,11 @@ function ChatPage() {
       setSocket(newSocket);
     };
   }, [socket, currentChannel, messages, handleIncomingMessage]);
-  // const [tabs, setTabs] = useState([
-  //   'Anniv',
-  //   'Noel',
-  //   'Test',
-  //   'Blabla',
-  //   'Salut a tous',
-  //   'Anniv',
-  //   'Noel',
-  //   'Test',
-  //   'Blabla',
-  //   'Salut a tous',
-  //   'Anniv',
-  //   'Noel',
-  // ]); // need to map chats from server
-  const [tabsFiltered, setTabsFiltered] = useState([...channels]); // need to map chats from server
   const [search, setSearch] = useState('');
 
   const filteredTabs = channels.filter((tab) => {
     return tab.name.toLowerCase().includes(search.toLowerCase());
   });
-
-  useEffect(() => {
-    if (search === '') {
-      setTabsFiltered(channels);
-    } else setTabsFiltered(filteredTabs);
-  }, [search]);
-
-  // display only the tabs that match the search
 
   return (
     <>
@@ -101,6 +79,9 @@ function ChatPage() {
           channelId={currentChannel}
           messages={messages}
           setMessages={setMessages}
+          channelName={
+            channels.find((channel) => channel.id === currentChannel)?.name
+          }
         />
       </div>
     </>

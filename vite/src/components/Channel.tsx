@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 // import MessageOther from "./MessageOther";
 import Messages from './Messages';
 import api from '../api/chat';
+import MyMenu from './Menu';
 
 function Channel(props: {
   channelId: number;
   messages: any;
   setMessages: any;
+  channelName: string;
 }) {
   const [message, setMessage] = useState('');
 
@@ -35,9 +37,28 @@ function Channel(props: {
     setMessage('');
   };
 
+  // scroll to bottom of messages
+  useEffect(() => {
+    const messages = document.getElementById('messages');
+    if (messages) {
+      messages.scrollTop = messages.scrollHeight;
+    }
+  }, [props.messages]);
+
+  const [modal, setModal] = useState(false);
+
   return (
-    <div className="w-full px-5 flex flex-col justify-between">
-      <div className="flex flex-col mt-5">
+    <div className="w-full flex flex-col">
+      <div className="flex border-b-2 py-4 px-2 justify-between">
+        <div className="py-2 px-3 text-lg font-semibold">
+          {props.channelName}
+        </div>
+        <MyMenu channelName={props.channelName} />
+      </div>
+      <div
+        id="messages"
+        className="flex-col mt-5 mx-3 h-screen overflow-y-auto overflow-y-scroll no-scrollbar"
+      >
         {props.messages.map((message: any) => {
           return (
             <Messages
@@ -48,10 +69,10 @@ function Channel(props: {
           ); // need author and avatar from server
         })}
       </div>
-      <div className="py-5">
+      <div className="pt-auto pb-3 px-4">
         <form action="submit" onSubmit={handleSubmit}>
           <input
-            className="w-full bg-gray-300 py-5 px-3 rounded-xl"
+            className="w-full bg-gray-200 py-5 px-3 rounded-xl"
             type="text"
             value={message}
             onChange={handleChange}

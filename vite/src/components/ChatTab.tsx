@@ -7,7 +7,7 @@ function ChatTab(props: {
 }) {
   return (
     <div
-      className="flex flex-row py-4 px-2 items-center border-b-2"
+      className="flex flex-row py-4 px-2 items-center border-b-2 hover:bg-gray-100 cursor-pointer"
       onClick={() => {
         props.setCurrentChannel(props.id);
       }}
