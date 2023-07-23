@@ -57,6 +57,7 @@ function Carrousel(): JSX.Element {
   	return (
     	<div>
 			{stickers}
+			{/* <Carrousele></Carrousele> */}
       		<ul>
         		{/* <li>Width: <strong>{screenSize.width}</strong></li>
         		<li>Height: <strong>{screenSize.height}</strong></li> */}
