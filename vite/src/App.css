@@ -6,6 +6,11 @@
     font-family: 'Oswald', sans-serif;
 }
 
+#sticker:hover
+{
+  transform: scale(1.8);
+}
+
 #home-menu
 {
     position: relative;
