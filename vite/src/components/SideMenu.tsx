@@ -30,4 +30,6 @@ interface SMButtonProps {
 }
 
 function SMButton(props: SMButtonProps): JSX.Element {
-    return ()
+    return (
+        <a
+            className="flex flex-1 cursor-pointer items-center space-x-3 rounded-md hover:bg-gray-700 px-2 py-1.5 text-sm font-medium text-white"
