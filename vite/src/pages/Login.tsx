@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 import { useState } from 'react';
-import { domainName } from './main';
+import { domainName } from '../main';
 import { useNavigate } from 'react-router-dom';
 
 function Login() {

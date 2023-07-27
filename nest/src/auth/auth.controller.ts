@@ -8,6 +8,7 @@ import { Response } from 'express';
 import { FtAuthGuard } from './guards/ft-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { AuthenticatedGuard } from './guards/authenticated.guard';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -53,5 +54,11 @@ export class AuthController {
     console.log("Successful logout");
     response.redirect(`http://${domainName}/login`);
     // return { msg: 'The user session ended'};
+  }
+
+  @Get('status')
+  @UseGuards(AuthenticatedGuard)
+  status(@Request() req) {
+    return req.user;
   }
 }
