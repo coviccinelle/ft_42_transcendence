@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
-// import SideMenu from '../components/SideMenu';
+import { GihamburgerMenu } from 'react-icons/gi';
+import SideMenu from './components/SideMenu';
 
 interface ScreenSize {
 	width: number;
@@ -23,7 +24,7 @@ function Sticker(props: StickerProps): JSX.Element {
 }
 
 function Carrousel(): JSX.Element {
-  const [screenSize, setScreenSize] = useState(getCurrentDimension());
+  	const [screenSize, setScreenSize] = useState(getCurrentDimension());
 	const lenStickers = 35;
 	const initAngle = (2 * Math.PI) / lenStickers;
 	const stickers = [];
