@@ -18,6 +18,11 @@
   -webkit-text-size-adjust: 100%;
 }
 
+.dark-mode :root {
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+}
+
 a {
   font-weight: 500;
   color: #646cff;
