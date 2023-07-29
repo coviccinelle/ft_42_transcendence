@@ -5,7 +5,7 @@ import { domainName } from '../main';
 
 function Game() {
   return (
-    
+    <></>
   )
 }
 
@@ -29,4 +29,4 @@ function Pong() {
   );
 }
 
-export default Pong;
+export default Game;
