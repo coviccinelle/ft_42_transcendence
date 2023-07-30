@@ -44,7 +44,7 @@ export class UsersController {
   }
 
   @Get('me')
-  @UseGuards(AuthenticatedGuard)
+  // @UseGuards(AuthenticatedGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
   async findMe(@User() user: UserEntity) {
@@ -52,7 +52,9 @@ export class UsersController {
       console.log("REQUESTING user data for: " + user.email);
       return user;
     } else {
-      throw new Error("USERS ERROR: No user found user/me (findMe())");
+      console.log('User not logged')
+      return null;
+      // throw new Error("USERS ERROR: No user found user/me (findMe())");
     }
   }
 

@@ -35,7 +35,7 @@ export class AuthController {
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
   redirectGoogle(@Res() response: Response) {
-    response.redirect(`http://${domainName}/profile`);
+    response.redirect(`http://${domainName}/`);
   }
 
   @Get('ft/login')
@@ -45,14 +45,14 @@ export class AuthController {
   @Get('ft/callback')
   @UseGuards(FtAuthGuard)
   redirectFt(@Res() response: Response) {
-    response.redirect(`http://${domainName}/profile`);
+    response.redirect(`http://${domainName}/`);
   }
 
   @Get('logout')
   logout(@Request() req, @Res() response: Response): any {
     req.session.destroy();
     console.log("Successful logout");
-    response.redirect(`http://${domainName}/login`);
+    response.redirect(`http://${domainName}/`);
     // return { msg: 'The user session ended'};
   }
 

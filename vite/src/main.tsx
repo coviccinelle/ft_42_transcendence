@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
@@ -10,3 +11,16 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <App />
   </React.StrictMode>,
 );
+
+export const client = axios.create({
+    baseURL: `http://${domainName}/api`
+});
+
+export interface UserEntity {
+  id: number;
+  email: string;
+  firstName: string;
+  lastName: string;
+  picture: string;
+  password: string;
+}

@@ -5,6 +5,18 @@ import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Game from './pages/Game';
 import './styles/App.css';
+import { UserEntity, client } from './main';
+
+export const getUser = async (): Promise<any> => {
+  const { data } = await client.get('/users/me');
+  if (!data)
+    return (null);
+  return (data);
+}
+
+export async function handleLogout() {
+  await client.get(`/auth/logout`);
+}
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
