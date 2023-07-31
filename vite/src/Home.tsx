@@ -69,7 +69,7 @@ function Home(): JSX.Element {
 
 	return (
     <>
-		<div id="center" className="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center">
+		{/* <div id="center" className="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center">
 			<h1>Pooong?</h1> <br></br> <br></br> <br></br> 
 			<ul id="home-menu">
 				<li style={{ "--i": 2}}><a href="#">Don't click me</a></li>
@@ -77,7 +77,7 @@ function Home(): JSX.Element {
 				<li style={{ "--i": 0}}><Link to="/login">Login</Link></li>
 			</ul>
 				<Carrousel />
-		</div>
+		</div> */}
     </>
 	);
 }

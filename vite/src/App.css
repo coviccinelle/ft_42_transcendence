@@ -1,17 +1,38 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 @import url('https://fonts.googleapis.com/css?family=Oswald:400,700');
-{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Oswald', sans-serif;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
 }
 
 .dark {
-  color: #fff;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: rgba(255, 255, 255, 0.87);
   background-color: #1a202c;
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
 }
 
 #sticker:hover
@@ -21,9 +42,8 @@
 
 #home-menu
 {
-    position: relative;
-    transform: skewY(-15deg);
-
+  position: relative;
+  transform: skewY(-15deg);
 }
 
 #home-menu li
@@ -117,11 +137,6 @@
   background: #FCEEB5;
 }
 
-.dark-mode {
-  background-color: #282c34;
-  color: white;
-}
-
 .mode {
   float:right;
 }
@@ -136,10 +151,6 @@
   text-align: center;
   padding: 5px;
   margin-left: 8px;
-}
-.dark{
-  background-color: #222;
-  color: #e6e6e6;
 }
 
 .logo {
