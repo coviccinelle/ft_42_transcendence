@@ -9,6 +9,11 @@
     font-family: 'Oswald', sans-serif;
 }
 
+.dark {
+  color: #fff;
+  background-color: #1a202c;
+}
+
 #sticker:hover
 {
   transform: scale(1.5);
