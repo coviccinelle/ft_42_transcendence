@@ -32,10 +32,10 @@ function App() {
       <span
         role="img"
         aria-label="dark mode"
-        className="text-2xl mr-2 cursor-pointer"
+        className="cursor-pointer"
         onClick={toggleDarkMode}
       >
-        {darkMode ? '  🌻' : '🌙'}
+        {darkMode ? '🌻' : '🌙'}
       </span>
       <label htmlFor="darkModeToggle" className="cursor-pointer"/>
       <input
