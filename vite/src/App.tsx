@@ -20,12 +20,14 @@ function App() {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
     localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
+    const htmlElement = document.querySelector('html');
+    htmlElement?.classList.toggle('dark');
   };
 
 
   return (
-    <div className={`${darkMode ? 'dark' : ''}`}>
-    <div className="flex items-center justify-center mb-4">
+    <div>
+    <div className="p-2 rounded cursor-pointer dark:bg-blue-200 bg-red-200">
       <span
         role="img"
         aria-label="dark mode"
