@@ -25,20 +25,19 @@ function App() {
   };
 
 
+
   return (
     <div>
-    <div className="p-2 rounded cursor-pointer dark:bg-blue-200 bg-red-200">
+    <div className="top-4 fixed right-4 p-2 rounded-full cursor-pointer dark:bg-yellow-200 bg-gray-600">
       <span
         role="img"
         aria-label="dark mode"
         className="text-2xl mr-2 cursor-pointer"
         onClick={toggleDarkMode}
       >
-        {darkMode ? '🌻' : '🌙'}
+        {darkMode ? '  🌻' : '🌙'}
       </span>
-      <label htmlFor="darkModeToggle" className="cursor-pointer">
-        Dark Mode
-      </label>
+      <label htmlFor="darkModeToggle" className="cursor-pointer"/>
       <input
         type="checkbox"
         id="darkModeToggle"
