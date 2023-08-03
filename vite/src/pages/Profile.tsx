@@ -1,5 +1,5 @@
 import axios from "axios";
-import { domainName } from './main';
+import { domainName } from '../main';
 import { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 

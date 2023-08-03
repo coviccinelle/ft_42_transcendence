@@ -1,9 +1,9 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import React, { useState, useEffect } from 'react';
-import Home from './Home';
-import Login from './Login';
-import Profile from './Profile';
-import './App.css';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Profile from './pages/Profile';
+import './style/App.css';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
