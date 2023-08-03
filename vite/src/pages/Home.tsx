@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
 import { GihamburgerMenu } from 'react-icons/gi';
 import SideMenu from './components/SideMenu';
+import { getUser, logoutUser } from "../App";
+import { UserEntity } from "../main";
 
 interface ScreenSize {
 	width: number;
@@ -13,6 +15,19 @@ interface StickerProps {
 	id: number;
 	angle: number;
 	screenSize: ScreenSize;
+}
+
+function LoginTile(): JSX.Element {
+	const [user, setUser] = useState<UserEntity>();
+	const tileId = { "--i": 0 } as React.CSSProperties;
+
+	useEffect(() => {
+		getUser().then(res => setUser(res));
+	}, []);
+
+	if (user === null)
+		return (<li className="login" style={tileId}><Link to="/login">Login</Link></li>);
+	return (<li className="logout" style={tileId}><a href="/api/auth/logout">Logout</a></li>);
 }
 
 function Sticker(props: StickerProps): JSX.Element {
@@ -69,12 +84,14 @@ function Home(): JSX.Element {
 
 	return (
     <>
-		<div id="center" className="fixed top-0 left-1 w-full h-full flex flex-col items-center justify-center">
+		<div id="center" className="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center">
 			<h1>Pooong?</h1> <br></br> <br></br> <br></br> 
 			<ul id="home-menu">
-				<li style={{ "--i": 2}}><a href="#">Don't click me</a></li>
-				<li style={{ "--i": 1}} ><a href="#">Nope, still not</a></li>
-				<li style={{ "--i": 0}}><Link to="/login">Login</Link></li>
+				<li style={{ "--i": 2} as React.CSSProperties}><a href="/game">Game</a></li>
+				<li style={{ "--i": 1} as React.CSSProperties} ><a href="/chat">Chat</a></li>
+				{/* If user not logged redirect to login page */}
+				<LoginTile />
+				{/* If user logged redirect to logout */}
 			</ul>
 				<Carrousel />
 		</div>

@@ -3,7 +3,20 @@ import React, { useState, useEffect } from 'react';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
+// import Game from './pages/Game';
 import './style/App.css';
+import { UserEntity, client } from './main';
+
+export const getUser = async (): Promise<any> => {
+  const { data } = await client.get('/users/me');
+  if (!data)
+    return (null);
+  return (data);
+}
+
+export async function handleLogout() {
+  await client.get(`/auth/logout`);
+}
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
