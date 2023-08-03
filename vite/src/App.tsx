@@ -29,12 +29,11 @@ function App() {
   return (
     <div>
     <div style={{zIndex: 9999}} //putting the dark mode toggle on top of everything
-    className="top-4 fixed right-4 p-2 rounded-full cursor-pointer dark:bg-yellow-200 bg-gray-600">
+    className="top-4 fixed right-4 p-2 rounded-full cursor-pointer dark:bg-yellow-200 bg-gray-600" onClick={toggleDarkMode}>
       <span
         role="img"
         aria-label="dark mode"
         className="cursor-pointer"
-        onClick={toggleDarkMode}
       >
         {darkMode ? '🌻' : '🌙'}
       </span>
