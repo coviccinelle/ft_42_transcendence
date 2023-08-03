@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import '../styles/pong.css';
+import '../styles/Game.css';
 import axios from 'axios';
 import { domainName } from '../main';
 

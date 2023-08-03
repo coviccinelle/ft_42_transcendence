@@ -3,8 +3,8 @@ import React, { useState, useEffect } from 'react';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
-// import Game from './pages/Game';
-import './style/App.css';
+import Game from './pages/Game';
+import './styles/App.css';
 import { UserEntity, client } from './main';
 
 export const getUser = async (): Promise<any> => {

@@ -1,8 +1,4 @@
 @import url('https://fonts.googleapis.com/css?family=Oswald:400,700');
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -93,6 +89,51 @@ button:focus-visible {
     z-index: var(--i);
     transition: 0.5s;
 }
+/* LOGIN / LOGOUT COLOR */
+#home-menu li.login,
+#home-menu li.login::before,
+#home-menu li.login::after
+{
+  background: #a0d15f;
+}
+
+#home-menu li.login:hover,
+#home-menu li.login:hover::after
+{
+  background: #71a32e;
+}
+#home-menu li.login:hover::before
+{
+  background: #496b18;
+}
+
+#home-menu li.login:last-child::after
+{
+  box-shadow: -120px 120px 20px #277027;
+}
+
+#home-menu li.logout,
+#home-menu li.logout::before,
+#home-menu li.logout::after
+{
+  background: #ec5e4b;
+}
+
+#home-menu li.logout:hover,
+#home-menu li.logout:hover::after
+{
+  background: #d85241;
+}
+#home-menu li.logout:hover::before
+{
+  background: #913225;
+}
+
+#home-menu li.logout:last-child::after
+{
+  box-shadow: -120px 120px 20px #863e3e;
+}
+/* ------------ */
 
 #home-menu li:hover
 {
