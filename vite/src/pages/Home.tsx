@@ -24,10 +24,10 @@ function LoginTile(): JSX.Element {
 	useEffect(() => {
 		getUser().then(res => setUser(res));
 	}, []);
-
-	if (user === null)
-		return (<li className="login" style={tileId}><Link to="/login">Login</Link></li>);
-	return (<li className="logout" style={tileId}><a href="/api/auth/logout">Logout</a></li>);
+	if (user != null)
+		return (<li className="logout" style={tileId}><a href="/api/auth/logout">Logout</a></li>);
+	return (<li className="login" style={tileId}><Link to="/login">Login</Link></li>);
+	
 }
 
 function Sticker(props: StickerProps): JSX.Element {
