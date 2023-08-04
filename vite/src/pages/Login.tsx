@@ -56,35 +56,26 @@ function Login() {
   };
 
   return (
-    <div>
-      <input
-        type="firstName"
-        placeholder="First Name"
-        value={firstName}
-        onChange={(e) => setFirstName(e.target.value)}
-      />
-      <input
-        type="lastName"
-        placeholder="Last Name"
-        value={lastName}
-        onChange={(e) => setLastName(e.target.value)}
-      />
-      <input
-        type="email"
-        placeholder="Email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleSignup}>Signup</button>
-      <button onClick={handleLogin}>Login</button>
-      <button onClick={handleLoginGoogle}>Login with Google</button>
-      <button onClick={handleLoginFt}>Login with 42</button>
+    //wrapper
+    <div className="transform -translate-y-1/2 -translate-x-1/2 absolute top-1/2 left-1/2 max-h-full max-w-[980px] mx-auto">
+      {/* container */}
+      <div className="bg-fuchsia-200 rounded-2xl p-10 box-border box-content box-border box-content pointer-events-auto">
+        {/* exit cross button */}
+        <button className="absolute top-2 right-2 bg-blue-300 hover:bg-blue-200 p-1 rounded-full w-8 h-8">X</button>
+        {/* Contents : upper and bottom */}
+        <div className="w-430 mx-auto px-40 py-40 box-border">
+          <div className="mb-20 flex items-center flex-col text-gray-700 box-border">
+            Upper
+            <p className="text-2xl">Welcome! Are you ready for the pong battle?</p>
+          
+          </div>
+          <div className="flex items-center flex-col text-gray-700 box-border">Bottom</div>
+          <button className="bg-blue-300 hover:bg-blue-200 p-3 rounded-xl w-72 transform transition-transform hover:scale-105" onClick={handleSignup}>Signup</button>
+          <button onClick={handleLogin}>Login</button>
+          <button onClick={handleLoginGoogle}>Login with Google</button>
+          <button onClick={handleLoginFt}>Login with 42</button>
+        </div>
+      </div>
     </div>
   );
 }
