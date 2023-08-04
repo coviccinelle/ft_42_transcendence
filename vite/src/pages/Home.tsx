@@ -24,6 +24,7 @@ function LoginTile(): JSX.Element {
 	useEffect(() => {
 		getUser().then(res => setUser(res));
 	}, []);
+	console.log(user);
 	if (user != null)
 		return (<li className="logout" style={tileId}><a href="/api/auth/logout">Logout</a></li>);
 	return (<li className="login" style={tileId}><Link to="/login">Login</Link></li>);
