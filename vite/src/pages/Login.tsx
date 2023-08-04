@@ -61,20 +61,24 @@ function Login() {
       {/* container */}
       <div className="bg-fuchsia-200 rounded-2xl p-10 box-border box-content box-border box-content pointer-events-auto">
         {/* exit cross button */}
+        
         <button className="absolute top-2 right-2 bg-blue-300 hover:bg-blue-200 p-1 rounded-full w-8 h-8">X</button>
         {/* Contents : upper and bottom */}
         <div className="w-430 mx-auto px-40 py-40 box-border">
           <div className="mb-20 flex items-center flex-col text-gray-700 box-border">
             Upper
-            <p className="text-2xl">Welcome! Are you ready for the pong battle?</p>
-          
+            <p className="text-2xl">Welcome back! Happy to see you back</p>
+
           </div>
           <div className="flex items-center flex-col text-gray-700 box-border">Bottom</div>
-          <button className="bg-blue-300 hover:bg-blue-200 p-3 rounded-xl w-72 transform transition-transform hover:scale-105" onClick={handleSignup}>Signup</button>
-          <button onClick={handleLogin}>Login</button>
-          <button onClick={handleLoginGoogle}>Login with Google</button>
-          <button onClick={handleLoginFt}>Login with 42</button>
-        </div>
+            <div className="mb-10 relative text-center py-4 px-12 cursor-pointer block transition-all duration-300">
+              <button className="mb-5 bg-blue-300 hover:bg-blue-200 p-3 rounded-xl w-72 transform transition-transform hover:scale-105"
+              onClick={handleSignup}>Signup</button>
+              <button className="mx-1.5" onClick={handleLogin}>Login</button>
+              <button className="mx-1.5" onClick={handleLoginGoogle}>Google</button>
+              <button className="mx-1.5" onClick={handleLoginFt}>42</button>
+            </div>
+          </div>
       </div>
     </div>
   );
