@@ -4,6 +4,7 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Game from './pages/Game';
+import P404 from './pages/P404';
 import './styles/App.css';
 import { UserEntity, client } from './main';
 
@@ -65,6 +66,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/game" element={<Game />} />
+          <Route path="*" element={<P404 />} />
         </Routes>
       </BrowserRouter>
     </div>
