@@ -13,6 +13,12 @@ export default {
       skew: {
         '15': '15deg',
       },
+      height: {
+        'screen-92': '92vh',
+      },
+      width: {
+        'screen-92': '92vw',
+      },
     },
   },
   plugins: [],
