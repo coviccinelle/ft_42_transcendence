@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
+import LeaderBoard from './pages/LeaderBoard';
 import Game from './pages/Game';
 import P404 from './pages/P404';
 import './styles/App.css';
@@ -66,6 +67,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/leaderboard" element={<LeaderBoard />} />
           <Route path="/game" element={<Game />} />
           <Route path="*" element={<P404 />} />
         </Routes>
