@@ -2,12 +2,12 @@
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 @import url('https://fonts.googleapis.com/css?family=Oswald:400,700');
-{
+/* {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
     font-family: 'Oswald', sans-serif;
-}
+} */
 
 #sticker:hover
 {
@@ -26,24 +26,24 @@
   position: relative;
   list-style: none;
   width: 200px;
-  background: #ffc750;
+  background: #ffffff;
   padding: 15px;
   z-index: var(--i);
   transition: 0.5s;
 }
 
 /* LOGIN / LOGOUT COLOR */
-#home-menu li.login,
+/* #home-menu li.login,
 #home-menu li.login::before,
 #home-menu li.login::after
 {
-  background: #a0d15f;
+  background: #e2fac0;
 }
 
 #home-menu li.login:hover,
 #home-menu li.login:hover::after
 {
-  background: #71a32e;
+  background: #9ab970;
 }
 #home-menu li.login:hover::before
 {
@@ -59,29 +59,29 @@
 #home-menu li.logout::before,
 #home-menu li.logout::after
 {
-  background: #ec5e4b;
+  background: #ffe8e5;
 }
 
 #home-menu li.logout:hover,
 #home-menu li.logout:hover::after
 {
-  background: #d85241;
+  background: #c06b60;
 }
 #home-menu li.logout:hover::before
 {
-  background: #913225;
+  background: #835751;
 }
 
 #home-menu li.logout:last-child::after
 {
   box-shadow: -120px 120px 20px #863e3e;
-}
+} */
 /* ------------ */
 
 
 #home-menu li:hover
 {
-    background: #33a3ee;
+    background: #b1b1b1;
     transform: translateX(50px);
 }
 
@@ -93,7 +93,7 @@
     left: -40px;
     width: 40px;
     height: 100%;
-    background: #ffc700;
+    background: #ffffff;
     transform-origin: right;
     transform: skewY(45deg);
     transition: 0.5s;
@@ -101,7 +101,7 @@
 
 #home-menu li:hover::before
 {
-    background: #1f5378;
+    background: #5f5f5f;
 }
 
 #home-menu li::after
@@ -112,7 +112,7 @@
     left: 0;
     width: 100%;
     height: 40px;
-    background: #ffc770;
+    background: #ffffff;
     transform-origin: bottom;
     transform: skewX(45deg);
     transition: 0.5s;
@@ -120,7 +120,7 @@
 
 #home-menu li:hover::after
 {
-    background: #33a3ee;
+    background: #999999;
 }
 
 #home-menu li a
@@ -140,7 +140,7 @@
 
 #home-menu li:last-child::after
 {
-    box-shadow: -120px 120px 20px rgba(0,0,0,0.25);
+    box-shadow: -120px 120px 20px rgba(255, 255, 255, 0.25);
 }
 
 #root {
@@ -156,12 +156,7 @@
   place-items: center;
   min-width: 320px;
   min-height: 100vh;
-  background: #FCEEB5;
-}
-
-.dark-mode {
-  background-color: #282c34;
-  color: white;
+  background: #ffffff;
 }
 
 .mode {
@@ -172,16 +167,12 @@
   top: 15px;
   right: 15px;
   cursor: pointer;
-  border: 1px solid #b8b8b8;
+  border: 1px solid #ffffff;
   border-radius: 40%;
   width: 20px;
   text-align: center;
   padding: 5px;
   margin-left: 8px;
-}
-.dark{
-  background-color: #222;
-  color: #e6e6e6;
 }
 
 .logo {
@@ -191,10 +182,10 @@
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #ffffffaa);
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em #ffffffaa);
 }
 
 h2 {

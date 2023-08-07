@@ -4,6 +4,7 @@ import { GihamburgerMenu } from 'react-icons/gi';
 import SideMenu from './components/SideMenu';
 import { getUser, logoutUser } from "../App";
 import { UserEntity } from "../main";
+import '../styles/App.css';
 
 interface ScreenSize {
 	width: number;
@@ -17,17 +18,12 @@ interface StickerProps {
 	screenSize: ScreenSize;
 }
 
-function LoginTile(): JSX.Element {
-	const [user, setUser] = useState<UserEntity>();
-	const tileId = { "--i": 0 } as React.CSSProperties;
-
-	useEffect(() => {
-		getUser().then(res => setUser(res));
-	}, []);
+function LoginTile({ user }: {user: any}): JSX.Element {
+	const loginTileId = { "--i": 0 } as React.CSSProperties;
 
 	if (user === null)
-		return (<li className="login" style={tileId}><Link to="/login">Login</Link></li>);
-	return (<li className="logout" style={tileId}><a href="/api/auth/logout">Logout</a></li>);
+		return (<li className="login" style={loginTileId}><Link to="/login">Login</Link></li>);
+	return (<li className="logout" style={loginTileId}><a href="/api/auth/logout">Logout</a></li>);
 }
 
 function Sticker(props: StickerProps): JSX.Element {
@@ -76,25 +72,63 @@ function Carrousel(): JSX.Element {
   	)
 }
 
+function SelectMenu({user}: {user: any}): JSX.Element {
+	return (
+		<ul id="home-menu">
+			<li style={{ "--i": 2} as React.CSSProperties}><a href="/game">Game</a></li>
+			<li style={{ "--i": 1} as React.CSSProperties} ><a href="/chat">Chat</a></li>
+			<LoginTile user={user}/>
+		</ul>
+	)
+}
+
+function Menu({user}: {user: any}): JSX.Element {
+	return (
+		<>
+			{/* replace by image logo */}
+			<h1>Pooong?</h1> <br></br> <br></br> <br></br>
+
+			<SelectMenu user={user}/>
+			<Carrousel />
+		</>
+	)
+}
+
+function LoadingScreen(): JSX.Element {
+	return (
+		<div className="loading-screen">
+			<div className="spinner"></div>
+		</div>
+	)
+}
+
 function Home(): JSX.Element {
-  const [hideSideMenu, setHideSideMenu] = useState(true);
-  const handleClick = () => {
-    setHideSideMenu(!hideSideMenu);
-  };
+	const [isLoading, setIsLoading] = useState(true);
+	const [user, setUser] = useState();
+
+  // const [hideSideMenu, setHideSideMenu] = useState(true);
+  // const handleClick = () => {
+  //   setHideSideMenu(!hideSideMenu);
+  // };
+
+	useEffect(() => {
+			if (isLoading)
+			{
+				getUser().then((res) => {
+					setUser(res);
+					console.log(user);
+					setIsLoading(false);
+				});
+			}
+	})
 
 	return (
     <>
-		<div id="center" className="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center">
-			<h1>Pooong?</h1> <br></br> <br></br> <br></br> 
-			<ul id="home-menu">
-				<li style={{ "--i": 2} as React.CSSProperties}><a href="/game">Game</a></li>
-				<li style={{ "--i": 1} as React.CSSProperties} ><a href="/chat">Chat</a></li>
-				{/* If user not logged redirect to login page */}
-				<LoginTile />
-				{/* If user logged redirect to logout */}
-			</ul>
-				<Carrousel />
-		</div>
+			{isLoading ?
+				<LoadingScreen />
+			:
+				<Menu user={user} />
+			}
     </>
 	);
 }

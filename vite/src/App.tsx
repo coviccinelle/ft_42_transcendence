@@ -29,6 +29,7 @@ function App() {
 
   return (
     <div className={`container mx-auto p-4 ${darkMode ? 'dark' : ''}`}>
+      {/*
       <div className="flex iteam-center justify-center mb-4">
         <span role="img" aria-label='night' className="text-2x1 mr-2">
           🌙
@@ -47,6 +48,7 @@ function App() {
         🌻
         </span>
       </div>
+      */}
 
     <BrowserRouter>
       <Routes>
