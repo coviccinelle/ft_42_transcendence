@@ -5,7 +5,7 @@ import Login from './pages/Login';
 import Profile from './pages/Profile';
 import Game from './pages/Game';
 import './styles/App.css';
-import { UserEntity, client } from './main';
+import { client } from './main';
 
 export const getUser = async (): Promise<any> => {
   const { data } = await client.get('/users/me');
@@ -22,10 +22,10 @@ function App() {
   const [darkMode, setDarkMode] = useState(false);
 
   //function toggleDarkMode
-  const toggleDarkMode = () => {
-    setDarkMode(!darkMode);
-    document.documentElement.classList.toggle('dark');
-  };
+  // const toggleDarkMode = () => {
+  //   setDarkMode(!darkMode);
+  //   document.documentElement.classList.toggle('dark');
+  // };
 
   return (
     <div className={`container mx-auto p-4 ${darkMode ? 'dark' : ''}`}>

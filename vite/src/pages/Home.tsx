@@ -3,8 +3,8 @@ import { useState, useEffect } from 'react';
 import { GihamburgerMenu } from 'react-icons/gi';
 import SideMenu from './components/SideMenu';
 import { getUser, logoutUser } from "../App";
-import { UserEntity } from "../main";
 import '../styles/App.css';
+import LoadingScreen from "../components/LoadingScreen";
 
 interface ScreenSize {
 	width: number;
@@ -94,14 +94,6 @@ function Menu({user}: {user: any}): JSX.Element {
 	)
 }
 
-function LoadingScreen(): JSX.Element {
-	return (
-		<div className="loading-screen">
-			<div className="spinner"></div>
-		</div>
-	)
-}
-
 function Home(): JSX.Element {
 	const [isLoading, setIsLoading] = useState(true);
 	const [user, setUser] = useState();
@@ -112,14 +104,14 @@ function Home(): JSX.Element {
   // };
 
 	useEffect(() => {
-			if (isLoading)
-			{
-				getUser().then((res) => {
-					setUser(res);
-					console.log(user);
-					setIsLoading(false);
-				});
-			}
+		if (isLoading)
+		{
+			getUser().then((res) => {
+				setUser(res);
+				console.log(user);
+				setIsLoading(false);
+			});
+		}
 	})
 
 	return (
