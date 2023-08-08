@@ -4,12 +4,14 @@ import ChatTab from '../components/ChatTab';
 import { useEffect, useState } from 'react';
 import api from '../api/chat';
 import { Socket, io } from 'socket.io-client';
+import ChatTabAdd from '../components/ChatTabAdd';
 
 function ChatPage() {
   const [channels, setChannels] = useState([]); // need to map channels from server
   const [currentChannel, setCurrentChannel] = useState(1);
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState<Socket | undefined>();
+  const [channelName, setChannelName] = useState('');
 
   useEffect(() => {
     const fetchChannels = async () => {
@@ -26,6 +28,10 @@ function ChatPage() {
   };
 
   useEffect(() => {
+    const channelName = channels.find(
+      (channel) => channel.id === currentChannel,
+    )?.name;
+    setChannelName(channelName || '');
     setSocket(io('/chat'));
     if (!socket) return;
     let newSocket = socket;
@@ -39,7 +45,7 @@ function ChatPage() {
       socket.disconnect();
       setSocket(undefined);
     };
-  }, [channels]);
+  }, [channels, currentChannel, socket]);
 
   useEffect(() => {
     if (!socket) return;
@@ -60,8 +66,8 @@ function ChatPage() {
 
   return (
     <>
-      <div className="flex flex-row h-screen">
-        <div className="flex flex-col w-2/5 border-r-2 overflow-y-auto">
+      <div className="flex flex-row h-screen bg-gray-950">
+        <div className="flex flex-col w-2/5 border-r-2 border-gray-700 overflow-y-auto">
           <SearchChat search={search} setSearch={setSearch} />
           {filteredTabs.map((tab) => {
             return (
@@ -74,14 +80,14 @@ function ChatPage() {
               />
             );
           })}
+          <ChatTabAdd setChannels={setChannels} channels={channels} />
         </div>
         <Channel
           channelId={currentChannel}
           messages={messages}
           setMessages={setMessages}
-          channelName={
-            channels.find((channel) => channel.id === currentChannel)?.name
-          }
+          channelName={channelName}
+          setChannelName={setChannelName}
         />
       </div>
     </>

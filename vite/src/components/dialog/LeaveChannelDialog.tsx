@@ -1,34 +1,21 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
+import { Fragment } from 'react';
 
-function MyModal() {
-  let [isOpen, setIsOpen] = useState(false);
-
-  function closeModal() {
-    setIsOpen(false);
-  }
-
-  function openModal() {
-    setIsOpen(true);
+function LeaveChannelDialog(props: {
+  leaveChannelDialog: any;
+  setLeaveChannelDialog: any;
+}) {
+  function closeDialog() {
+    props.setLeaveChannelDialog(false);
   }
 
   return (
     <>
-      <div className="fixed inset-0 flex items-center justify-center bg-blue-200">
-        <button
-          type="button"
-          onClick={openModal}
-          className="px-4 py-2 text-sm font-medium text-white bg-green-500 rounded-md hover:bg-opacity-50 duration-300 shadow-xl"
-        >
-          Open Me
-        </button>
-      </div>
-
-      <Transition appear show={isOpen} as={Fragment}>
+      <Transition appear show={props.leaveChannelDialog} as={Fragment}>
         <Dialog
           as="div"
           className="fixed inset-0 z-10 overflow-y-auto"
-          onClose={closeModal}
+          onClose={closeDialog}
         >
           <div className="min-h-screen px-4 text-center">
             <Transition.Child
@@ -43,7 +30,6 @@ function MyModal() {
               <Dialog.Overlay className="fixed inset-0" />
             </Transition.Child>
 
-            {/* This element is to trick the browser into centering the modal contents. */}
             <span
               className="inline-block h-screen align-middle"
               aria-hidden="true"
@@ -59,26 +45,25 @@ function MyModal() {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-white shadow-xl rounded-2xl">
+              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gray-800 shadow-xl rounded-2xl">
                 <Dialog.Title
                   as="h3"
-                  className="text-lg font-medium leading-6 text-gray-900"
+                  className="text-lg font-medium leading-6 text-gray-200"
                 >
-                  Modal
+                  Leaving the channel
                 </Dialog.Title>
                 <div className="mt-2">
-                  <p className="text-sm text-gray-500 border-t pt-2">
-                    This is a dialog box
-                  </p>
-                </div>
-
-                <div className="mt-4">
+                  <div className="flex flex-col">
+                    Are you sure you want to leave the channel?
+                  </div>
                   <button
-                    type="button"
-                    className="inline-flex justify-center px-4 py-2 text-sm text-red-900 bg-red-100 border border-transparent rounded-md hover:bg-red-200 duration-300"
-                    onClick={closeModal}
+                    className="mt-4 bg-red-500 hover:bg-red-600 text-red-950 font-bold py-2 px-4 rounded"
+                    onClick={() => {
+                      console.log('Leave channel');
+                      closeDialog();
+                    }}
                   >
-                    Close
+                    Leave
                   </button>
                 </div>
               </div>
@@ -90,4 +75,4 @@ function MyModal() {
   );
 }
 
-export default MyModal;
+export default LeaveChannelDialog;

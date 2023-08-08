@@ -36,4 +36,16 @@ const getChannels = async (userId: number) => {
   }
 };
 
-export default { postMessage, getMessages, getChannels };
+const putChannelName = async (channelId: number, name: string) => {
+  try {
+    const response = await axios.patch(`${API}/chat/${channelId}`, {
+      name: name,
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export default { postMessage, getMessages, getChannels, putChannelName };

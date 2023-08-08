@@ -1,9 +1,17 @@
 import { Menu } from '@headlessui/react';
 import { Transition } from '@headlessui/react';
-import MyDialog from './Modal';
-import { useState } from 'react';
 
-function MyMenu(props: { channelName: string }) {
+function MyMenu(props: {
+  channelName: string;
+  changeNameDialog: any;
+  setChangeNameDialog: any;
+  addSomeoneDialog: any;
+  setAddSomeoneDialog: any;
+  listOfUsersDialog: any;
+  setListOfUsersDialog: any;
+  leaveChannelDialog: any;
+  setLeaveChannelDialog: any;
+}) {
   {
     return (
       <div className="flex">
@@ -12,9 +20,13 @@ function MyMenu(props: { channelName: string }) {
             {({ open }) => (
               <>
                 <span className="rounded-md shadow-sm">
-                  <Menu.Button className="inline-flex justify-center w-full px-4 py-2 text-sm transition duration-150 bg-white border border-gray-300 rounded-md hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800">
+                  <Menu.Button className="inline-flex justify-center w-full px-4 py-2 text-sm transition duration-150 bg-gray-700 border border-gray-700 text-gray-200 rounded-md hover:text-gray-500 focus:outline-none focus:border-gray-4 	00 focus:shadow-outline-blue active:bg-blue-200 active:text-gray-800">
                     <span>Options</span>
-                    <svg viewBox="0 0 20 20" fill="currentColor"></svg>
+                    <svg
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      className="w-0"
+                    ></svg>
                   </Menu.Button>
                 </span>
 
@@ -29,12 +41,12 @@ function MyMenu(props: { channelName: string }) {
                 >
                   <Menu.Items
                     static
-                    className="absolute w-56 right-0 mt-2 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg outline-none"
+                    className="absolute w-56 right-0 mt-2 origin-top-right bg-gray-950 border border-gray-700 rounded-md shadow-lg outline-none"
                   >
-                    <div className="gap-1 px-4 py-3 border-b-2">
-                      <p className="text-sm">Settings for :</p>
-                      <p className="text-sm font-medium leading-5 text-blue-500">
-                        {props.channelName}
+                    <div className="px-4 py-3 border-b-2 border-gray-700 text-gray-400">
+                      <p className="text-sm truncate">
+                        Settings :{' '}
+                        <a className="text-blue-500">{props.channelName}</a>
                       </p>
                     </div>
 
@@ -44,9 +56,12 @@ function MyMenu(props: { channelName: string }) {
                           <button
                             className={`${
                               active
-                                ? 'bg-gray-100 text-gray-900'
-                                : 'text-gray-700'
+                                ? 'bg-gray-700 text-gray-200'
+                                : 'text-gray-400'
                             } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                            onClick={() => {
+                              props.setChangeNameDialog(true);
+                            }}
                           >
                             Change the name of {props.channelName}
                           </button>
@@ -58,9 +73,12 @@ function MyMenu(props: { channelName: string }) {
                             href="#add_user"
                             className={`${
                               active
-                                ? 'bg-gray-100 text-gray-900'
-                                : 'text-gray-700'
+                                ? 'bg-gray-700 text-gray-200'
+                                : 'text-gray-400'
                             } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                            onClick={() => {
+                              props.setAddSomeoneDialog(true);
+                            }}
                           >
                             Add someone to {props.channelName}
                           </a>
@@ -72,9 +90,12 @@ function MyMenu(props: { channelName: string }) {
                             href="#list_user"
                             className={`${
                               active
-                                ? 'bg-gray-100 text-gray-900'
-                                : 'text-gray-700'
+                                ? 'bg-gray-700 text-gray-200'
+                                : 'text-gray-400'
                             } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                            onClick={() => {
+                              props.setListOfUsersDialog(true);
+                            }}
                           >
                             List of users in {props.channelName}
                           </a>
@@ -86,9 +107,12 @@ function MyMenu(props: { channelName: string }) {
                             href="#leave_channel"
                             className={`${
                               active
-                                ? 'bg-gray-100 text-gray-900'
+                                ? 'bg-gray-700 text-red-600'
                                 : 'text-red-400'
                             } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                            onClick={() => {
+                              props.setLeaveChannelDialog(true);
+                            }}
                           >
                             Leave {props.channelName}
                           </a>
