@@ -5,6 +5,7 @@ import SideMenu from './components/SideMenu';
 import { getUser, logoutUser } from "../App";
 import '../styles/App.css';
 import LoadingScreen from "../components/LoadingScreen";
+import { UserEntity } from "../main";
 
 interface ScreenSize {
 	width: number;
@@ -96,7 +97,7 @@ function Menu({user}: {user: any}): JSX.Element {
 
 function Home(): JSX.Element {
 	const [isLoading, setIsLoading] = useState(true);
-	const [user, setUser] = useState();
+	const [user, setUser] = useState<UserEntity | null>();
 
   // const [hideSideMenu, setHideSideMenu] = useState(true);
   // const handleClick = () => {
@@ -106,21 +107,28 @@ function Home(): JSX.Element {
 	useEffect(() => {
 		if (isLoading)
 		{
-			getUser().then((res) => {
-				setUser(res);
-				console.log(user);
-				setIsLoading(false);
-			});
+			setTimeout(() => {
+				getUser().then((res) => {
+					setUser(res);
+					console.log(user);
+					setTimeout(() => {
+						setIsLoading(false);
+					}, 1000);
+				});
+			}, 2000);
 		}
 	})
 
 	return (
     <>
-			{isLoading ?
-				<LoadingScreen />
-			:
-				<Menu user={user} />
-			}
+			{/* <div className={`app ${isLoading ? 'loading' : ''}`}> */}
+				<div className={`curtain ${isLoading ? 'revealed' : ''}`}></div>
+				{isLoading ?
+					<LoadingScreen />
+				:
+					<Menu user={user} />
+}
+					{/* </div> */}
     </>
 	);
 }

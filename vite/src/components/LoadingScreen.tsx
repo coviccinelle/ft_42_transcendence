@@ -3,7 +3,9 @@ import '../styles/loading.css';
 function LoadingScreen(): JSX.Element {
 	return (
 		<div className="loading-screen">
-			<div className="spinner"></div>
+			<div className="paddle left"></div>
+			<div className="ball"></div>
+			<div className="paddle right"></div>
 		</div>
 	)
 }
