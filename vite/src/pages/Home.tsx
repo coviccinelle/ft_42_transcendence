@@ -107,15 +107,13 @@ function Home(): JSX.Element {
 	useEffect(() => {
 		if (isLoading)
 		{
+			getUser().then((res) => {
+				setUser(res);
+				console.log(user);
+			});
 			setTimeout(() => {
-				getUser().then((res) => {
-					setUser(res);
-					console.log(user);
-					setTimeout(() => {
-						setIsLoading(false);
-					}, 1000);
-				});
-			}, 1000);
+				setIsLoading(false);
+			}, 500);
 		}
 	})
 
