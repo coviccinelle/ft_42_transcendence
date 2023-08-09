@@ -1,12 +1,16 @@
 import '../styles/loading.css';
 
-function LoadingScreen(): JSX.Element {
+function LoadingScreen({ isLoading }: {isLoading: boolean}): JSX.Element {
 	return (
-		<div className="loading-screen">
-			<div className="paddle left"></div>
-			<div className="ball"></div>
-			<div className="paddle right"></div>
-		</div>
+		<>
+			<div className={`loading-screen ${isLoading ? '' : 'play'}`}>
+				<div className="content">
+					<div className="paddle left"></div>
+					<div className="ball"></div>
+					<div className="paddle right"></div>
+				</div>
+			</div>
+		</>
 	)
 }
 

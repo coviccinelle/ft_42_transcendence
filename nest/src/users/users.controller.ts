@@ -52,7 +52,7 @@ export class UsersController {
       console.log("REQUESTING user data for: " + user.email);
       return user;
     } else {
-      console.log('User not logged')
+      // console.log('User not logged')
       return null;
       // throw new Error("USERS ERROR: No user found user/me (findMe())");
     }

@@ -115,20 +115,14 @@ function Home(): JSX.Element {
 						setIsLoading(false);
 					}, 1000);
 				});
-			}, 2000);
+			}, 1000);
 		}
 	})
 
 	return (
     <>
-			{/* <div className={`app ${isLoading ? 'loading' : ''}`}> */}
-				<div className={`curtain ${isLoading ? 'revealed' : ''}`}></div>
-				{isLoading ?
-					<LoadingScreen />
-				:
-					<Menu user={user} />
-}
-					{/* </div> */}
+			<LoadingScreen isLoading={isLoading} />
+			<Menu user={user} />
     </>
 	);
 }
