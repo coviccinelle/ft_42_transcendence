@@ -44,7 +44,7 @@ function P404 () {
                 </p>
                 <a
             href="/"
-            class="inline-block px-5 py-3 mt-6 text-sm font-medium text-white bg-indigo-400 rounded hover:bg-indigo-500 focus:outline-none focus:ring"
+            className="inline-block px-5 py-3 mt-6 text-sm font-medium text-white bg-indigo-400 rounded hover:bg-indigo-500 focus:outline-none focus:ring"
         >
             Go Back Home
         </a>
