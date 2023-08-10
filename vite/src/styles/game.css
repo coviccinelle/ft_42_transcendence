@@ -3,3 +3,7 @@
   top: 8px;
   left: 8px
 }
+
+canvas {
+  background-color: rgb(44, 44, 44);
+}

@@ -1,9 +1,10 @@
 import { Link, useNavigate } from 'react-router-dom';
-import '../styles/pong.css';
+import '../styles/game.css';
 import { getUser } from '../App';
 import { useEffect, useState } from 'react';
 import LoadingScreen from '../components/LoadingScreen';
 import { UserEntity } from '../main';
+import { GameZone } from '../components/GameZone';
 
 
 function Pong(): JSX.Element {
@@ -15,7 +16,7 @@ function Pong(): JSX.Element {
 
       <h1>Pong</h1>
 
-      
+      <GameZone />
 
     </div>
   );
