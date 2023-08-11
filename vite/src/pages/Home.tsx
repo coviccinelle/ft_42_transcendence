@@ -31,11 +31,11 @@ function Sticker(props: StickerProps): JSX.Element {
 	const xPos = props.screenSize.width / 2 + props.screenSize.radius * Math.cos(props.angle) - 100 / 2;
 	const yPos = props.screenSize.height / 2 + props.screenSize.radius * Math.sin(props.angle) - 100 / 2;
 	return (
-		<img id="sticker" className="absolute w-10 h-10 lg:w-24 lg:h-24 object-cover transform transition-transform hover:scale-150" style={{left: xPos, top: yPos}} src={`./src/assets/duckie_bg_rm/sticker${props.id}.png`} />
+		<img id="sticker" className="unselectable absolute w-10 h-10 lg:w-24 lg:h-24 object-cover transform transition-transform hover:scale-150" style={{left: xPos, top: yPos}} src={`./src/assets/duckie_bg_rm/sticker${props.id}.png`} />
 	)
 }
 
-function Carrousel(): JSX.Element {
+function Carrousel({className}: {className?: string}): JSX.Element {
   	const [screenSize, setScreenSize] = useState(getCurrentDimension());
 	const lenStickers = 35;
 	const initAngle = (2 * Math.PI) / lenStickers;
@@ -67,7 +67,7 @@ function Carrousel(): JSX.Element {
   	}, [screenSize])
 
   	return (
-    	<div>
+    	<div className={className}>
 			{stickers} 
     	</div>
   	)
@@ -90,7 +90,7 @@ function Menu({user}: {user: any}): JSX.Element {
 			<h1>Pooong?</h1> <br></br> <br></br> <br></br>
 
 			<SelectMenu user={user}/>
-			<Carrousel />
+			<Carrousel className="unselectable" />
 		</>
 	)
 }

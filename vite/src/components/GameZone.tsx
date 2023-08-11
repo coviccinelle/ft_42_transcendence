@@ -13,33 +13,40 @@ export const GameZone = () => {
     width: window.innerWidth - 200,
     height: window.innerHeight - 200
   });
+  const middleY = windowSize.height / 2 - PADDLE_HEIGHT / 2;
 
-  const updateGameSize = () => {
-    setWindowSize({
-      width: window.innerWidth - 200,
-      height: window.innerHeight - 200,
-    });
-  }
-
-  useEffect(() => {
-    window.addEventListener('resize', updateGameSize);
-    if (canvasRef.current) {
+  function updateGameSize() {
+    if (canvasRef.current)
+    {
       const ctx = canvasRef.current.getContext("2d");
-      const middleY = windowSize.height / 2 - PADDLE_HEIGHT / 2;
+      setWindowSize({
+        width: window.innerWidth - 200,
+        height: window.innerHeight - 200,
+      });
       paddle(ctx, 10, middleY);
       paddle(ctx, windowSize.width - PADDLE_WIDTH - 10, middleY);
     }
+  }
 
+  useEffect(() => {
+    if (canvasRef.current) {
+      const ctx = canvasRef.current.getContext("2d");
+      if (ctx)
+      {
+        window.addEventListener('resize', updateGameSize);
+        paddle(ctx, 10, middleY);
+        paddle(ctx, windowSize.width - PADDLE_WIDTH - 10, middleY);
+      }
+    }
     return (() => {
       window.removeEventListener('resize', updateGameSize);
-    })
+    });
   }, []);
 
   return (
     <>
       <canvas id="gamezone" ref={canvasRef}
         width={windowSize.width} height={windowSize.height}
-        style={{ border: "2px solid white" }}
       />
     </>
   )

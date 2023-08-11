@@ -1,9 +1,18 @@
 .topbar {
   position: absolute;
   top: 8px;
-  left: 8px
+  left: 8px;
+}
+
+.link-style {
+  padding: 4px 10px;
+  margin: 4px 4px;
+  /* border: white 2px solid; */
+  background-color: rgb(150, 150, 150);
+  color: black;
 }
 
 canvas {
   background-color: rgb(44, 44, 44);
+  outline: 2px solid white;
 }

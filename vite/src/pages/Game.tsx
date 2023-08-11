@@ -11,10 +11,13 @@ function Pong(): JSX.Element {
   return (
     <div className="pong">
       <div className="topbar">
-        <Link to="/">Home</Link>
+        <Link className={"link-style"} to="/">Home</Link>
+        <Link className={"link-style"} to="/profile">Profile</Link>
       </div>
 
-      <h1>Pong</h1>
+      {/* change to score */}
+      <h1>0 - 0</h1>
+      {/* --------------- */}
 
       <GameZone />
 
@@ -32,22 +35,22 @@ function Game(): JSX.Element {
     {
       getUser().then((res) => {
         setUser(res)
-        console.log(user);
-        setIsLoading(false);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 500);
       });
-      if (user === null)
-      // ? Pop-up login qui dit "you need to login to play..." ?
-        navigate('/login');
     }
   }, [isLoading, user]);
 
+  // ? Pop-up login qui dit "you need to login to play..." ?
+  console.log(user);
+  if (user === null)
+    navigate('/login');
+
   return (
     <>
-      {isLoading ?
-        <LoadingScreen />
-      :
-        <Pong />
-      }
+      <LoadingScreen isLoading={isLoading} />
+      <Pong />
     </>
   )
 }

@@ -19,6 +19,7 @@
 }
 
 a {
+  user-select: none;
   font-weight: 500;
   color: #ffffff;
   text-decoration: inherit;
@@ -37,8 +38,14 @@ body {
 }
 
 h1 {
+  user-select: none;
+  /* display: none; */
   font-size: 3.2em;
   line-height: 1.1;
+}
+
+br {
+  user-select: none;
 }
 
 button {
