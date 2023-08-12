@@ -49,7 +49,7 @@ export class UsersController {
   @ApiOkResponse({ type: UserEntity })
   async findMe(@User() user: UserEntity) {
     if (user) {
-      console.log("REQUESTING user data for: " + user.email);
+      // console.log("REQUESTING user data for: " + user.email);
       return user;
     } else {
       // console.log('User not logged')

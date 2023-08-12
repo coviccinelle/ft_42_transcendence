@@ -34,6 +34,7 @@ export const GameZone = () => {
       if (ctx)
       {
         window.addEventListener('resize', updateGameSize);
+        ctx.scale()
         paddle(ctx, 10, middleY);
         paddle(ctx, windowSize.width - PADDLE_WIDTH - 10, middleY);
       }
