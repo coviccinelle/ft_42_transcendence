@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { hash } from 'bcrypt';
+import { connect } from 'http2';
 
 export const roundsOfHashing = 10;
 
@@ -18,8 +19,20 @@ export class UsersService {
       );
       createUserDto.password = hashedPassword;
     }
-
-    return this.prisma.user.create({ data: createUserDto });
+    const newUser = await this.prisma.user.create({ data: createUserDto });
+    //Auto join general channel
+    await this.prisma.member.create({
+      data: {
+        role: "REGULAR",
+        user: {
+          connect: { id: newUser.id },
+        },
+        channel: {
+          connect: { id: 1 },
+        }
+      }
+    });
+    return newUser;
   }
 
   findAll() {
@@ -46,15 +59,5 @@ export class UsersService {
 
   remove(id: number) {
     return this.prisma.user.delete({ where: { id } });
-  }
-
-  async getChannels(id: number) {
-    return this.prisma.channel.findMany({
-      where: {
-        members: {
-          some: { userId: id },
-        },
-      },
-    });
   }
 }

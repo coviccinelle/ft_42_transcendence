@@ -26,7 +26,9 @@ function Channel(props: {
       const messages = await api.getMessages(props.channelId);
       props.setMessages(messages);
     };
-    fetchMessages();
+    if (props.channelId) {
+      fetchMessages();
+    }
   }, [props.channelId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,7 +37,7 @@ function Channel(props: {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    api.postMessage(message, props.channelId, 1); // need to get channelId and authorId from server
+    api.postMessage(message, props.channelId); // need to get channelId and authorId from server
     // console.log(messages);
     setMessage('');
   };

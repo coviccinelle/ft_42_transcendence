@@ -6,9 +6,4 @@ export class CreateMessageDto {
   @IsNotEmpty()
   @ApiProperty()
   content: string;
-
-  @ApiProperty()
-  @IsNotEmpty()
-  @IsInt()
-  authorId: number;
 }

@@ -8,15 +8,20 @@ import ChatTabAdd from '../components/ChatTabAdd';
 
 function ChatPage() {
   const [channels, setChannels] = useState([]); // need to map channels from server
-  const [currentChannel, setCurrentChannel] = useState(1);
+  const [currentChannel, setCurrentChannel] = useState(channels[0]);
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState<Socket | undefined>();
   const [channelName, setChannelName] = useState('');
 
   useEffect(() => {
     const fetchChannels = async () => {
-      const channels = await api.getChannels(1);
+      const channels = await api.getChannels();
       setChannels(channels);
+      if (channels && channels[0]) {
+        setCurrentChannel(channels[0].id);
+      } else {
+        setCurrentChannel(undefined);
+      }
     };
     fetchChannels();
   }, []);

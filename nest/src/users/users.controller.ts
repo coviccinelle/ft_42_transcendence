@@ -109,10 +109,4 @@ export class UsersController {
   async remove(@Param('id', ParseIntPipe) id: number) {
     return new UserEntity(await this.usersService.remove(id));
   }
-
-  @Get(':id/channels')
-  @ApiOkResponse({ type: ChannelEntity, isArray: true })
-  async getChannels(@Param('id', ParseIntPipe) id: number) {
-    return await this.usersService.getChannels(id);
-  }
 }

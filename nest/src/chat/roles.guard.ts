@@ -8,26 +8,26 @@ export class RolesGuard implements CanActivate {
   constructor(private reflector: Reflector, private prisma: PrismaService) {}
 
   async canActivate(context: ExecutionContext) {
+    const request = context.switchToHttp().getRequest();
+		const user = request.user;
+		if (!request.isAuthenticated() || !user) {
+			return false;
+		}
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
     if (!roles) {
-      return true;
-    }
-    const request = context.switchToHttp().getRequest();
-    const user = request.user;
-    const channelId = request.params.id;
-    const members = await this.prisma.member.findMany({
+			return true;
+		}
+    const channelId = +request.params.id;
+    const member = await this.prisma.member.findFirst({
       where: {
         userId: user.id,
         channelId: channelId,
       },
     });
-    if (members.length === 0) {
+    if (!member) {
       return false;
     }
-    if (members.length > 1) {
-      console.log('More than one member for given user and channel');
-    }
-    const userRole = members[0].role;
+    const userRole = member.role;
     for (const requiredRole of roles) {
       if (requiredRole === 'owner' && userRole !== 'OWNER') {
         return false;
