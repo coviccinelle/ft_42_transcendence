@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ParseIntPipe,
+  UseGuards,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CreateChannelDto } from './dto/create-channel.dto';
@@ -14,10 +15,20 @@ import { UpdateChannelDto } from './dto/update-channel.dto';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { ChannelEntity } from './entities/channel.entity';
 import { MessageEntity } from './entities/message.entity';
-import { ApiCreatedResponse, ApiOkResponse, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiTags,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import { User } from 'src/users/users.decorator';
+import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
+import { Roles } from './roles.decorator';
 
 @Controller('chat')
+@UseGuards(AuthenticatedGuard)
 @ApiTags('chat')
+@ApiBearerAuth()
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
@@ -34,11 +45,14 @@ export class ChatController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.chatService.findOne(+id);
+  @Roles('regular')
+  @ApiOkResponse({ type: ChannelEntity })
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.chatService.findOne(id);
   }
 
   @Get(':id/messages')
+  @Roles('regular')
   @ApiOkResponse({ type: MessageEntity, isArray: true })
   async getMessages(@Param('id', ParseIntPipe) id: number) {
     return await this.chatService.getMessages(id);
@@ -54,12 +68,15 @@ export class ChatController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateChannelDto: UpdateChannelDto) {
-    return this.chatService.update(+id, updateChannelDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateChannelDto: UpdateChannelDto,
+  ) {
+    return this.chatService.update(id, updateChannelDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.chatService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.chatService.remove(id);
   }
 }

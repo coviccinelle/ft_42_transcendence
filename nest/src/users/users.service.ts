@@ -11,9 +11,11 @@ export class UsersService {
   constructor(private prisma: PrismaService) {}
 
   async create(createUserDto: CreateUserDto) {
-    if (createUserDto.password)
-    {
-      const hashedPassword = await hash(createUserDto.password, roundsOfHashing);
+    if (createUserDto.password) {
+      const hashedPassword = await hash(
+        createUserDto.password,
+        roundsOfHashing,
+      );
       createUserDto.password = hashedPassword;
     }
 
@@ -45,14 +47,14 @@ export class UsersService {
   remove(id: number) {
     return this.prisma.user.delete({ where: { id } });
   }
-  
+
   async getChannels(id: number) {
     return this.prisma.channel.findMany({
       where: {
         members: {
-          some: {userId: id}
-        }
-      }
-    })
-  } 
+          some: { userId: id },
+        },
+      },
+    });
+  }
 }

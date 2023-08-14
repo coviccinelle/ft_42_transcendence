@@ -50,10 +50,10 @@ export class UsersController {
   @ApiOkResponse({ type: UserEntity })
   async findMe(@User() user: UserEntity) {
     if (user) {
-      console.log("REQUESTING user data for: " + user.email);
+      console.log('REQUESTING user data for: ' + user.email);
       return user;
     } else {
-      throw new Error("USERS ERROR: No user found user/me (findMe())");
+      throw new Error('USERS ERROR: No user found user/me (findMe())');
     }
   }
 
@@ -63,13 +63,15 @@ export class UsersController {
   @ApiOkResponse({ type: UserEntity })
   async updateMe(
     @User() user: UserEntity,
-    @Body() updateUserDto: UpdateUserDto
+    @Body() updateUserDto: UpdateUserDto,
   ) {
     if (user) {
-      console.log("UPDATING user data for: " + user.email);
-      return new UserEntity(await this.usersService.update(user.id, updateUserDto));
+      console.log('UPDATING user data for: ' + user.email);
+      return new UserEntity(
+        await this.usersService.update(user.id, updateUserDto),
+      );
     } else {
-      throw new Error("USERS ERROR: No user found to update (updateMe())");
+      throw new Error('USERS ERROR: No user found to update (updateMe())');
     }
   }
 

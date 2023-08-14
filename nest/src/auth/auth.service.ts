@@ -11,25 +11,31 @@ import { CreateUserDto } from 'src/users/dto/create-user.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly usersService: UsersService,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
-  async signup(firstName: string, lastName: string, email: string, password: string): Promise<UserEntity> {
-    console.log("Signup request: creating new user...");
+  async signup(
+    firstName: string,
+    lastName: string,
+    email: string,
+    password: string,
+  ): Promise<UserEntity> {
+    console.log('Signup request: creating new user...');
     const lowerEmail = email.toLowerCase();
     const user = await this.usersService.findOneByEmail(lowerEmail);
 
     if (user) {
-      throw new ConflictException(`User found while registering with email: ${lowerEmail}`);
+      throw new ConflictException(
+        `User found while registering with email: ${lowerEmail}`,
+      );
     }
     const newUserDto: CreateUserDto = {
       email: lowerEmail,
       firstName: firstName,
       lastName: lastName,
-      picture: "https://i.pinimg.com/originals/a4/97/d7/a497d78803c0821e1f0cdb8b8b8a6d32.jpg",
+      picture:
+        'https://i.pinimg.com/originals/a4/97/d7/a497d78803c0821e1f0cdb8b8b8a6d32.jpg',
       password: password,
-    }
+    };
     return new UserEntity(await this.usersService.create(newUserDto));
   }
 

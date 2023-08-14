@@ -13,17 +13,22 @@ import { getProfileFt } from '../utils/ft.utils';
 export class FtStrategy extends PassportStrategy(Strategy, 'ft') {
   constructor(
     private readonly usersService: UsersService,
-    private readonly configService: ConfigService) {
+    private readonly configService: ConfigService,
+  ) {
     super({
       clientID: configService.get<string>('FT_CLIENT_ID'),
       clientSecret: configService.get<string>('FT_CLIENT_SECRET'),
       authorizationURL: `https://api.intra.42.fr/oauth/authorize`,
-      tokenURL: "https://api.intra.42.fr/oauth/token",
+      tokenURL: 'https://api.intra.42.fr/oauth/token',
       callbackURL: `http://${domainName}/api/auth/ft/callback`,
     });
   }
-  async validate(accessToken: string, refreshToken: string,
-             profile: any, done: VerifyCallback): Promise<UserEntity> {
+  async validate(
+    accessToken: string,
+    refreshToken: string,
+    profile: any,
+    done: VerifyCallback,
+  ): Promise<UserEntity> {
     const profileData = await getProfileFt(accessToken);
 
     const user = await this.usersService.findOneByEmail(profileData.email);
@@ -31,7 +36,8 @@ export class FtStrategy extends PassportStrategy(Strategy, 'ft') {
     if (user) {
       console.log(user);
       return user;
-    } else { // If no user => Create new user
+    } else {
+      // If no user => Create new user
       const newUserDto: CreateUserDto = {
         email: profileData.email,
         firstName: profileData.first_name,
