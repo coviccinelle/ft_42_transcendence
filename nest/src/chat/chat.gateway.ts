@@ -18,13 +18,11 @@ export class ChatGateway {
     @ConnectedSocket() client: Socket,
   ) {
     client.join(channelId.toString());
-    console.log('joined channel', channelId);
   }
 
   broadcastMessage(content: string, authorId: number, channelId: number) {
     this.wss
       .in(channelId.toString())
       .emit('message', { content, authorId, channelId });
-    console.log('broadcasted message', content, authorId, channelId);
   }
 }

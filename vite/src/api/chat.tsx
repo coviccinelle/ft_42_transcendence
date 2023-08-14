@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
 
-const API = 'http://localhost:8080/api';
+const API = '/api';
 
 const postMessage = async (
   message: string,
