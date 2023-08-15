@@ -5,6 +5,7 @@ import Login from './pages/Login';
 import Profile from './pages/Profile';
 import LeaderBoard from './pages/LeaderBoard';
 import Game from './pages/Game';
+import Chat from './pages/Chat';
 import P404 from './pages/P404';
 import './styles/App.css';
 import { UserEntity, client } from './main';
@@ -68,6 +69,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/leaderboard" element={<LeaderBoard />} />
+          <Route path="/chat" element={<Chat />} />
           <Route path="/game" element={<Game />} />
           <Route path="*" element={<P404 />} />
         </Routes>

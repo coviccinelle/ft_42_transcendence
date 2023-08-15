@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom";
 import { useState, useEffect } from 'react';
-import { GihamburgerMenu } from 'react-icons/gi';
-import SideMenu from './components/SideMenu';
 import { getUser, logoutUser } from "../App";
 import { UserEntity } from "../main";
 

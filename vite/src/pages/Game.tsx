@@ -14,9 +14,7 @@ function Pong(): JSX.Element {
       </div>
 
       <h1>Pong</h1>
-
       
-
     </div>
   );
 }
