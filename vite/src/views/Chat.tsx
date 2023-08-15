@@ -27,6 +27,7 @@ function ChatPage() {
   }, []);
 
   const handleIncomingMessage = (message: any) => {
+    console.log(`New message : ${message}`);
     if (message.channelId === currentChannel) {
       setMessages([...messages, message]);
     }
@@ -40,11 +41,6 @@ function ChatPage() {
     setSocket(io('/chat'));
     if (!socket) return;
     let newSocket = socket;
-    newSocket.on('connect', () => {
-      for (const channel of channels) {
-        newSocket.emit('join', channel.id);
-      }
-    });
     setSocket(newSocket);
     return () => {
       socket.disconnect();

@@ -5,6 +5,7 @@ import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
 import * as session from 'express-session';
 import * as passport from 'passport';
 import { ConfigService } from '@nestjs/config';
+import PassportIoAdapter from './passport.adapter';
 
 export const domainName = 'localhost:8080';
 
@@ -40,16 +41,15 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
-  app.use(
-    session({
-      secret: configService.get<string>('SESSION_SECRET'),
-      saveUninitialized: false,
-      resave: false,
-      cookie: {
-        maxAge: parseInt(configService.get<string>('COOKIE_MAX_AGE')),
-      },
-    }),
-  );
+  const sessionMiddleware = session({
+    secret: configService.get<string>('SESSION_SECRET'),
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+      maxAge: parseInt(configService.get<string>('COOKIE_MAX_AGE')),
+    },
+  });
+  app.use(sessionMiddleware);
   app.use(passport.initialize());
   app.use(passport.session());
 
@@ -63,6 +63,9 @@ async function bootstrap() {
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
+  const passportIoAdapter = new PassportIoAdapter(app, sessionMiddleware);
+  app.useWebSocketAdapter(passportIoAdapter);
 
   await app.listen(3000);
 }

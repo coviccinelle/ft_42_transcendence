@@ -1,3 +1,4 @@
+import { UseGuards } from '@nestjs/common';
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -7,22 +8,33 @@ import {
   OnGatewayConnection,
 } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
+import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { MessageEntity } from './entities/message.entity';
 
 @WebSocketGateway({ namespace: 'chat' })
-export class ChatGateway {
+@UseGuards(AuthenticatedGuard)
+export class ChatGateway implements OnGatewayConnection {
+  constructor(private prisma: PrismaService) {}
   @WebSocketServer() wss: Server;
 
-  @SubscribeMessage('join')
-  handleJoin(
-    @MessageBody() channelId: number,
-    @ConnectedSocket() client: Socket,
-  ) {
-    client.join(channelId.toString());
+  async handleConnection(client: any, ...args: any[]) {
+    const user = client.request.user;
+    if (!user) {
+      client.disconnect();
+      return;
+    }
+    const members = await this.prisma.member.findMany({
+      where: {
+        userId: user.id,
+      },
+    });
+    for (const member of members) {
+      client.join(member.channelId.toString());
+    }
   }
 
-  broadcastMessage(content: string, authorId: number, channelId: number) {
-    this.wss
-      .in(channelId.toString())
-      .emit('message', { content, authorId, channelId });
+  broadcastMessage(payload: MessageEntity) {
+    this.wss.in(payload.channelId.toString()).emit('message', payload);
   }
 }

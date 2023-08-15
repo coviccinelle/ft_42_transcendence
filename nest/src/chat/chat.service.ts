@@ -24,7 +24,7 @@ export class ChatService {
     return `This action returns a #${id} channel`;
   }
 
-  async getMyChannels(user : UserEntity) {
+  async getMyChannels(user: UserEntity) {
     return this.prisma.channel.findMany({
       where: {
         members: {
@@ -40,25 +40,26 @@ export class ChatService {
     });
   }
 
-  async postMessage(id: number, createMessageDto: CreateMessageDto, user : UserEntity) {
+  async postMessage(
+    id: number,
+    createMessageDto: CreateMessageDto,
+    user: UserEntity,
+  ) {
     const member = await this.prisma.member.findFirst({
       where: {
         userId: user.id,
         channelId: id,
-      }
+      },
     });
-    this.gateway.broadcastMessage(
-      createMessageDto.content,
-      member.id,
-      id,
-    );
-    return await this.prisma.message.create({
+    const message = await this.prisma.message.create({
       data: {
         content: createMessageDto.content,
         authorId: member.id,
         channelId: id,
       },
     });
+    this.gateway.broadcastMessage(message);
+    return message;
   }
 
   update(id: number, updateChannelDto: UpdateChannelDto) {

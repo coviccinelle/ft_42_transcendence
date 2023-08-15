@@ -23,14 +23,14 @@ export class UsersService {
     //Auto join general channel
     await this.prisma.member.create({
       data: {
-        role: "REGULAR",
+        role: 'REGULAR',
         user: {
           connect: { id: newUser.id },
         },
         channel: {
           connect: { id: 1 },
-        }
-      }
+        },
+      },
     });
     return newUser;
   }

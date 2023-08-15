@@ -9,14 +9,14 @@ export class RolesGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
-		const user = request.user;
-		if (!request.isAuthenticated() || !user) {
-			return false;
-		}
+    const user = request.user;
+    if (!request.isAuthenticated() || !user) {
+      return false;
+    }
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
     if (!roles) {
-			return true;
-		}
+      return true;
+    }
     const channelId = +request.params.id;
     const member = await this.prisma.member.findFirst({
       where: {

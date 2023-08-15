@@ -67,7 +67,7 @@ export class ChatController {
   async getMessages(@Param('id', ParseIntPipe) id: number) {
     return await this.chatService.getMessages(id);
   }
-  
+
   @Post(':id/message')
   @Roles('regular')
   @ApiCreatedResponse({ type: MessageEntity })
@@ -82,8 +82,8 @@ export class ChatController {
   @Patch(':id')
   @Roles('owner')
   update(
-  @Param('id', ParseIntPipe) id: number,
-  @Body() updateChannelDto: UpdateChannelDto,
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateChannelDto: UpdateChannelDto,
   ) {
     return this.chatService.update(id, updateChannelDto);
   }
