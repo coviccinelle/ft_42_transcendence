@@ -76,10 +76,6 @@ function Carrousel(): JSX.Element {
 }
 
 function Home(): JSX.Element {
-  const [hideSideMenu, setHideSideMenu] = useState(true);
-  const handleClick = () => {
-    setHideSideMenu(!hideSideMenu);
-  };
 
 	return (
     <>
