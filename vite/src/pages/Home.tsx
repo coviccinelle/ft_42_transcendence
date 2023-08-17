@@ -86,6 +86,7 @@ function Home(): JSX.Element {
 		<div id="center" className="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center">
 			<h1>Pooong?</h1> <br></br> <br></br> <br></br> 
 			<ul id="home-menu">
+				<li style={{ "--i": 4} as React.CSSProperties}><a href="/profile">Profile</a></li>
 				<li style={{ "--i": 3} as React.CSSProperties}><a href="/game">Game</a></li>
 				<li style={{ "--i": 2} as React.CSSProperties} ><a href="/chat">Chat</a></li>
 				<li style={{ "--i": 1} as React.CSSProperties}><a href="/leaderboard">Leaderboard</a></li>
