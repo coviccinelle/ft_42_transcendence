@@ -77,11 +77,11 @@ function SignUp() {
 
         </form>
 
-        <button className="mx-3 px-2 py-2 rounded-md border border-transparent cursor-pointer hover:border-amber-200 focus:outline-4 focus:ring-amber-500 focus:border-amber-500 focus:ring-opacity-50"
+        {/* <button className="mx-3 px-2 py-2 rounded-md border border-transparent cursor-pointer hover:border-amber-200 focus:outline-4 focus:ring-amber-500 focus:border-amber-500 focus:ring-opacity-50"
           type='button' onClick={handleLoginGoogle}>Google</button>
         <button className="mx-3 px-2 py-2 rounded-md border border-transparent cursor-pointer hover:border-amber-200 focus:outline-4 focus:ring-amber-500 focus:border-amber-500 focus:ring-opacity-50"
           type='button' onClick={handleLoginFt}>42</button>
-        <br></br>
+        <br></br> */}
         <div className="mt-12 flex items-center">
           <p className="mr-16">Already have an account?</p>
           <a href="/login" className="py-1 px-1 text-blue-500">Log in</a>
