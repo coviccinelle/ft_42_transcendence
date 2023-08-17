@@ -26,19 +26,19 @@ function LoginTile(): JSX.Element {
 	if (user != null)
 		return (<li className="logout" style={tileId}><a href="/api/auth/logout">Logout</a></li>);
 	return (<li className="login" style={tileId}><Link to="/login">Login</Link></li>);
-	
+
 }
 
 function Sticker(props: StickerProps): JSX.Element {
 	const xPos = props.screenSize.width / 2 + props.screenSize.radius * Math.cos(props.angle) - 100 / 2;
 	const yPos = props.screenSize.height / 2 + props.screenSize.radius * Math.sin(props.angle) - 100 / 2;
 	return (
-		<img id="sticker" className="absolute w-10 h-10 lg:w-24 lg:h-24 object-cover transform transition-transform hover:scale-150" style={{left: xPos, top: yPos}} src={`./src/assets/duckie_bg_rm/sticker${props.id}.png`} />
+		<img id="sticker" className="absolute w-10 h-10 lg:w-24 lg:h-24 object-cover transform transition-transform hover:scale-150" style={{ left: xPos, top: yPos }} src={`./src/assets/duckie_bg_rm/sticker${props.id}.png`} />
 	)
 }
 
 function Carrousel(): JSX.Element {
-  	const [screenSize, setScreenSize] = useState(getCurrentDimension());
+	const [screenSize, setScreenSize] = useState(getCurrentDimension());
 	const lenStickers = 35;
 	const initAngle = (2 * Math.PI) / lenStickers;
 	const stickers = [];
@@ -48,55 +48,56 @@ function Carrousel(): JSX.Element {
 		currentAngle = i * initAngle;
 		stickers.push(<Sticker key={i} id={i + 1} angle={currentAngle} screenSize={screenSize} />);
 	}
-  	function getCurrentDimension(){
-    	return {
-      		width: window.innerWidth,
-      		height: window.innerHeight,
-			radius: Math.min(window.innerWidth-100, window.innerHeight-100) / 2,
-    	}
-  	}
-  
-  	useEffect(() => {
-    		const updateDimension = () => {
-      			setScreenSize(getCurrentDimension())
-    		}
-    		window.addEventListener('resize', updateDimension);
-    
-		
-    		return(() => {
-        		window.removeEventListener('resize', updateDimension);
-    		})
-  	}, [screenSize])
+	function getCurrentDimension() {
+		return {
+			width: window.innerWidth,
+			height: window.innerHeight,
+			radius: Math.min(window.innerWidth - 100, window.innerHeight - 100) / 2,
+		}
+	}
 
-  	return (
-    	<div>
-			{stickers} 
-    	</div>
-  	)
+	useEffect(() => {
+		const updateDimension = () => {
+			setScreenSize(getCurrentDimension())
+		}
+		window.addEventListener('resize', updateDimension);
+
+
+		return (() => {
+			window.removeEventListener('resize', updateDimension);
+		})
+	}, [screenSize])
+
+	return (
+		<div>
+			{stickers}
+		</div>
+	)
 }
 
 function Home(): JSX.Element {
-  const [hideSideMenu, setHideSideMenu] = useState(true);
-  const handleClick = () => {
-    setHideSideMenu(!hideSideMenu);
-  };
+	const [hideSideMenu, setHideSideMenu] = useState(true);
+	const handleClick = () => {
+		setHideSideMenu(!hideSideMenu);
+	};
 
 	return (
-    <>
-		<div id="center" className="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center">
-			<h1>Pooong?</h1> <br></br> <br></br> <br></br> 
-			<ul id="home-menu">
-				<li style={{ "--i": 4} as React.CSSProperties}><a href="/profile">Profile</a></li>
-				<li style={{ "--i": 3} as React.CSSProperties}><a href="/game">Game</a></li>
-				<li style={{ "--i": 2} as React.CSSProperties} ><a href="/chat">Chat</a></li>
-				<li style={{ "--i": 1} as React.CSSProperties}><a href="/leaderboard">Leaderboard</a></li>
-				{/* If user not logged redirect to login page */}
-				<LoginTile />
-				{/* If user logged redirect to logout */}
-			</ul>
+		<>
+			<div id="center" className="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center">
+				<h1 className="mb-16 pb-2 animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl font-black">
+					Pooong?</h1>
+				<ul id="home-menu">
+					<li style={{ "--i": 4 } as React.CSSProperties}><a href="/profile">Profile</a></li>
+					<li style={{ "--i": 3 } as React.CSSProperties}><a href="/game">Game</a></li>
+					<li style={{ "--i": 2 } as React.CSSProperties} ><a href="/chat">Chat</a></li>
+					<li style={{ "--i": 1 } as React.CSSProperties}><a href="/leaderboard">Leaderboard</a></li>
+					{/* If user not logged redirect to login page */}
+					<LoginTile />
+					{/* If user logged redirect to logout */}
+				</ul>
 				<Carrousel />
-		</div>
-    </>
+			</div>
+		</>
 	);
 }
 
