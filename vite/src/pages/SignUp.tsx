@@ -4,26 +4,30 @@ import { domainName } from '../main';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
 
-function Login() {
+function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const navigate = useNavigate();
 
-
-  const handleLogin = (event: any) => {
+  const handleSignup = (event: any) => {
     event.preventDefault();
     const formData = {
+      firstName: firstName,
+      lastName: lastName,
       email: email,
       password: password,
     };
 
     axios
-      .post(`http://${domainName}/api/auth/local/login`, formData)
+      .post(`http://${domainName}/api/auth/local/signup`, formData)
       .then((res) => {
-        console.log("GOGOGOGOGOGOGO TO PROFILE")
-        return navigate("/profile");
+        console.log("Sign up OK !")
+        return navigate("/login");
       })
       .catch((e) => {
+        // * when user is already in db (conflictException) or other errors
         console.log(e);
       });
   };
@@ -38,9 +42,18 @@ function Login() {
 
   return (
     <div className="login-box">
-		<h1 className="my-9 animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl font-black">Login</h1>
-		
-    <form>
+		<h1 className="my-9 animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl font-black">Sign Up</h1>
+		<form>
+    <div className="user-box">
+			<input type="firstName" value={firstName}
+        onChange={(e) => setFirstName(e.target.value)}/>
+			<label>First Name</label>
+		</div>
+    <div className="user-box">
+			<input type="lastName" value={lastName}
+        onChange={(e) => setLastName(e.target.value)}/>
+			<label>Last Name</label>
+		</div>
 		<div className="user-box">
 			<input type="email" value={email}
         onChange={(e) => setEmail(e.target.value)}/>
@@ -51,23 +64,20 @@ function Login() {
         onChange={(e) => setPassword(e.target.value)}/>
 			<label>Password</label>
 		</div>
-		<a type='submit' onClick={handleLogin}>
+		<a type='submit' onClick={handleSignup}>
 			<span></span>
 			<span></span>
 			<span></span>
 			<span></span>
-			Log in
+			Sign Up
 		</a>
     <br></br>
-
+    <a href='/login'>Log in</a>
 		</form>
-      
       <button className="mx-3 my-3" type='button' onClick={handleLoginGoogle}>Google</button>
       <button className="mx-3 my-3" type='button' onClick={handleLoginFt}>42</button>
-      <br></br>
-      <a className='object-right mx-3 my-3' href='/signup'>Sign up</a>
 	</div>
   );
 }
 
-export default Login;
+export default SignUp;
