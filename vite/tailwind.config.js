@@ -7,6 +7,11 @@ export default {
   darkMode: "class", //enable dark mode on the class dark added to the html element
   theme: {
     extend: {
+      backgroundImage: {
+        'flowery': "url('./src/assets/flower_field.jpg')",
+        'white_flower': "url('./src/assets/white_flower.jpg')",
+        'night_sky': "url('./src/assets/night_sky.jpg')",
+      },
       animation: {
         text: 'text 5s ease infinite',
       },
