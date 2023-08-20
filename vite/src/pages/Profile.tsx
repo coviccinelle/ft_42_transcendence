@@ -33,7 +33,7 @@ function Profile() {
 
 			<div className="w-screen items-center justify-center bg-white_flower dark:bg-night_sky">
 				<div className="py-3  items-center justify-center">
-					<p className="text-lg px-2 items-center justify-center font-semibold">{firstName} {lastName}</p>
+					<p className="text-lg px-2 items-center justify-center text-black dark:text-white font-semibold">{firstName} {lastName}</p>
 				{/* </div>
 				<div className="py-2 ml-28 items-center justify-center"> */}
 					<img className="py-2 ml-28 w-48 h-48 rounded-full mt-1" src={img} alt="Profile Avatar" />
