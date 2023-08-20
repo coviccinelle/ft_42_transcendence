@@ -7,7 +7,6 @@ import LeaderBoard from './pages/LeaderBoard';
 import Game from './pages/Game';
 import Chat from './pages/Chat';
 import SignUp from './pages/SignUp';
-import User from './pages/User';
 import P404 from './pages/P404';
 import './styles/App.css';
 import { UserEntity, client } from './main';
@@ -83,7 +82,6 @@ function App() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/game" element={<Game />} />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/user" element={<User />} />
           <Route path="*" element={<P404 />} />
         </Routes>
       </BrowserRouter>
