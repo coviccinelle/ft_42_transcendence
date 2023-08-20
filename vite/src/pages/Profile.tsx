@@ -1,6 +1,5 @@
 import { client } from '../main';
 import { useEffect, useState } from 'react';
-import { useNavigate } from "react-router-dom";
 import { getUser, handleLogout } from '../App';
 
 function Profile() {
@@ -19,10 +18,12 @@ function Profile() {
 	return (
 		<>
 			<div className="py-5 flex justify-center items-center">
-				<button className="bg-blue-500 text-white px-3 py-1 rounded-md mr-2" onClick={handleLogout}>
+				<button className="bg-blue-500 hover:bg-blue-300 text-white px-3 py-1 rounded-md mr-2 hover:text-gray-700 focus:relative" onClick={handleLogout}>
 					Logout
 				</button>
+				<button className="bg-blue-500 hover:bg-blue-300 text-white px-3 py-1 rounded-md mr-2 hover:text-gray-700 focus:relative" onClick={() => client.service('users').patch(1, { firstName: 'test' })}>
 				<a href='/'>Home</a>
+				</button>
 			</div>
 			<div className="py-3 flex flex-col items-center justify-center">
 				<p className="text-lg font-semibold">{firstName} {lastName}</p>

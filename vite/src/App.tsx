@@ -7,6 +7,7 @@ import LeaderBoard from './pages/LeaderBoard';
 import Game from './pages/Game';
 import Chat from './pages/Chat';
 import SignUp from './pages/SignUp';
+import User from './pages/User';
 import P404 from './pages/P404';
 import './styles/App.css';
 import { UserEntity, client } from './main';
@@ -30,6 +31,10 @@ function App() {
     const savedDarkMode = localStorage.getItem('darkMode');
     if (savedDarkMode) {
       setDarkMode(JSON.parse(savedDarkMode));
+      const htmlElement = document.querySelector('html');
+      if (JSON.parse(savedDarkMode)) {
+        htmlElement?.classList.add('dark'); // Apply dark mode class if savedDarkMode is true
+      }
     }
   }, []);
 
@@ -37,8 +42,14 @@ function App() {
     const newDarkMode = !darkMode;
     setDarkMode(newDarkMode);
     localStorage.setItem('darkMode', JSON.stringify(newDarkMode));
+
     const htmlElement = document.querySelector('html');
-    htmlElement?.classList.toggle('dark');
+
+    if (newDarkMode) {
+      htmlElement?.classList.add('dark'); // Apply dark mode class
+    } else {
+      htmlElement?.classList.remove('dark'); // Remove dark mode class
+    }
   };
 
 
@@ -49,7 +60,7 @@ function App() {
     className="top-4 fixed right-4 p-2 rounded-full cursor-pointer dark:bg-yellow-200 bg-gray-600" onClick={toggleDarkMode}>
       <span
         role="img"
-        aria-label="dark mode"
+        aria-label="dark"
         className="cursor-pointer"
       >
         {darkMode ? '🌻' : '🌙'}
@@ -60,7 +71,6 @@ function App() {
         id="darkModeToggle"
         className="hidden"
         onChange={toggleDarkMode}
-        checked={darkMode}
       />
     </div>
 
@@ -73,6 +83,7 @@ function App() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/game" element={<Game />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/user" element={<User />} />
           <Route path="*" element={<P404 />} />
         </Routes>
       </BrowserRouter>
