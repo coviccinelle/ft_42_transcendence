@@ -7,30 +7,8 @@ import '../styles/Login.css';
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
   const navigate = useNavigate();
 
-  const handleSignup = (event: any) => {
-    event.preventDefault();
-    const formData = {
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      password: password,
-    };
-
-    axios
-      .post(`http://${domainName}/api/auth/local/signup`, formData)
-      .then((res) => {
-        console.log("Sign up OK !")
-        return navigate("/login");
-      })
-      .catch((e) => {
-        // * when user is already in db (conflictException) or other errors
-        console.log(e);
-      });
-  };
 
   const handleLogin = (event: any) => {
     event.preventDefault();
@@ -60,29 +38,42 @@ function Login() {
 
   return (
     <div className="login-box">
-		<h2>Login</h2>
-		<form>
-		<div className="user-box">
-			<input type="text" name="" required=""/>
-			<label>Username</label>
-		</div>
-		<div className="user-box">
-			<input type="password" name="" required=""/>
-			<label>Password</label>
-		</div>
-		<a type='submit' onClick={handleLogin}>
-			<span></span>
-			<span></span>
-			<span></span>
-			<span></span>
-			Log in
-		</a>
-    <br></br>
-    <button type='submit' onClick={handleSignup}>Signup</button>
-		</form>
-      <button type='button' onClick={handleLoginGoogle}>Google</button>
-      <button type='button' onClick={handleLoginFt}>42</button>
-	</div>
+      <h1 className="mb-9 py-2 animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl font-black">
+        Login</h1>
+
+      <form>
+        <div className="user-box">
+          <input type="email" value={email}
+            onChange={(e) => setEmail(e.target.value)} />
+          <label>Email</label>
+        </div>
+        <div className="user-box">
+          <input type="password" value={password}
+            onChange={(e) => setPassword(e.target.value)} />
+          <label>Password</label>
+        </div>
+        <a type='submit' onClick={handleLogin}>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          Log in
+        </a>
+        <br></br>
+
+      </form>
+
+      <button className="mx-3 px-2 py-2 rounded-md border border-transparent cursor-pointer hover:border-amber-200 focus:outline-4 focus:ring-amber-500 focus:border-amber-500 focus:ring-opacity-50"
+        type='button' onClick={handleLoginGoogle}>Google</button>
+      <button className="mx-3 px-2 py-2 rounded-md border border-transparent cursor-pointer hover:border-amber-200 focus:outline-4 focus:ring-amber-500 focus:border-amber-500 focus:ring-opacity-50"
+        type='button' onClick={handleLoginFt}>42</button>
+      <br></br>
+      <div className="mt-12 flex items-center">
+        <p className="mr-20">Don't have an account?</p>
+        <a href="/signup" className="py-1 px-1 text-blue-500">Sign Up</a>
+      </div>
+
+    </div>
   );
 }
 

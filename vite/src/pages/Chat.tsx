@@ -90,6 +90,7 @@ function ChatPage() {
           setChannelName={setChannelName}
         />
       </div>
+      <a href="/">Home</a>
     </>
   );
 }
