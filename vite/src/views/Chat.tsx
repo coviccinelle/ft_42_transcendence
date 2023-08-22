@@ -10,10 +10,8 @@ function ChatPage() {
   const [channels, setChannels] = useState([]); // need to map channels from server
   const [currentChannel, setCurrentChannel] = useState(channels[0]);
   const [messages, setMessages] = useState([]);
-  // const [socket, setSocket] = useState<Socket | undefined>();
   const [channelName, setChannelName] = useState('');
-
-  const socket = io('/chat', { autoConnect: false });
+  const [socket, setSocket] = useState(io('/chat', { autoConnect: false }));
 
   useEffect(() => {
     const fetchChannels = async () => {
@@ -33,25 +31,28 @@ function ChatPage() {
       (channel) => channel.id === currentChannel,
     )?.name;
     setChannelName(channelName || '');
+  }, [currentChannel]);
+
+  useEffect(() => {
     socket.connect();
     return () => {
       socket.disconnect();
     };
-  }, [channels, currentChannel, socket]);
+  }, []);
 
   useEffect(() => {
     function handleIncomingMessage(message: any) {
-      console.log(`New message : ${message}`);
+      console.log(`New message : ${message.content}`);
       if (message.channelId === currentChannel) {
         setMessages([...messages, message]);
       }
     };
     function handleConnection() {
       console.log('Socket connected');
-    }
+    };
     function handleDisconnect() {
       console.log('Socket disconnected');
-    }
+    };
     socket.on('message', handleIncomingMessage);
     socket.on('connect', handleConnection);
     socket.on('disconnect', handleDisconnect);
@@ -91,6 +92,7 @@ function ChatPage() {
           setMessages={setMessages}
           channelName={channelName}
           setChannelName={setChannelName}
+          socket={socket}
         />
       </div>
     </>

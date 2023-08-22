@@ -6,4 +6,8 @@ export class CreateMessageDto {
   @IsNotEmpty()
   @ApiProperty()
   content: string;
+
+  @IsInt()
+  @ApiProperty()
+  channelId: number;
 }

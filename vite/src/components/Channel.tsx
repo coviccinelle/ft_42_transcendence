@@ -7,6 +7,7 @@ import ChangeNameDialog from './dialog/ChangeNameDialog';
 import AddSomeoneDialog from './dialog/AddSomeoneDialog';
 import ListOfUsersDialog from './dialog/ListOfUsersDialog';
 import LeaveChannelDialog from './dialog/LeaveChannelDialog';
+import { Socket } from 'socket.io-client';
 
 function Channel(props: {
   channelId: number;
@@ -14,6 +15,7 @@ function Channel(props: {
   setMessages: any;
   channelName: string;
   setChannelName: any;
+  socket: Socket;
 }) {
   const [message, setMessage] = useState('');
   const [addSomeoneDialog, setAddSomeoneDialog] = useState(false);
@@ -37,7 +39,8 @@ function Channel(props: {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    api.postMessage(message, props.channelId); // need to get channelId and authorId from server
+    api.sendMessage(message, props.channelId, props.socket);
+    // api.postMessage(message, props.channelId); // need to get channelId and authorId from server
     // console.log(messages);
     setMessage('');
   };
