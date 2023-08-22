@@ -35,6 +35,6 @@ export class ChatGateway implements OnGatewayConnection {
   }
 
   broadcastMessage(payload: MessageEntity) {
-    this.wss.in(payload.channelId.toString()).emit('message', payload);
+    this.wss.to(payload.channelId.toString()).emit('message', payload);
   }
 }

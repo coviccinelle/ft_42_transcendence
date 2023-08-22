@@ -10,8 +10,10 @@ function ChatPage() {
   const [channels, setChannels] = useState([]); // need to map channels from server
   const [currentChannel, setCurrentChannel] = useState(channels[0]);
   const [messages, setMessages] = useState([]);
-  const [socket, setSocket] = useState<Socket | undefined>();
+  // const [socket, setSocket] = useState<Socket | undefined>();
   const [channelName, setChannelName] = useState('');
+
+  const socket = io('/chat', { autoConnect: false });
 
   useEffect(() => {
     const fetchChannels = async () => {
@@ -26,41 +28,41 @@ function ChatPage() {
     fetchChannels();
   }, []);
 
-  const handleIncomingMessage = (message: any) => {
-    console.log(`New message : ${message}`);
-    if (message.channelId === currentChannel) {
-      setMessages([...messages, message]);
-    }
-  };
-
   useEffect(() => {
     const channelName = channels.find(
       (channel) => channel.id === currentChannel,
     )?.name;
     setChannelName(channelName || '');
-    setSocket(io('/chat'));
-    if (!socket) return;
-    let newSocket = socket;
-    setSocket(newSocket);
+    socket.connect();
     return () => {
       socket.disconnect();
-      setSocket(undefined);
     };
   }, [channels, currentChannel, socket]);
 
   useEffect(() => {
-    if (!socket) return;
-    let newSocket = socket;
-    newSocket.on('message', handleIncomingMessage);
-    setSocket(newSocket);
-    return () => {
-      let newSocket = socket;
-      newSocket.off('message', handleIncomingMessage);
-      setSocket(newSocket);
+    function handleIncomingMessage(message: any) {
+      console.log(`New message : ${message}`);
+      if (message.channelId === currentChannel) {
+        setMessages([...messages, message]);
+      }
     };
-  }, [socket, currentChannel, messages, handleIncomingMessage]);
-  const [search, setSearch] = useState('');
+    function handleConnection() {
+      console.log('Socket connected');
+    }
+    function handleDisconnect() {
+      console.log('Socket disconnected');
+    }
+    socket.on('message', handleIncomingMessage);
+    socket.on('connect', handleConnection);
+    socket.on('disconnect', handleDisconnect);
+    return () => {
+      socket.off('message', handleIncomingMessage);
+      socket.off('connect', handleConnection);
+      socket.off('disconnect', handleDisconnect);
+    };
+  }, [currentChannel, messages]);
 
+  const [search, setSearch] = useState('');
   const filteredTabs = channels.filter((tab) => {
     return tab.name.toLowerCase().includes(search.toLowerCase());
   });
