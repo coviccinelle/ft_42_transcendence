@@ -20,7 +20,7 @@ function MyMenu(props: {
             {({ open }) => (
               <>
                 <span className="rounded-md shadow-sm">
-                  <Menu.Button className="inline-flex justify-center w-full px-4 py-2 text-sm transition duration-150 bg-gray-700 border border-gray-700 text-gray-200 rounded-md hover:text-gray-500 focus:outline-none focus:border-gray-4 	00 focus:shadow-outline-blue active:bg-blue-200 active:text-gray-800">
+                  <Menu.Button className="inline-flex justify-center w-full px-4 py-2 text-sm transition duration-150 dark:bg-gray-900 bg-rose-100 dark:border border-gray-700 dark:text-gray-200 text-black rounded-md hover:text-gray-500 focus:outline-none focus:border-gray-4 	00 focus:shadow-outline-blue active:bg-blue-200 active:text-gray-800">
                     <span>Options</span>
                     <svg
                       viewBox="0 0 20 20"

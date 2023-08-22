@@ -1,12 +1,13 @@
-import Channel from '../components/Channel';
-import SearchChat from '../components/SearchChat';
-import ChatTab from '../components/ChatTab';
+import Channel from '../components/chat/Channel';
+import SearchChat from '../components/chat/SearchChat';
+import ChatTab from '../components/chat/ChatTab';
 import { useEffect, useState } from 'react';
 import api from '../api/chat';
 import { Socket, io } from 'socket.io-client';
-import ChatTabAdd from '../components/ChatTabAdd';
+import ChatTabAdd from '../components/chat/ChatTabAdd';
+import Navbar from '../components/Navbar';
 
-function ChatPage() {
+function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
   const [channels, setChannels] = useState([]); // need to map channels from server
   const [currentChannel, setCurrentChannel] = useState(1);
   const [messages, setMessages] = useState([]);
@@ -65,33 +66,35 @@ function ChatPage() {
   });
 
   return (
-    <>
-      <div className="flex flex-row h-screen bg-gray-950">
-        <div className="flex flex-col w-2/5 border-r-2 border-gray-700 overflow-y-auto">
-          <SearchChat search={search} setSearch={setSearch} />
-          {filteredTabs.map((tab) => {
-            return (
-              <ChatTab
-                name={tab.name}
-                lastMessage={'last message'}
-                avatar="https://img-02.stickers.cloud/packs/1da1c0da-9330-4d89-9700-8d75b9c62635/webp/65bb0543-f220-456a-ad64-2ae40431ec03.webp"
-                id={tab.id}
-                setCurrentChannel={setCurrentChannel}
-              />
-            );
-          })}
-          <ChatTabAdd setChannels={setChannels} channels={channels} />
+    <div className="flex h-screen flex-col min-h-0">
+      <Navbar darkMode={props.darkMode} toggleDarkMode={props.toggleDarkMode} />
+      <div className="flex-auto flex flex-col min-h-0 w-full">
+        <div className="flex-auto flex flex-row min-h-0">
+          <div className="flex flex-col w-2/5 border-r-2 border-gray-950 overflow-y-auto">
+            <SearchChat search={search} setSearch={setSearch} />
+            {filteredTabs.map((tab) => {
+              return (
+                <ChatTab
+                  name={tab.name}
+                  lastMessage={'last message'}
+                  avatar="https://img-02.stickers.cloud/packs/1da1c0da-9330-4d89-9700-8d75b9c62635/webp/65bb0543-f220-456a-ad64-2ae40431ec03.webp"
+                  id={tab.id}
+                  setCurrentChannel={setCurrentChannel}
+                />
+              );
+            })}
+            <ChatTabAdd setChannels={setChannels} channels={channels} />
+          </div>
+          <Channel
+            channelId={currentChannel}
+            messages={messages}
+            setMessages={setMessages}
+            channelName={channelName}
+            setChannelName={setChannelName}
+          />
         </div>
-        <Channel
-          channelId={currentChannel}
-          messages={messages}
-          setMessages={setMessages}
-          channelName={channelName}
-          setChannelName={setChannelName}
-        />
       </div>
-      <a href="/">Home</a>
-    </>
+    </div>
   );
 }
 

@@ -1,14 +1,18 @@
 import { Link } from 'react-router-dom';
 import '../styles/LeaderBoard.css';
+import Navbar from '../components/Navbar';
 
-function LeaderBoard() {
+function LeaderBoard(props: { darkMode: boolean; toggleDarkMode: any }) {
   return (
-    <div className="leaderboard">
-      <div className="topbar">
-        <Link to="/">Home</Link>
-      </div>
+    <div>
+      <Navbar darkMode={props.darkMode} toggleDarkMode={props.toggleDarkMode} />
+      <div className="leaderboard">
+        <div className="topbar">
+          <Link to="/">Home</Link>
+        </div>
 
-      <h1>LeaderBoard</h1>
+        <h1>LeaderBoard</h1>
+      </div>
     </div>
   );
 }

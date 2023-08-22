@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
-import api from '../../api/chat';
+import api from '../../../api/chat';
 
 function ChangeNameDialog(props: {
   changeNameDialog: any;

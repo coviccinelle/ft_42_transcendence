@@ -9,7 +9,6 @@ function Login() {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-
   const handleLogin = (event: any) => {
     event.preventDefault();
     const formData = {
@@ -20,8 +19,8 @@ function Login() {
     axios
       .post(`http://${domainName}/api/auth/local/login`, formData)
       .then((res) => {
-        console.log("GOGOGOGOGOGOGO TO PROFILE")
-        return navigate("/profile");
+        console.log('GOGOGOGOGOGOGO TO PROFILE');
+        return navigate('/profile');
       })
       .catch((e) => {
         console.log(e);
@@ -39,20 +38,27 @@ function Login() {
   return (
     <div className="login-box">
       <h1 className="mb-9 py-2 animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl font-black">
-        Login</h1>
+        Login
+      </h1>
 
       <form>
         <div className="user-box">
-          <input type="email" value={email}
-            onChange={(e) => setEmail(e.target.value)} />
+          <input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
           <label>Email</label>
         </div>
         <div className="user-box">
-          <input type="password" value={password}
-            onChange={(e) => setPassword(e.target.value)} />
+          <input
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
           <label>Password</label>
         </div>
-        <a type='submit' onClick={handleLogin}>
+        <a type="submit" onClick={handleLogin}>
           <span></span>
           <span></span>
           <span></span>
@@ -60,19 +66,29 @@ function Login() {
           Log in
         </a>
         <br></br>
-
       </form>
 
-      <button className="mx-3 px-2 py-2 rounded-md border border-transparent cursor-pointer hover:border-amber-200 focus:outline-4 focus:ring-amber-500 focus:border-amber-500 focus:ring-opacity-50"
-        type='button' onClick={handleLoginGoogle}>Google</button>
-      <button className="mx-3 px-2 py-2 rounded-md border border-transparent cursor-pointer hover:border-amber-200 focus:outline-4 focus:ring-amber-500 focus:border-amber-500 focus:ring-opacity-50"
-        type='button' onClick={handleLoginFt}>42</button>
+      <button
+        className="mx-3 px-2 py-2 rounded-md border border-transparent cursor-pointer hover:border-amber-200 focus:outline-4 focus:ring-amber-500 focus:border-amber-500 focus:ring-opacity-50"
+        type="button"
+        onClick={handleLoginGoogle}
+      >
+        Google
+      </button>
+      <button
+        className="mx-3 px-2 py-2 rounded-md border border-transparent cursor-pointer hover:border-amber-200 focus:outline-4 focus:ring-amber-500 focus:border-amber-500 focus:ring-opacity-50"
+        type="button"
+        onClick={handleLoginFt}
+      >
+        42
+      </button>
       <br></br>
       <div className="mt-12 flex items-center">
         <p className="mr-20">Don't have an account?</p>
-        <a href="/signup" className="py-1 px-1 text-blue-500">Sign Up</a>
+        <a href="/signup" className="py-1 px-1 text-blue-500">
+          Sign Up
+        </a>
       </div>
-
     </div>
   );
 }

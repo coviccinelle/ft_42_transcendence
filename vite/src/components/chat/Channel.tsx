@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 // import MessageOther from "./MessageOther";
 import Messages from './Messages';
-import api from '../api/chat';
+import api from '../../api/chat';
 import MyMenu from './Menu';
 import ChangeNameDialog from './dialog/ChangeNameDialog';
 import AddSomeoneDialog from './dialog/AddSomeoneDialog';
@@ -50,8 +50,8 @@ function Channel(props: {
 
   return (
     <div className="w-full flex flex-col">
-      <div className="flex border-b-2 border-gray-700 py-4 px-2 justify-between">
-        <div className="py-2 px-3 text-lg font-semibold text-gray-200">
+      <div className="flex border-b-2 border-t-2 border-gray-950 py-4 px-2 justify-between">
+        <div className="py-2 px-3 text-lg font-semibold dark:text-gray-200 text-black">
           {props.channelName}
         </div>
         <MyMenu
@@ -102,7 +102,7 @@ function Channel(props: {
       <div className="pt-auto pb-3 px-4">
         <form action="submit" onSubmit={handleSubmit}>
           <input
-            className="w-full border border-gray-700 bg-gray-950 py-5 px-3 rounded-xl text-gray-300 placeholder-gray-300"
+            className="w-full dark:border dark:border-gray-700 dark:border-light-blue-300 dark:bg-gray-950 bg-rose-100 py-5 px-3 rounded-xl dark:text-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-sky-950 focus:border-transparent"
             type="text"
             value={message}
             onChange={handleChange}
