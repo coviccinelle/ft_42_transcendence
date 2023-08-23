@@ -48,7 +48,6 @@ async function main() {
     update: {},
     create: {
       role: 'OWNER',
-      left: false,
       user: {
         connect: { id: user1.id },
       },
@@ -63,7 +62,6 @@ async function main() {
     update: {},
     create: {
       role: 'OWNER',
-      left: false,
       user: {
         connect: { id: user1.id },
       },

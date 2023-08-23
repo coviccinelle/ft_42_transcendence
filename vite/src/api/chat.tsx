@@ -1,22 +1,34 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
+import { Socket } from 'socket.io-client';
 
 const API = '/api';
 
 const postMessage = async (
   message: string,
   channelId: number,
-  authorId: number,
 ) => {
   try {
     const response = await axios.post(`${API}/chat/${channelId}/message`, {
       content: message,
-      authorId: authorId,
+      channelId: channelId,
     });
     return response.data;
   } catch (error) {
     console.error(error);
   }
 };
+
+const sendMessage = (
+  message: string,
+  channelId: number,
+  socket: Socket
+) => {
+  console.log(`Sending message ${message}`);
+  socket.emit('message', {
+    content: message,
+    channelId: channelId,
+  });
+}
 
 const getMessages = async (channelId: number) => {
   try {
@@ -27,9 +39,9 @@ const getMessages = async (channelId: number) => {
   }
 };
 
-const getChannels = async (userId: number) => {
+const getChannels = async () => {
   try {
-    const response = await axios.get(`${API}/users/${userId}/channels`);
+    const response = await axios.get(`${API}/chat/mychannels`);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -48,4 +60,4 @@ const putChannelName = async (channelId: number, name: string) => {
   }
 };
 
-export default { postMessage, getMessages, getChannels, putChannelName };
+export default { postMessage, sendMessage, getMessages, getChannels, putChannelName };

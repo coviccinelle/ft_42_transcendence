@@ -6,7 +6,7 @@ export class MessageEntity implements Message {
   constructor(partial: Partial<Message>) {
     Object.assign(this, partial);
   }
-  
+
   @ApiProperty()
   id: number;
 

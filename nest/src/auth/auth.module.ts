@@ -11,13 +11,14 @@ import { FtStrategy } from './strategies/ft.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 
 @Module({
-  imports: [
-    ConfigModule,
-    PrismaModule,
-    PassportModule,
-    UsersModule,
-  ],
+  imports: [ConfigModule, PrismaModule, PassportModule, UsersModule],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, GoogleStrategy, FtStrategy, SessionSerializer],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    GoogleStrategy,
+    FtStrategy,
+    SessionSerializer,
+  ],
 })
 export class AuthModule {}

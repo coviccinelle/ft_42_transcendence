@@ -5,7 +5,7 @@ export class ChannelEntity implements Channel {
   constructor(partial: Partial<ChannelEntity>) {
     Object.assign(this, partial);
   }
-  
+
   @ApiProperty()
   id: number;
 

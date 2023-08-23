@@ -9,58 +9,62 @@ import Navbar from '../components/Navbar';
 
 function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
   const [channels, setChannels] = useState([]); // need to map channels from server
-  const [currentChannel, setCurrentChannel] = useState(1);
+  const [currentChannel, setCurrentChannel] = useState(channels[0]);
   const [messages, setMessages] = useState([]);
-  const [socket, setSocket] = useState<Socket | undefined>();
   const [channelName, setChannelName] = useState('');
+  const [socket, setSocket] = useState(io('/chat', { autoConnect: false }));
 
   useEffect(() => {
     const fetchChannels = async () => {
-      const channels = await api.getChannels(1);
+      const channels = await api.getChannels();
       setChannels(channels);
+      if (channels && channels[0]) {
+        setCurrentChannel(channels[0].id);
+      } else {
+        setCurrentChannel(undefined);
+      }
     };
     fetchChannels();
   }, []);
-
-  const handleIncomingMessage = (message: any) => {
-    if (message.channelId === currentChannel) {
-      setMessages([...messages, message]);
-    }
-  };
 
   useEffect(() => {
     const channelName = channels.find(
       (channel) => channel.id === currentChannel,
     )?.name;
     setChannelName(channelName || '');
-    setSocket(io('/chat'));
-    if (!socket) return;
-    let newSocket = socket;
-    newSocket.on('connect', () => {
-      for (const channel of channels) {
-        newSocket.emit('join', channel.id);
-      }
-    });
-    setSocket(newSocket);
-    return () => {
-      socket.disconnect();
-      setSocket(undefined);
-    };
-  }, [channels, currentChannel, socket]);
+  }, [currentChannel]);
 
   useEffect(() => {
-    if (!socket) return;
-    let newSocket = socket;
-    newSocket.on('message', handleIncomingMessage);
-    setSocket(newSocket);
+    socket.connect();
     return () => {
-      let newSocket = socket;
-      newSocket.off('message', handleIncomingMessage);
-      setSocket(newSocket);
+      socket.disconnect();
     };
-  }, [socket, currentChannel, messages, handleIncomingMessage]);
-  const [search, setSearch] = useState('');
+  }, []);
 
+  useEffect(() => {
+    function handleIncomingMessage(message: any) {
+      console.log(`New message : ${message.content}`);
+      if (message.channelId === currentChannel) {
+        setMessages([...messages, message]);
+      }
+    };
+    function handleConnection() {
+      console.log('Socket connected');
+    };
+    function handleDisconnect() {
+      console.log('Socket disconnected');
+    };
+    socket.on('message', handleIncomingMessage);
+    socket.on('connect', handleConnection);
+    socket.on('disconnect', handleDisconnect);
+    return () => {
+      socket.off('message', handleIncomingMessage);
+      socket.off('connect', handleConnection);
+      socket.off('disconnect', handleDisconnect);
+    };
+  }, [currentChannel, messages]);
+
+  const [search, setSearch] = useState('');
   const filteredTabs = channels.filter((tab) => {
     return tab.name.toLowerCase().includes(search.toLowerCase());
   });
@@ -91,7 +95,8 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
             setMessages={setMessages}
             channelName={channelName}
             setChannelName={setChannelName}
-          />
+            socket={socket}
+            />
         </div>
       </div>
     </div>
