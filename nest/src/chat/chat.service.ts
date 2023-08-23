@@ -49,6 +49,21 @@ export class ChatService {
   getMessages(id: number) {
     return this.prisma.message.findMany({
       where: { channelId: id },
+      include: {
+        author: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                email: true,
+                firstName: true,
+                lastName: true,
+                picture: true,
+              }
+            }
+          },
+        },
+      },
     });
   }
 
