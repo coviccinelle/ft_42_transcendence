@@ -21,10 +21,12 @@ export class ChatService {
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} channel`;
+    return this.prisma.channel.findUnique({
+      where: { id: id },
+    });
   }
 
-  async getMyChannels(user: UserEntity) {
+  getMyChannels(user: UserEntity) {
     return this.prisma.channel.findMany({
       where: {
         members: {
@@ -34,8 +36,18 @@ export class ChatService {
     });
   }
 
-  async getMessages(id: number) {
-    return await this.prisma.message.findMany({
+  getUsers(id: number) {
+    return this.prisma.user.findMany({
+      where: {
+        members: {
+          some: {channelId: id},
+        },
+      },
+    })
+  }
+
+  getMessages(id: number) {
+    return this.prisma.message.findMany({
       where: { channelId: id },
     });
   }

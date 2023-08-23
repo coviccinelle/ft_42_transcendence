@@ -48,17 +48,24 @@ export class ChatController {
     return this.chatService.findPublic();
   }
 
+  @Get(':id')
+  @Roles('regular')
+  @ApiOkResponse({ type: ChannelEntity })
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.chatService.findOne(id);
+  }
+
   @Get('mychannels')
   @ApiOkResponse({ type: ChannelEntity, isArray: true })
   async getMyChannels(@User() user: UserEntity) {
     return await this.chatService.getMyChannels(user);
   }
 
-  @Get(':id')
+  @Get(':id/users')
   @Roles('regular')
-  @ApiOkResponse({ type: ChannelEntity })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.chatService.findOne(id);
+  @ApiOkResponse({ type: UserEntity })
+  getUsers(@Param('id', ParseIntPipe) id: number) {
+    return this.chatService.getUsers(id);
   }
 
   @Get(':id/messages')
