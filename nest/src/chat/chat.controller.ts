@@ -31,7 +31,6 @@ import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
 @Controller('chat')
 @ApiTags('chat')
 @UseGuards(RolesGuard)
-// @ApiCookieAuth('connect.sid')
 @ApiBearerAuth()
 export class ChatController {
   constructor(private readonly chatService: ChatService) {}
@@ -47,37 +46,37 @@ export class ChatController {
   findPublic() {
     return this.chatService.findPublic();
   }
-
-  @Get(':id')
-  @Roles('regular')
-  @ApiOkResponse({ type: ChannelEntity })
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    return await this.chatService.findOne(id);
-  }
-
+  
   @Get('mychannels')
   @ApiOkResponse({ type: ChannelEntity, isArray: true })
   async getMyChannels(@User() user: UserEntity) {
     return await this.chatService.getMyChannels(user);
   }
 
-  @Get(':id/users')
+  @Get(':id')
+  @ApiOkResponse({ type: ChannelEntity })
   @Roles('regular')
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return await this.chatService.findOne(id);
+  }
+
+  @Get(':id/users')
   @ApiOkResponse({ type: UserEntity })
+  @Roles('regular')
   getUsers(@Param('id', ParseIntPipe) id: number) {
     return this.chatService.getUsers(id);
   }
 
   @Get(':id/messages')
-  @Roles('regular')
   @ApiOkResponse({ type: MessageEntity, isArray: true })
+  @Roles('regular')
   async getMessages(@Param('id', ParseIntPipe) id: number) {
     return await this.chatService.getMessages(id);
   }
 
   @Post(':id/message')
-  @Roles('regular')
   @ApiCreatedResponse({ type: MessageEntity })
+  @Roles('regular')
   async sendMessage(
     @Param('id', ParseIntPipe) id: number,
     @Body() createMessageDto: CreateMessageDto,
@@ -87,8 +86,8 @@ export class ChatController {
   }
 
   @Patch(':id/name')
-  @Roles('admin')
   @ApiOkResponse({ type: ChannelEntity })
+  @Roles('admin')
   async updateName(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateChannelNameDto: UpdateChannelNameDto,

@@ -30,6 +30,7 @@ export class RolesGuard implements CanActivate {
     if (!roles) {
       return true;
     }
+    if (!Number.isInteger(channelId)) return false;
     const member = await this.prisma.member.findFirst({
       where: {
         userId: user.id,
