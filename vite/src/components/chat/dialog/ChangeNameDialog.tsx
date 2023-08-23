@@ -70,10 +70,10 @@ function ChangeNameDialog(props: {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gray-800 shadow-xl rounded-2xl">
+              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform dark:bg-gray-800 bg-rose-100 shadow-xl rounded-2xl">
                 <Dialog.Title
                   as="h3"
-                  className="text-lg font-medium leading-6 text-gray-200"
+                  className="text-lg font-medium leading-6 dark:text-gray-200 text-gray-900"
                 >
                   Change the name of {props.nameOfChannel}
                 </Dialog.Title>
@@ -81,7 +81,7 @@ function ChangeNameDialog(props: {
                   <form action="submit" onSubmit={handleSubmit}>
                     <input
                       type="text"
-                      className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none bg-blue-100"
+                      className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none dark:bg-blue-100 bg-white"
                       placeholder="New name"
                       value={nameOfChannel}
                       onChange={handleChange}

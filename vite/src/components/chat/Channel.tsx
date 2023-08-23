@@ -90,7 +90,10 @@ function Channel(props: {
           setLeaveChannelDialog={setLeaveChannelDialog}
         ></LeaveChannelDialog>
       </div>
-      <div className="flex-col mt-5 mx-3 h-screen overflow-y-auto overflow-y-scroll no-scrollbar">
+      <div
+        id="messages"
+        className="flex-col mt-5 mx-3 h-screen overflow-y-auto overflow-y-scroll no-scrollbar"
+      >
         {props.messages.map((message: any) => {
           return (
             <Messages

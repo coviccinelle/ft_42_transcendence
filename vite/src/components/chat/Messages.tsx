@@ -13,8 +13,9 @@ function Messages(props: { message: string; author: string; avatar: string }) {
     return (
       <div className="flex justify-start mb-4">
         <img src={props.avatar} className="object-cover h-8 w-8 rounded-full" />
-        <div className="ml-2 py-3 px-4 bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl text-white">
-          {props.message}
+        <div className="ml-2 py-3 px-4 bg-purple-200 dark:bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl dark:text-white text-black max-w-[50%]">
+          {props.author}
+          <p className="break-words">{props.message}</p>
         </div>
       </div>
     );

@@ -8,7 +8,7 @@ function ChatTabAdd(props: {
   const [createChannelDialog, setCreateChannelDialog] = useState(false);
   return (
     <div
-      className="flex flex-row py-4 px-2 items-center dark:text-white text-black border-b-2 border-gray-950 dark:hover:bg-gradient-to-r hover:bg-gradient-to-r dark:hover:from-sky-950 hover:from-amber-300 dark:hover:to-violet-900 hover:to-rose-300 cursor-pointer"
+      className="flex flex-row py-4 px-2 items-center dark:text-white text-black dark:hover:bg-gradient-to-r hover:bg-gradient-to-r dark:hover:from-sky-950 hover:from-amber-300 dark:hover:to-violet-900 hover:to-rose-300 cursor-pointer"
       onClick={() => {
         console.log('Add a chat');
         setCreateChannelDialog(true);

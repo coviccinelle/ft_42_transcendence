@@ -79,14 +79,15 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
           <div className="sm:w-1/4 w-1/6 flex flex-col border-r-2 border-gray-950 overflow-y-auto no-scrollbar">
             <SearchChat search={search} setSearch={setSearch} />
             <ChatTabAdd setChannels={setChannels} channels={channels} />
-            {filteredTabs.map((tab) => {
+            {filteredTabs.map((tab: any) => {
               return (
                 <ChatTab
                   name={tab.name}
                   lastMessage={'last message'}
                   avatar="https://img-02.stickers.cloud/packs/1da1c0da-9330-4d89-9700-8d75b9c62635/webp/65bb0543-f220-456a-ad64-2ae40431ec03.webp"
-                  id={tab.id}
-                  setCurrentChannel={setCurrentChannel}
+                  onClick={() => {
+                    setCurrentChannel(tab.id);
+                  }}
                 />
               );
             })}

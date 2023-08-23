@@ -1,5 +1,6 @@
-import { Dialog, Transition } from '@headlessui/react';
+import { Dialog, Tab, Transition } from '@headlessui/react';
 import { Fragment, useState } from 'react';
+import ChatTab from '../ChatTab';
 
 function CreateChannelDialog(props: {
   createChannelDialog: any;
@@ -7,11 +8,12 @@ function CreateChannelDialog(props: {
   channels: any;
   setChannels: any;
 }) {
-  const [checked, setChecked] = useState(false);
+  const [selected, setSelected] = useState('public');
   const [password, setPassword] = useState('');
   const [nameOfChannel, setNameOfChannel] = useState('');
   function closeDialog() {
     props.setCreateChannelDialog(false);
+    setSelected('public');
   }
 
   function handleChangePassword(e: React.ChangeEvent<HTMLInputElement>) {
@@ -69,54 +71,87 @@ function CreateChannelDialog(props: {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gray-800 shadow-xl rounded-2xl">
-                <Dialog.Title
-                  as="h3"
-                  className="text-lg font-medium leading-6 text-gray-200"
-                >
-                  Create a channel
-                </Dialog.Title>
-                <div className="mt-2">
-                  <form action="submit" onSubmit={handleSubmit}>
-                    <input
-                      type="text"
-                      className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none bg-blue-100"
-                      placeholder="Name of channel"
-                      value={nameOfChannel}
-                      onChange={handleChangeName}
-                    />
-                  </form>
-                  <div className="flex mt-2 justify-end">
-                    <span className="px-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                      Private
-                    </span>
-                    <label className="relative inline-flex items-center cursor-pointer">
-                      <input
-                        type="checkbox"
-                        value=""
-                        className="sr-only peer"
-                        checked={checked}
-                        onChange={() => {
-                          setChecked(!checked);
-                        }}
-                      />
-                      <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                    </label>
-                  </div>
-                  {checked ? (
-                    <div className="mt-2">
-                      <form action="submit" onSubmit={handleSubmit}>
-                        <input
-                          type="text"
-                          className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none bg-blue-100"
-                          placeholder="Password"
-                          value={password}
-                          onChange={handleChangePassword}
-                        />
-                      </form>
-                    </div>
-                  ) : null}
-                </div>
+              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform dark:bg-gray-800 bg-rose-100 shadow-xl rounded-2xl">
+                <Tab.Group>
+                  <Tab.List className="flex p-1 space-x-1 bg-blue-900/20 rounded-xl">
+                    <Tab
+                      className={({ selected }) =>
+                        `${
+                          selected
+                            ? 'dark:bg-blue-900 bg-rose-300 shadow dark:text-blue-100 text-amber-900'
+                            : 'text-blue-400 dark:hover:text-blue-100 hover:text-gray-800'
+                        } relative flex items-center justify-center flex-1 p-2 text-sm font-medium leading-5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-blue-200`
+                      }
+                    >
+                      <span>Create a channel</span>
+                    </Tab>
+                    <Tab
+                      className={({ selected }) =>
+                        `${
+                          selected
+                            ? 'dark:bg-blue-900 bg-rose-300 shadow dark:text-blue-100 text-amber-900'
+                            : 'text-blue-400 dark:hover:text-blue-100 hover:text-gray-800'
+                        } relative flex items-center justify-center flex-1 p-2 text-sm font-medium leading-5 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-blue-200`
+                      }
+                    >
+                      <span>Join a channel</span>
+                    </Tab>
+                  </Tab.List>
+                  <Tab.Panels>
+                    <Tab.Panel>
+                      <div className="mt-2">
+                        <form action="submit" onSubmit={handleSubmit}>
+                          <input
+                            type="text"
+                            className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none dark:bg-blue-100 bg-white"
+                            placeholder="Name of channel"
+                            value={nameOfChannel}
+                            onChange={handleChangeName}
+                          />
+                        </form>
+                        <div className="mt-2">
+                          <label className="flex cursor-pointer">
+                            <select
+                              className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none dark:bg-blue-100 bg-white"
+                              onChange={(e) => setSelected(e.target.value)}
+                            >
+                              <option value="public">Public</option>
+                              <option value="private">Private</option>
+                              <option value="protected">Protected</option>
+                            </select>
+                          </label>
+                        </div>
+                        {selected === 'protected' ? (
+                          <div className="mt-2">
+                            <label className="flex items-center cursor-pointer">
+                              <input
+                                type="password"
+                                className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none bg-blue-100"
+                                placeholder="Password"
+                                value={password}
+                                onChange={handleChangePassword}
+                              />
+                            </label>
+                          </div>
+                        ) : null}
+                      </div>
+                    </Tab.Panel>
+                    <Tab.Panel>
+                      {props.channels.map((tab: any) => {
+                        return (
+                          <ChatTab
+                            name={tab.name}
+                            lastMessage={'last message'}
+                            avatar="https://img-02.stickers.cloud/packs/1da1c0da-9330-4d89-9700-8d75b9c62635/webp/65bb0543-f220-456a-ad64-2ae40431ec03.webp"
+                            onClick={() => {
+                              console.log('join channel');
+                            }}
+                          />
+                        );
+                      })}
+                    </Tab.Panel>
+                  </Tab.Panels>
+                </Tab.Group>
               </div>
             </Transition.Child>
           </div>
