@@ -31,7 +31,6 @@ export class RankingController {
   @Get('stats/ratio')
   async getRatio() {}
 
-
   @Patch('update')
   async updatePlayers(winer: UserEntity, loser: UserEntity) {}
 

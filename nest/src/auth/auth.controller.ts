@@ -59,7 +59,7 @@ export class AuthController {
   @Get('logout')
   logout(@Request() req, @Res() response: Response): any {
     req.session.destroy();
-    console.log("Successful logout");
+    console.log('Successful logout');
     response.redirect(`http://${domainName}/`);
     // return { msg: 'The user session ended'};
   }

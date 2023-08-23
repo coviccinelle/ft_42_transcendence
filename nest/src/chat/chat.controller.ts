@@ -8,6 +8,7 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  HttpCode,
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CreateChannelDto } from './dto/create-channel.dto';
@@ -21,12 +22,14 @@ import {
   ApiTags,
   ApiCookieAuth,
   ApiBearerAuth,
+  ApiNoContentResponse,
 } from '@nestjs/swagger';
 import { User } from 'src/users/users.decorator';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { Roles } from './roles.decorator';
 import { RolesGuard } from './roles.guard';
 import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
+import { ChannelAddUserDto } from './dto/channel-add-user.dto';
 
 @Controller('chat')
 @ApiTags('chat')
@@ -46,7 +49,7 @@ export class ChatController {
   findPublic() {
     return this.chatService.findPublic();
   }
-  
+
   @Get('mychannels')
   @ApiOkResponse({ type: ChannelEntity, isArray: true })
   async getMyChannels(@User() user: UserEntity) {
@@ -88,12 +91,22 @@ export class ChatController {
   @Patch(':id/name')
   @ApiOkResponse({ type: ChannelEntity })
   @Roles('admin')
-  async updateName(
+  updateName(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateChannelNameDto: UpdateChannelNameDto,
-    @User() user: UserEntity,
   ) {
-    return await this.chatService.updateName(id, updateChannelNameDto);
+    return this.chatService.updateName(id, updateChannelNameDto);
+  }
+
+  @Patch(':id/adduser')
+  @HttpCode(204)
+  @ApiNoContentResponse()
+  @Roles('admin')
+  async addUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() channelAddUserDto: ChannelAddUserDto,
+  ) {
+    this.chatService.addUser(id, channelAddUserDto.id);
   }
 
   @Delete(':id')

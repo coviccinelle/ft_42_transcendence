@@ -40,10 +40,10 @@ export class ChatService {
     return this.prisma.user.findMany({
       where: {
         members: {
-          some: {channelId: id},
+          some: { channelId: id },
         },
       },
-    })
+    });
   }
 
   getMessages(id: number) {
@@ -76,13 +76,35 @@ export class ChatService {
 
   async updateName(id: number, updateChannelNameDto: UpdateChannelNameDto) {
     const channel = await this.prisma.channel.update({
-      where: { id: id},
+      where: { id: id },
       data: {
         name: updateChannelNameDto.name,
-      }
+      },
     });
     this.gateway.broadcastUpdateChannel(id);
     return channel;
+  }
+
+  async addUser(channelId: number, userId: number) {
+    let member = await this.prisma.member.findFirst({
+      where: {
+        userId: userId,
+        channelId: channelId,
+      },
+    });
+    if (member) return;
+    member = await this.prisma.member.create({
+      data: {
+        role: 'REGULAR',
+        user: {
+          connect: { id: userId },
+        },
+        channel: {
+          connect: { id: channelId },
+        },
+      },
+    });
+    this.gateway.broadcastUpdateUser(userId, channelId);
   }
 
   remove(id: number) {
