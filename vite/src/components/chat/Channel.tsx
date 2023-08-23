@@ -54,7 +54,7 @@ function Channel(props: {
   }, [props.messages]);
 
   return (
-    <div className="w-full flex flex-col">
+    <div className="sm:w-3/4 w-5/6 flex flex-col">
       <div className="flex border-b-2 border-t-2 border-gray-950 py-4 px-2 justify-between">
         <div className="py-2 px-3 text-lg font-semibold dark:text-gray-200 text-black">
           {props.channelName}
@@ -90,10 +90,7 @@ function Channel(props: {
           setLeaveChannelDialog={setLeaveChannelDialog}
         ></LeaveChannelDialog>
       </div>
-      <div
-        id="messages"
-        className="flex-col mt-5 mx-3 h-screen overflow-y-auto overflow-y-scroll no-scrollbar"
-      >
+      <div className="flex-col mt-5 mx-3 h-screen overflow-y-auto overflow-y-scroll no-scrollbar">
         {props.messages.map((message: any) => {
           return (
             <Messages

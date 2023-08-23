@@ -9,7 +9,7 @@ import Navbar from '../components/Navbar';
 
 function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
   const [channels, setChannels] = useState([]); // need to map channels from server
-  const [currentChannel, setCurrentChannel] = useState(channels[0]);
+  const [currentChannel, setCurrentChannel] = useState(0);
   const [messages, setMessages] = useState([]);
   const [channelName, setChannelName] = useState('');
   const [socket, setSocket] = useState(io('/chat', { autoConnect: false }));
@@ -18,11 +18,6 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
     const fetchChannels = async () => {
       const channels = await api.getChannels();
       setChannels(channels);
-      if (channels && channels[0]) {
-        setCurrentChannel(channels[0].id);
-      } else {
-        setCurrentChannel(undefined);
-      }
     };
     fetchChannels();
   }, []);
@@ -47,7 +42,7 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
       if (message.channelId === currentChannel) {
         setMessages([...messages, message]);
       }
-    };
+    }
     function handleUpdate(channelId: number) {
       console.log(`Received update for channel ${channelId}`);
       //TODO trigger update for that channel
@@ -55,10 +50,10 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
     }
     function handleConnection() {
       console.log('Socket connected');
-    };
+    }
     function handleDisconnect() {
       console.log('Socket disconnected');
-    };
+    }
     socket.on('message', handleIncomingMessage);
     socket.on('update', handleUpdate);
     socket.on('connect', handleConnection);
@@ -81,8 +76,9 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
       <Navbar darkMode={props.darkMode} toggleDarkMode={props.toggleDarkMode} />
       <div className="flex-auto flex flex-col min-h-0 w-full">
         <div className="flex-auto flex flex-row min-h-0">
-          <div className="flex flex-col w-2/5 border-r-2 border-gray-950 overflow-y-auto">
+          <div className="sm:w-1/4 w-1/6 flex flex-col border-r-2 border-gray-950 overflow-y-auto no-scrollbar">
             <SearchChat search={search} setSearch={setSearch} />
+            <ChatTabAdd setChannels={setChannels} channels={channels} />
             {filteredTabs.map((tab) => {
               return (
                 <ChatTab
@@ -94,16 +90,25 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
                 />
               );
             })}
-            <ChatTabAdd setChannels={setChannels} channels={channels} />
           </div>
-          <Channel
-            channelId={currentChannel}
-            messages={messages}
-            setMessages={setMessages}
-            channelName={channelName}
-            setChannelName={setChannelName}
-            socket={socket}
+
+          {currentChannel ? (
+            <Channel
+              channelId={currentChannel}
+              messages={messages}
+              setMessages={setMessages}
+              channelName={channelName}
+              setChannelName={setChannelName}
+              socket={socket}
             />
+          ) : (
+            <div className="flex flex-col border-t-2 border-gray-950 items-center justify-center flex-auto">
+              <div className="text-3xl font-semibold">Welcome to Chat!</div>
+              <div className="text-xl font-semibold">
+                Select a channel to start chatting
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

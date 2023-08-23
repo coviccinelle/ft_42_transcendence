@@ -14,7 +14,7 @@ function ChatTabAdd(props: {
         setCreateChannelDialog(true);
       }}
     >
-      <div className="w-1/4">
+      <div className="sm:w-1/4">
         <img
           src={
             'https://cdn.icon-icons.com/icons2/495/PNG/512/add-circle-1_icon-icons.com_48714.png'
@@ -23,8 +23,10 @@ function ChatTabAdd(props: {
           alt=""
         />
       </div>
-      <div className="w-full">
-        <div className="text-lg font-semibold">{'Create a new channel'}</div>{' '}
+      <div className="sm:w-full">
+        <div className="text-lg font-semibold hidden sm:flex">
+          {'Create a new channel'}
+        </div>{' '}
       </div>
       <CreateChannelDialog
         createChannelDialog={createChannelDialog}

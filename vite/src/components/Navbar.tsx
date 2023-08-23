@@ -7,18 +7,18 @@ function Navbar(props: { darkMode: boolean; toggleDarkMode: any }) {
           window.location.href = '/';
         }}
       >
-        <div className="flex px-4 py-2 text-sm">
+        <div className="flex px-4 py-3 text-sm">
           <span role="img">🐱</span>
         </div>
-        <p className="text-xl font-bold py-1">Pong Game</p>
+        <p className="text-xl font-bold py-2">Pong Game</p>
       </div>
       <div className="flex flex-row">
-        <div className="flex px-2 py-2 text-sm">
+        <div className="flex px-2 py-3 text-sm">
           <span role="img" aria-label="notification" className="cursor-pointer">
             🔔
           </span>
         </div>
-        <div className="flex px-2 py-2 text-sm" onClick={props.toggleDarkMode}>
+        <div className="flex px-2 py-3 text-sm" onClick={props.toggleDarkMode}>
           <span role="img" aria-label="dark" className="cursor-pointer">
             {props.darkMode ? '🌻' : '🌙'}
           </span>
@@ -30,7 +30,7 @@ function Navbar(props: { darkMode: boolean; toggleDarkMode: any }) {
             onChange={props.toggleDarkMode}
           />
         </div>
-        <div className="flex px-2 py-2 text-sm">
+        <div className="flex px-2 py-3 text-sm">
           <span role="img" aria-label="avatar" className="cursor-pointer">
             {/* TODO: Add avatar img */}
             👤

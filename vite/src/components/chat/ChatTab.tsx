@@ -12,18 +12,17 @@ function ChatTab(props: {
         props.setCurrentChannel(props.id);
       }}
     >
-      <div className="w-1/4">
+      <div className="sm:w-1/4">
         <img
           src={props.avatar} // image from group chat or other user
           className="object-cover h-12 w-12 rounded-full"
-          alt=""
         />
       </div>
-      <div className="w-full">
-        <div className="text-lg font-semibold">{props.name}</div>{' '}
-        <span className="dark:text-gray-300 text-gray-800">
+      <div className="sm:w-full">
+        <div className="text-lg font-semibold hidden sm:flex">{props.name}</div>{' '}
+        <p className="dark:text-gray-300 text-gray-800 hidden sm:flex">
           {props.lastMessage}
-        </span>{' '}
+        </p>
       </div>
     </div>
   );
