@@ -50,7 +50,7 @@ const getChannels = async () => {
 
 const putChannelName = async (channelId: number, name: string) => {
   try {
-    const response = await axios.patch(`${API}/chat/${channelId}`, {
+    const response = await axios.patch(`${API}/chat/${channelId}/name`, {
       name: name,
     });
     console.log(response.data);

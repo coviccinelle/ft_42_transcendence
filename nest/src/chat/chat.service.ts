@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { CreateMessageDto } from './dto/create-message.dto';
-import { UpdateChannelDto } from './dto/update-channel.dto';
+import { UpdateChannelNameDto } from './dto/update-channel-name.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatGateway } from './chat.gateway';
 import { UserEntity } from 'src/users/entities/user.entity';
@@ -62,8 +62,15 @@ export class ChatService {
     return message;
   }
 
-  update(id: number, updateChannelDto: UpdateChannelDto) {
-    return `This action updates a #${id} channel named ${updateChannelDto.name}`;
+  async updateName(id: number, updateChannelNameDto: UpdateChannelNameDto) {
+    const channel = await this.prisma.channel.update({
+      where: { id: id},
+      data: {
+        name: updateChannelNameDto.name,
+      }
+    });
+    this.gateway.broadcastUpdateChannel(id);
+    return channel;
   }
 
   remove(id: number) {

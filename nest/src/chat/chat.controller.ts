@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ChatService } from './chat.service';
 import { CreateChannelDto } from './dto/create-channel.dto';
-import { UpdateChannelDto } from './dto/update-channel.dto';
+import { UpdateChannelNameDto } from './dto/update-channel-name.dto';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { ChannelEntity } from './entities/channel.entity';
 import { MessageEntity } from './entities/message.entity';
@@ -79,13 +79,15 @@ export class ChatController {
     return await this.chatService.postMessage(id, createMessageDto, user);
   }
 
-  @Patch(':id')
-  @Roles('owner')
-  update(
+  @Patch(':id/name')
+  @Roles('admin')
+  @ApiOkResponse({ type: ChannelEntity })
+  async updateName(
     @Param('id', ParseIntPipe) id: number,
-    @Body() updateChannelDto: UpdateChannelDto,
+    @Body() updateChannelNameDto: UpdateChannelNameDto,
+    @User() user: UserEntity,
   ) {
-    return this.chatService.update(id, updateChannelDto);
+    return await this.chatService.updateName(id, updateChannelNameDto);
   }
 
   @Delete(':id')
