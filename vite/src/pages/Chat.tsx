@@ -82,6 +82,7 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
             {filteredTabs.map((tab: any) => {
               return (
                 <ChatTab
+                  key={tab.id}
                   name={tab.name}
                   lastMessage={'last message'}
                   avatar="https://img-02.stickers.cloud/packs/1da1c0da-9330-4d89-9700-8d75b9c62635/webp/65bb0543-f220-456a-ad64-2ae40431ec03.webp"
