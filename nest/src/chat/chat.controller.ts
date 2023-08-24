@@ -69,6 +69,15 @@ export class ChatController {
     return this.chatService.joinChannel(joinChannelDto, user);
   }
 
+  @Get(':id/leave')
+  @ApiOkResponse()
+  leaveChannel(
+    @User   () user: UserEntity,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.chatService.leaveChannel(id, user);
+  }
+
   @Get(':id')
   @ApiOkResponse({ type: ChannelEntity })
   @Roles('regular')

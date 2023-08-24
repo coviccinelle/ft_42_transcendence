@@ -84,6 +84,7 @@ export class ChatService {
         id: joinChannelDto.id,
       }
     });
+    if (!channel) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     if (channel.password) {
       if (
         !joinChannelDto.password
@@ -105,6 +106,18 @@ export class ChatService {
     });
     channel.password = null;
     return channel;
+  }
+
+  async leaveChannel(channelId: number, user: UserEntity) {
+    const member = await this.prisma.member.findFirst({
+      where: {
+        channelId: channelId,
+        userId: user.id,
+      }
+    });
+    if (!member) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    member.role = 'LEFT';
+    return member;
   }
 
   getUsers(id: number) {
@@ -149,6 +162,7 @@ export class ChatService {
         channelId: id,
       },
     });
+    if (!member) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
     const message = await this.prisma.message.create({
       data: {
         content: createMessageDto.content,
@@ -159,7 +173,7 @@ export class ChatService {
     this.gateway.broadcastMessage(message);
     return message;
   }
-
+  
   async updateName(id: number, updateChannelNameDto: UpdateChannelNameDto) {
     const channel = await this.prisma.channel.update({
       where: { id: id },
@@ -167,6 +181,7 @@ export class ChatService {
         name: updateChannelNameDto.name,
       },
     });
+    if (!channel) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     this.gateway.broadcastUpdateChannel(id);
     channel.password = null;
     return channel;
