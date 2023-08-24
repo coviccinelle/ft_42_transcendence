@@ -1,17 +1,55 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateChannelNameDto } from './dto/update-channel-name.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatGateway } from './chat.gateway';
 import { UserEntity } from 'src/users/entities/user.entity';
+import { hash } from 'bcrypt';
+import { roundsOfHashing } from 'src/users/users.service';
+import { ChannelEntity } from './entities/channel.entity';
+import { JoinChannelDto } from './dto/join-channel.dto';
 
 @Injectable()
 export class ChatService {
   constructor(private prisma: PrismaService, private gateway: ChatGateway) {}
 
-  create(createChannelDto: CreateChannelDto) {
-    return `This action adds a new channel named ${createChannelDto.name}`;
+  async create(createChannelDto: CreateChannelDto, userId: number) {
+    let hashedPassword: string;
+    let channel: ChannelEntity;
+    if (createChannelDto.isPublic && createChannelDto.password) {
+      hashedPassword = await hash(createChannelDto.password, roundsOfHashing);
+      channel = await this.prisma.channel.create({
+        data: {
+          name: createChannelDto.name,
+          isGroup: true,
+          isPublic: createChannelDto.isPublic,
+          password: hashedPassword,
+        },
+      });
+    } else {
+      channel = await this.prisma.channel.create({
+        data: {
+          name: createChannelDto.name,
+          isGroup: true,
+          isPublic: createChannelDto.isPublic,
+        },
+      });
+    }
+    const member = await this.prisma.member.create({
+      data: {
+        role: 'OWNER',
+        user: {
+          connect: { id: userId },
+        },
+        channel: {
+          connect: { id: channel.id },
+        },
+      },
+    });
+    this.gateway.broadcastUpdateUser(userId, channel.id);
+    channel.password = null;
+    return channel;
   }
 
   findPublic() {
@@ -26,14 +64,47 @@ export class ChatService {
     });
   }
 
-  getMyChannels(user: UserEntity) {
-    return this.prisma.channel.findMany({
+  async getMyChannels(user: UserEntity) {
+    const channels = await this.prisma.channel.findMany({
       where: {
         members: {
           some: { userId: user.id },
         },
       },
     });
+    channels.forEach((channel) => {
+      channel.password = null;
+    });
+    return channels;
+  }
+
+  async joinChannel(joinChannelDto: JoinChannelDto, user: UserEntity) {
+    const channel = await this.prisma.channel.findUnique({
+      where: {
+        id: joinChannelDto.id,
+      }
+    });
+    if (channel.password) {
+      if (
+        !joinChannelDto.password
+        || await hash(joinChannelDto.password, roundsOfHashing) !== channel.password
+      ) {
+        throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+      }
+    }
+    const member = await this.prisma.member.create({
+      data: {
+        role: 'REGULAR',
+        user: {
+          connect: { id: user.id },
+        },
+        channel: {
+          connect: { id: channel.id },
+        },
+      }
+    });
+    channel.password = null;
+    return channel;
   }
 
   getUsers(id: number) {
@@ -97,6 +168,7 @@ export class ChatService {
       },
     });
     this.gateway.broadcastUpdateChannel(id);
+    channel.password = null;
     return channel;
   }
 

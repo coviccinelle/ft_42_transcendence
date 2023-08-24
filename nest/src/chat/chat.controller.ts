@@ -30,6 +30,7 @@ import { Roles } from './roles.decorator';
 import { RolesGuard } from './roles.guard';
 import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
 import { ChannelAddUserDto } from './dto/channel-add-user.dto';
+import { JoinChannelDto } from './dto/join-channel.dto';
 
 @Controller('chat')
 @ApiTags('chat')
@@ -40,8 +41,11 @@ export class ChatController {
 
   @Post()
   @ApiCreatedResponse({ type: ChannelEntity })
-  create(@Body() createChannelDto: CreateChannelDto) {
-    return this.chatService.create(createChannelDto);
+  create(
+    @Body() createChannelDto: CreateChannelDto,
+    @User() user: UserEntity,
+  ) {
+    return this.chatService.create(createChannelDto, user.id);
   }
 
   @Get()
@@ -52,8 +56,17 @@ export class ChatController {
 
   @Get('mychannels')
   @ApiOkResponse({ type: ChannelEntity, isArray: true })
-  async getMyChannels(@User() user: UserEntity) {
-    return await this.chatService.getMyChannels(user);
+  getMyChannels(@User() user: UserEntity) {
+    return this.chatService.getMyChannels(user);
+  }
+
+  @Post('join')
+  @ApiCreatedResponse({ type: ChannelEntity })
+  joinChannel(
+    @User() user: UserEntity,
+    @Body() joinChannelDto: JoinChannelDto,
+  ) {
+    return this.chatService.joinChannel(joinChannelDto, user);
   }
 
   @Get(':id')

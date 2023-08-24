@@ -38,6 +38,7 @@ model Channel {
   name      String
   isGroup   Boolean
   isPublic  Boolean
+  password  String?
   members   Member[]
   messages  Message[]
 }

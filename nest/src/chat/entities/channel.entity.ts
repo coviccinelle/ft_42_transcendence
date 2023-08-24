@@ -17,4 +17,7 @@ export class ChannelEntity implements Channel {
 
   @ApiProperty()
   isGroup: boolean;
+
+  @ApiProperty()
+  password: string;
 }
