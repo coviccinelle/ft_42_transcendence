@@ -30,8 +30,11 @@ function LoginTile(): JSX.Element {
 }
 
 function Sticker(props: StickerProps): JSX.Element {
+	if (props.screenSize.width <= 768)
+		return <></>;
 	const xPos = props.screenSize.width / 2 + props.screenSize.radius * Math.cos(props.angle) - 100 / 2;
 	const yPos = props.screenSize.height / 2 + props.screenSize.radius * Math.sin(props.angle) - 100 / 2;
+
 	return (
 		<img id="sticker" className="absolute w-10 h-10 lg:w-24 lg:h-24 object-cover transform transition-transform hover:scale-150" style={{ left: xPos, top: yPos }} src={`./src/assets/duckie_bg_rm/sticker${props.id}.png`} />
 	)
