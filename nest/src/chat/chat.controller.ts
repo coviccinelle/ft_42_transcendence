@@ -50,8 +50,8 @@ export class ChatController {
 
   @Get()
   @ApiOkResponse({ type: ChannelEntity, isArray: true })
-  findPublic() {
-    return this.chatService.findPublic();
+  findPublic(@User() user: UserEntity) {
+    return this.chatService.findPublic(user.id);
   }
 
   @Get('mychannels')
@@ -81,8 +81,8 @@ export class ChatController {
   @Get(':id')
   @ApiOkResponse({ type: ChannelEntity })
   @Roles('regular')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    return await this.chatService.findOne(id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.chatService.findOne(id);
   }
 
   @Get(':id/users')

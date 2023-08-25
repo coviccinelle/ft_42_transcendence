@@ -34,13 +34,14 @@ model Member {
 }
 
 model Channel {
-  id        Int       @id @default(autoincrement())
-  name      String
-  isGroup   Boolean
-  isPublic  Boolean
-  password  String?
-  members   Member[]
-  messages  Message[]
+  id                  Int       @id @default(autoincrement())
+  name                String
+  isGroup             Boolean
+  isPublic            Boolean
+  isPasswordProtected Boolean
+  password            String?
+  members             Member[]
+  messages            Message[]
 }
 
 model Message {
@@ -58,4 +59,5 @@ enum Role {
   ADMIN
   REGULAR
   LEFT
+  BANNED
 }

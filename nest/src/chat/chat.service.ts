@@ -14,6 +14,17 @@ import { JoinChannelDto } from './dto/join-channel.dto';
 export class ChatService {
   constructor(private prisma: PrismaService, private gateway: ChatGateway) {}
 
+  async getRole(channelId: number, userId: number) {
+    const member = await this.prisma.member.findFirst({
+      where: {
+        channelId: channelId,
+        userId: userId,
+      },
+    });
+    if (!member) return "";
+    return member.role;
+  }
+
   async create(createChannelDto: CreateChannelDto, userId: number) {
     let hashedPassword: string;
     let channel: ChannelEntity;
@@ -24,6 +35,7 @@ export class ChatService {
           name: createChannelDto.name,
           isGroup: true,
           isPublic: createChannelDto.isPublic,
+          isPasswordProtected: true,
           password: hashedPassword,
         },
       });
@@ -33,6 +45,7 @@ export class ChatService {
           name: createChannelDto.name,
           isGroup: true,
           isPublic: createChannelDto.isPublic,
+          isPasswordProtected: false,
         },
       });
     }
@@ -47,28 +60,47 @@ export class ChatService {
         },
       },
     });
-    this.gateway.broadcastUpdateUser(userId, channel.id);
     channel.password = null;
     return channel;
   }
 
-  findPublic() {
-    return this.prisma.channel.findMany({
+  async findPublic(userId: number) {
+    const channels = await this.prisma.channel.findMany({
       where: { isPublic: true },
+      include: {
+        members: {
+          where: {
+            userId: userId,
+          },
+        },
+      },
+    });
+    channels.forEach((channel) => {
+      channel.password = null;
+    });
+    return channels.filter((channel) => {
+      return (channel.members.length == 0) || (channel.members[0].role === 'LEFT');
     });
   }
 
-  findOne(id: number) {
-    return this.prisma.channel.findUnique({
+  async findOne(id: number) {
+    const channel = await this.prisma.channel.findUnique({
       where: { id: id },
     });
+    if (channel) channel.password = null;
+    return channel;
   }
 
   async getMyChannels(user: UserEntity) {
     const channels = await this.prisma.channel.findMany({
       where: {
         members: {
-          some: { userId: user.id },
+          some: {
+            userId: user.id,
+            role: {
+              in: ['OWNER', 'ADMIN', 'REGULAR'],
+            },
+          },
         },
       },
     });
@@ -79,21 +111,39 @@ export class ChatService {
   }
 
   async joinChannel(joinChannelDto: JoinChannelDto, user: UserEntity) {
+    if (await this.getRole(joinChannelDto.id, user.id) === 'BANNED') {
+      throw new HttpException('You are banned from this channel', HttpStatus.FORBIDDEN);
+    }
     const channel = await this.prisma.channel.findUnique({
       where: {
         id: joinChannelDto.id,
       },
     });
-    if (!channel) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    if (!channel) throw new HttpException('Channel doesn\'t exist', HttpStatus.NOT_FOUND);
+    if (!channel.isPublic) throw new HttpException('Channel is private', HttpStatus.FORBIDDEN);
     if (channel.password) {
       if (
         !joinChannelDto.password
         || await hash(joinChannelDto.password, roundsOfHashing) !== channel.password
       ) {
-        throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+        throw new HttpException('Incorrect password', HttpStatus.FORBIDDEN);
       }
     }
-    const member = await this.prisma.member.create({
+    //Check if member already exists
+    let member = await this.prisma.member.findFirst({
+      where: {
+        userId: user.id,
+        channelId: joinChannelDto.id,
+      },
+    });
+    //Rejoin channel
+    if (member && member.role == 'LEFT') {
+      return await this.prisma.member.update({
+        where: { id: member.id },
+        data: { role: 'REGULAR' },
+      });
+    }
+    member = await this.prisma.member.create({
       data: {
         role: 'REGULAR',
         user: {
@@ -115,7 +165,7 @@ export class ChatService {
         userId: user.id,
       },
     });
-    if (!member) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    if (!member) throw new HttpException('Not a member of this channel', HttpStatus.NOT_FOUND);
     member.role = 'LEFT';
     return member;
   }
@@ -162,7 +212,7 @@ export class ChatService {
         channelId: id,
       },
     });
-    if (!member) throw new HttpException('Forbidden', HttpStatus.FORBIDDEN);
+    if (!member) throw new HttpException('Not a member of this channel', HttpStatus.FORBIDDEN);
     const message = await this.prisma.message.create({
       data: {
         content: createMessageDto.content,
@@ -181,7 +231,7 @@ export class ChatService {
         name: updateChannelNameDto.name,
       },
     });
-    if (!channel) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
+    if (!channel) throw new HttpException('Channel doesn\'t exist', HttpStatus.NOT_FOUND);
     this.gateway.broadcastUpdateChannel(id);
     channel.password = null;
     return channel;

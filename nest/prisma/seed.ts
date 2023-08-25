@@ -30,9 +30,10 @@ async function main() {
       name: 'General',
       isGroup: true,
       isPublic: true,
+      isPasswordProtected: false,
     },
   });
-
+  
   const randomChannel = await prisma.channel.upsert({
     where: { id: 2 },
     update: {},
@@ -40,6 +41,7 @@ async function main() {
       name: 'Random',
       isGroup: true,
       isPublic: true,
+      isPasswordProtected: false,
     },
   });
 

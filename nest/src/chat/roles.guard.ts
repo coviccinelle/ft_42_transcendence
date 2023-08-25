@@ -27,19 +27,17 @@ export class RolesGuard implements CanActivate {
       return false;
     }
     const roles = this.reflector.get<string[]>('roles', context.getHandler());
-    if (!roles) {
-      return true;
-    }
-    if (!Number.isInteger(channelId)) return false;
+    //If no channel is specified
+    if (!Number.isInteger(channelId)) return !roles;
     const member = await this.prisma.member.findFirst({
       where: {
         userId: user.id,
         channelId: channelId,
       },
     });
-    if (!member) {
-      return false;
-    }
+    if (member && member.role === 'BANNED') return false;
+    if (!roles) return true;
+    if (!member) return false;
     const userRole = member.role;
     for (const requiredRole of roles) {
       if (requiredRole === 'owner' && userRole !== 'OWNER') {
