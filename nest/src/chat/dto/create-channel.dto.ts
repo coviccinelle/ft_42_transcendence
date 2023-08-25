@@ -14,6 +14,5 @@ export class CreateChannelDto {
   @ApiProperty()
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   password: string;
 }
