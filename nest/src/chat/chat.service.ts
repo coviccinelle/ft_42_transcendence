@@ -374,5 +374,6 @@ export class ChatService {
         messages: true,
       },
     });
+    this.gateway.broadcastUpdateChannel(id);
   }
 }

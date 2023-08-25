@@ -1,5 +1,6 @@
 import { Channel } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 export class ChannelEntity implements Channel {
   constructor(partial: Partial<ChannelEntity>) {
@@ -21,6 +22,6 @@ export class ChannelEntity implements Channel {
   @ApiProperty()
   isPasswordProtected: boolean;
 
-  @ApiProperty()
+  @Exclude()
   password: string;
 }

@@ -31,6 +31,7 @@ import { RolesGuard } from './roles.guard';
 import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
 import { ChannelAddUserDto } from './dto/channel-add-user.dto';
 import { JoinChannelDto } from './dto/join-channel.dto';
+import { UserMemberEntity } from './entities/user-member.entity';
 
 @Controller('chat')
 @ApiTags('chat')
@@ -87,7 +88,7 @@ export class ChatController {
   }
 
   @Get(':id/users')
-  @ApiOkResponse({ type: UserEntity })
+  @ApiOkResponse({ type: UserMemberEntity })
   @Roles('regular')
   getUsers(@Param('id', ParseIntPipe) id: number) {
     return this.chatService.getUsers(id);
