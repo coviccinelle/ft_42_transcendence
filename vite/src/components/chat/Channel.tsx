@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 // import MessageOther from "./MessageOther";
 import Messages from './Messages';
-import api from '../../api/chat';
+import api from '../../api/chat/message';
 import MyMenu from './Menu';
 import ChangeNameDialog from './dialog/ChangeNameDialog';
 import AddSomeoneDialog from './dialog/AddSomeoneDialog';

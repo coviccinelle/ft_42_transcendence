@@ -2,7 +2,7 @@ import Channel from '../components/chat/Channel';
 import SearchChat from '../components/chat/SearchChat';
 import ChatTab from '../components/chat/ChatTab';
 import { useEffect, useState } from 'react';
-import api from '../api/chat';
+import apiChannel from '../api/chat/channel';
 import { Socket, io } from 'socket.io-client';
 import ChatTabAdd from '../components/chat/ChatTabAdd';
 import Navbar from '../components/Navbar';
@@ -16,7 +16,9 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
 
   useEffect(() => {
     const fetchChannels = async () => {
-      const channels = await api.getChannels();
+      const channels = await apiChannel.getChannels();
+      console.log(channels);
+      console.log('JJHG@EGHH@NJK@HDKJ');
       setChannels(channels);
     };
     fetchChannels();

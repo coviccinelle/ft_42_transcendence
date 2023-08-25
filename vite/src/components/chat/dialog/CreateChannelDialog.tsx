@@ -1,6 +1,7 @@
 import { Dialog, Tab, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import ChatTab from '../ChatTab';
+import apiChannel from '../../../api/chat/channel';
 
 function CreateChannelDialog(props: {
   createChannelDialog: any;
@@ -8,9 +9,28 @@ function CreateChannelDialog(props: {
   channels: any;
   setChannels: any;
 }) {
+  const [allChannels, setAllChannels] = useState([]);
   const [selected, setSelected] = useState('public');
   const [password, setPassword] = useState('');
   const [nameOfChannel, setNameOfChannel] = useState('');
+
+  useEffect(() => {
+    const fetchAllChannels = async () => {
+      const allChannels = await apiChannel.getAllChannels();
+      setAllChannels(allChannels);
+    };
+    fetchAllChannels();
+    console.log('allChannels : ', allChannels);
+  }, [props.createChannelDialog]);
+
+  useEffect(() => {
+    const fetchChannels = async () => {
+      const channels = await apiChannel.getChannels();
+      props.setChannels(channels);
+    };
+    fetchChannels();
+  }, [props.createChannelDialog]);
+
   function closeDialog() {
     props.setCreateChannelDialog(false);
     setSelected('public');
@@ -25,13 +45,7 @@ function CreateChannelDialog(props: {
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // console.log(props.nameOfChannel + " submitted");
-    const newChannel = {
-      name: nameOfChannel,
-      id: props.channels.length + 1,
-    };
-    props.setChannels([...props.channels, newChannel]);
-    // api.createChannel(nameOfChannel);!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    apiChannel.createChannel(nameOfChannel, selected !== 'private', password);
     props.setCreateChannelDialog(false);
   }
 
@@ -71,7 +85,7 @@ function CreateChannelDialog(props: {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform dark:bg-gray-800 bg-rose-100 shadow-xl rounded-2xl">
+              <div className="inline-block w-full max-h-96 max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform dark:bg-gray-800 bg-rose-100 shadow-xl rounded-2xl">
                 <Tab.Group>
                   <Tab.List className="flex p-1 space-x-1 bg-blue-900/20 rounded-xl">
                     <Tab
@@ -137,15 +151,37 @@ function CreateChannelDialog(props: {
                       </div>
                     </Tab.Panel>
                     <Tab.Panel>
-                      {props.channels.map((tab: any) => {
+                      {allChannels.map((channel: any) => {
+                        let type = 'Public';
+                        if (!channel.isPublic) {
+                          type = 'Private';
+                        }
+                        if (channel.isPasswordProtected) {
+                          type = 'Protected';
+                        }
                         return (
                           <ChatTab
-                            key={tab.id}
-                            name={tab.name}
-                            lastMessage={'last message'}
+                            key={channel.id}
+                            name={channel.name}
+                            lastMessage={type}
                             avatar="https://img-02.stickers.cloud/packs/1da1c0da-9330-4d89-9700-8d75b9c62635/webp/65bb0543-f220-456a-ad64-2ae40431ec03.webp"
-                            onClick={() => {
-                              console.log('join channel');
+                            onClick={async () => {
+                              if (channel.isPublic && channel.password) {
+                                const password = prompt(
+                                  'Enter the password to join the channel',
+                                );
+                                if (password === channel.password) {
+                                  await apiChannel.joinChannel(
+                                    channel.id,
+                                    password ?? '',
+                                  );
+                                } else {
+                                  alert('Wrong password');
+                                }
+                              } else {
+                                await apiChannel.joinChannel(channel.id, '');
+                              }
+                              closeDialog();
                             }}
                           />
                         );

@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
-import api from '../../../api/chat';
+import apiChannel from '../../../api/chat/channel';
 
 function ChangeNameDialog(props: {
   changeNameDialog: any;
@@ -29,7 +29,7 @@ function ChangeNameDialog(props: {
       return;
     }
     props.setNameOfChannel(nameOfChannel);
-    await api.putChannelName(props.channelId, nameOfChannel);
+    await apiChannel.putChannelName(props.channelId, nameOfChannel);
     // api.changeChannelName(props.nameOfChannel, props.channelId);!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     props.setChangeNameDialog(false);
   }
