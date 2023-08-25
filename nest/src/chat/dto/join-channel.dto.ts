@@ -10,6 +10,5 @@ export class JoinChannelDto {
   @ApiProperty()
   @IsOptional()
   @IsString()
-  @IsNotEmpty()
   password: string;
 }
