@@ -422,6 +422,42 @@ export class ChatService {
     });
   }
 
+  async transferOwnership(channelId: number, owner: UserEntity, newOwnerId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: newOwnerId },
+    });
+    if (!user) throw new HttpException('User doesn\'t exist', HttpStatus.NOT_FOUND);
+    const channel = await this.prisma.channel.findUnique({
+      where: { id: channelId },
+    });
+    if (!channel.isGroup) {
+      throw new HttpException('Can\'t transfer ownership of DM', HttpStatus.BAD_REQUEST);
+    }
+    const ownerMember = await this.prisma.member.findFirst({
+      where: {
+        userId: owner.id,
+        channelId: channelId,
+      },
+    });
+    const newOwnerMember = await this.prisma.member.findFirst({
+      where: {
+        userId: newOwnerId,
+        channelId: channelId,
+      },
+    });
+    if (!newOwnerMember) {
+      throw new HttpException('New owner isn\'t a member', HttpStatus.NOT_FOUND);
+    }
+    await this.prisma.member.update({
+      where: { id: ownerMember.id },
+      data: { role: 'ADMIN' },
+    });
+    await this.prisma.member.update({
+      where: { id: newOwnerMember.id },
+      data: { role: 'OWNER' },
+    });
+  }
+
   async remove(id: number) {
     await this.prisma.channel.delete({
       where: {

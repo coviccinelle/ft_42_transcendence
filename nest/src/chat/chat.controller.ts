@@ -175,6 +175,18 @@ export class ChatController {
     this.chatService.addUser(id, channelAddUserDto.id);
   }
 
+  @Patch(':id/owner')
+  @HttpCode(204)
+  @ApiNoContentResponse()
+  @Roles('owner')
+  transferOwnership(
+    @Param('id', ParseIntPipe) channelId: number,
+    @Body() userId: number,
+    @User() owner: UserEntity,
+  ) {
+    this.chatService.transferOwnership(channelId, owner, userId);
+  }
+
   @Delete(':id')
   @HttpCode(204)
   @ApiNoContentResponse()
