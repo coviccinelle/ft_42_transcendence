@@ -43,7 +43,7 @@ function Game(): JSX.Element {
   }, [isLoading, user]);
 
   // ? Pop-up login qui dit "you need to login to play..." ?
-  console.log(user);
+  // console.log(user);
   if (user === null)
     navigate('/login');
 
