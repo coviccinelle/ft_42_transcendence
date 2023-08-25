@@ -299,6 +299,60 @@ export class ChatService {
     this.gateway.broadcastUpdateUser(userId, channelId);
   }
 
+  async banUser(channelId: number, userId: number) {
+    const member = await this.prisma.member.findFirst({
+      where: {
+        channelId: channelId,
+        userId: userId,
+      },
+    });
+    if (!member) {
+      await this.prisma.member.create({
+        data: {
+          role: 'BANNED',
+          user : {
+            connect: { id: userId },
+          },
+          channel: {
+            connect: { id: channelId },
+          },
+        },
+      });
+      return;
+    }
+    if (member.role === 'BANNED') return;
+    if (member.role === 'OWNER') {
+      throw new HttpException('Can\'t ban owner', HttpStatus.FORBIDDEN);
+    }
+    this.prisma.member.update({
+      where: {
+        id: member.id,
+      },
+      data: {
+        role: 'BANNED',
+      },
+    });
+    this.gateway.broadcastUpdateUser(userId, channelId);
+  }
+
+  async unbanUser(channelId: number, userId: number) {
+    const member = await this.prisma.member.findFirst({
+      where: {
+        channelId: channelId,
+        userId: userId,
+      },
+    });
+    if (!member || member.role !== 'BANNED') return;
+    this.prisma.member.update({
+      where: {
+        id: member.id,
+      },
+      data: {
+        role: 'LEFT',
+      },
+    });
+  }
+
   remove(id: number) {
     return `This action removes a #${id} channel`;
   }

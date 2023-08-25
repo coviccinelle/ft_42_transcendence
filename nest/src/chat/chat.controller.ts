@@ -128,7 +128,29 @@ export class ChatController {
     @Param('id', ParseIntPipe) id: number,
     @Body() userId: number,
   ) {
-    return
+    this.chatService.kickUser(id, userId);
+  }
+
+  @Post(':id/ban')
+  @HttpCode(204)
+  @ApiNoContentResponse()
+  @Roles('admin')
+  banUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() userId: number,
+  ) {
+    this.chatService.banUser(id, userId);
+  }
+
+  @Post(':id/unban')
+  @HttpCode(204)
+  @ApiNoContentResponse()
+  @Roles('admin')
+  unbanUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() userId: number,
+  ) {
+    this.chatService.unbanUser(id, userId);
   }
 
   @Patch(':id/adduser')
