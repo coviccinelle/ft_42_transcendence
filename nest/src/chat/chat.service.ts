@@ -174,7 +174,17 @@ export class ChatService {
     return this.prisma.user.findMany({
       where: {
         members: {
-          some: { channelId: id },
+          some: { 
+            channelId: id,
+            role: { notIn: ['LEFT'] },
+          },
+        },
+      },
+      include: {
+        members: {
+          where: {
+            channelId: id,
+          },
         },
       },
     });
@@ -238,24 +248,35 @@ export class ChatService {
   }
 
   async addUser(channelId: number, userId: number) {
-    let member = await this.prisma.member.findFirst({
+    const member = await this.prisma.member.findFirst({
       where: {
         userId: userId,
         channelId: channelId,
       },
     });
-    if (member) return;
-    member = await this.prisma.member.create({
-      data: {
-        role: 'REGULAR',
-        user: {
-          connect: { id: userId },
+    if (member) {
+      if (member.role === 'OWNER'
+        || member.role === 'ADMIN'
+        || member.role === 'REGULAR') {
+          return;
+      }
+      await this.prisma.member.update({
+        where: { id: member.id },
+        data: { role: 'REGULAR' },
+      });
+    } else {
+      await this.prisma.member.create({
+        data: {
+          role: 'REGULAR',
+          user: {
+            connect: { id: userId },
+          },
+          channel: {
+            connect: { id: channelId },
+          },
         },
-        channel: {
-          connect: { id: channelId },
-        },
-      },
-    });
+      });
+    }
     this.gateway.broadcastUpdateUser(userId, channelId);
   }
 
@@ -266,7 +287,7 @@ export class ChatService {
         userId: userId,
       },
     });
-    if (!member) return;
+    if (!member || member.role === 'BANNED' || member.role === 'LEFT') return;
     this.prisma.member.update({
       where: {
         id: member.id,
@@ -275,6 +296,7 @@ export class ChatService {
         role: 'LEFT',
       },
     });
+    this.gateway.broadcastUpdateUser(userId, channelId);
   }
 
   remove(id: number) {
