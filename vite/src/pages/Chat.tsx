@@ -3,6 +3,7 @@ import SearchChat from '../components/chat/SearchChat';
 import ChatTab from '../components/chat/ChatTab';
 import { useEffect, useState } from 'react';
 import apiChannel from '../api/chat/channel';
+import apiMessage from '../api/chat/message';
 import { Socket, io } from 'socket.io-client';
 import ChatTabAdd from '../components/chat/ChatTabAdd';
 import Navbar from '../components/Navbar';
@@ -74,26 +75,36 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
   });
 
   return (
-    <div className="flex h-screen flex-col min-h-0">
+    <div className="flex h-screen flex-col min-h-0 w-full">
       <Navbar darkMode={props.darkMode} toggleDarkMode={props.toggleDarkMode} />
       <div className="flex-auto flex flex-col min-h-0 w-full">
         <div className="flex-auto flex flex-row min-h-0">
-          <div className="sm:w-1/4 w-1/6 flex flex-col border-r-2 border-gray-950 overflow-y-auto no-scrollbar">
+          <div className="sm:w-1/4 w-1/6 flex flex-col border-r-2 border-gray-950">
             <SearchChat search={search} setSearch={setSearch} />
-            <ChatTabAdd setChannels={setChannels} channels={channels} />
-            {filteredTabs.map((tab: any) => {
-              return (
-                <ChatTab
-                  key={tab.id}
-                  name={tab.name}
-                  lastMessage={'last message'}
-                  avatar="https://img-02.stickers.cloud/packs/1da1c0da-9330-4d89-9700-8d75b9c62635/webp/65bb0543-f220-456a-ad64-2ae40431ec03.webp"
-                  onClick={() => {
-                    setCurrentChannel(tab.id);
-                  }}
-                />
-              );
-            })}
+            <div className="flex-col flex overflow-y-scroll overflow-y-auto no-scrollbar">
+              <ChatTabAdd setChannels={setChannels} channels={channels} />
+              {filteredTabs.map((tab: any) => {
+                return (
+                  <ChatTab
+                    key={tab.id}
+                    name={tab.name}
+                    id={tab.id}
+                    avatar="https://img-02.stickers.cloud/packs/1da1c0da-9330-4d89-9700-8d75b9c62635/webp/65bb0543-f220-456a-ad64-2ae40431ec03.webp"
+                    onClick={() => {
+                      setCurrentChannel(tab.id);
+                    }}
+                    type={
+                      tab.isPublic
+                        ? 'Public'
+                        : tab.isPasswordProtected
+                        ? 'Protected'
+                        : 'Private'
+                    }
+                    createChannel={false}
+                  />
+                );
+              })}
+            </div>
           </div>
 
           {currentChannel ? (

@@ -43,9 +43,13 @@ function CreateChannelDialog(props: {
     setNameOfChannel(e.target.value);
   }
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    apiChannel.createChannel(nameOfChannel, selected !== 'private', password);
+    await apiChannel.createChannel(
+      nameOfChannel,
+      selected !== 'private',
+      password,
+    );
     props.setCreateChannelDialog(false);
   }
 
@@ -150,7 +154,10 @@ function CreateChannelDialog(props: {
                         ) : null}
                       </div>
                     </Tab.Panel>
-                    <Tab.Panel>
+                    <Tab.Panel
+                      as="div"
+                      className="flex flex-col overflow-y-auto overflow-y-scroll no-scrollbar h-96"
+                    >
                       {allChannels.map((channel: any) => {
                         let type = 'Public';
                         if (!channel.isPublic) {
@@ -163,7 +170,9 @@ function CreateChannelDialog(props: {
                           <ChatTab
                             key={channel.id}
                             name={channel.name}
-                            lastMessage={type}
+                            id={channel.id}
+                            type={type}
+                            createChannel={true}
                             avatar="https://img-02.stickers.cloud/packs/1da1c0da-9330-4d89-9700-8d75b9c62635/webp/65bb0543-f220-456a-ad64-2ae40431ec03.webp"
                             onClick={async () => {
                               if (channel.isPublic && channel.password) {
