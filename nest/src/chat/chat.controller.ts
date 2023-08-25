@@ -120,6 +120,17 @@ export class ChatController {
     return this.chatService.updateName(id, updateChannelNameDto);
   }
 
+  @Post(':id/kick')
+  @HttpCode(204)
+  @ApiNoContentResponse()
+  @Roles('admin')
+  kickUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() userId: number,
+  ) {
+    return
+  }
+
   @Patch(':id/adduser')
   @HttpCode(204)
   @ApiNoContentResponse()

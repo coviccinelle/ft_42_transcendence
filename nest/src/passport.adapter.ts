@@ -16,16 +16,6 @@ export default class PassportIoAdapter extends IoAdapter {
     const wrap = (middleware) => (socket, next) =>
       middleware(socket.request, {}, next);
     const server: Server = super.createIOServer(port, options);
-    // server.use(wrap(
-    //   session({
-    //     secret: this.configService.get<string>('SESSION_SECRET'),
-    //     saveUninitialized: false,
-    //     resave: false,
-    //     cookie: {
-    //       maxAge: parseInt(this.configService.get<string>('COOKIE_MAX_AGE')),
-    //     },
-    //   }),
-    // ));
     server.of('chat').use(wrap(this.sessionMiddleware));
     server.of('chat').use(wrap(passport.initialize()));
     server.of('chat').use(wrap(passport.session()));

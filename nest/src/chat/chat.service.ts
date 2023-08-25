@@ -82,7 +82,7 @@ export class ChatService {
     const channel = await this.prisma.channel.findUnique({
       where: {
         id: joinChannelDto.id,
-      }
+      },
     });
     if (!channel) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     if (channel.password) {
@@ -102,7 +102,7 @@ export class ChatService {
         channel: {
           connect: { id: channel.id },
         },
-      }
+      },
     });
     channel.password = null;
     return channel;
@@ -113,7 +113,7 @@ export class ChatService {
       where: {
         channelId: channelId,
         userId: user.id,
-      }
+      },
     });
     if (!member) throw new HttpException('Not found', HttpStatus.NOT_FOUND);
     member.role = 'LEFT';
@@ -143,8 +143,8 @@ export class ChatService {
                 firstName: true,
                 lastName: true,
                 picture: true,
-              }
-            }
+              },
+            },
           },
         },
       },
@@ -207,6 +207,24 @@ export class ChatService {
       },
     });
     this.gateway.broadcastUpdateUser(userId, channelId);
+  }
+
+  async kickUser(channelId: number, userId: number) {
+    const member = await this.prisma.member.findFirst({
+      where: {
+        channelId: channelId,
+        userId: userId,
+      },
+    });
+    if (!member) return;
+    this.prisma.member.update({
+      where: {
+        id: member.id,
+      },
+      data: {
+        role: 'LEFT',
+      },
+    });
   }
 
   remove(id: number) {
