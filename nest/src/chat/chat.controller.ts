@@ -87,6 +87,15 @@ export class ChatController {
     return this.chatService.findOne(id);
   }
 
+  @Post('newDM')
+  @ApiCreatedResponse()
+  openDM(
+    @Body() otherId: number,
+    @User() user: UserEntity,
+  ) {
+    return this.chatService.openDM(user, otherId);
+  }
+
   @Get(':id/users')
   @ApiOkResponse({ type: UserMemberEntity })
   @Roles('regular')

@@ -181,6 +181,56 @@ export class ChatService {
     member.role = 'LEFT';
   }
 
+  async openDM(user: UserEntity, otherId: number) {
+    //Check if there is already a DM channel open
+    const channel = await this.prisma.channel.findFirst({
+      where: {
+        isGroup: false,
+        members: {
+          every: {
+            userId: { in: [user.id, otherId] },
+          },
+        },
+      },
+    });
+    const otherUser = await this.prisma.user.findUnique({
+      where: { id: otherId },
+    });
+    if (!otherUser) throw new HttpException('User doesn\'t exist', HttpStatus.NOT_FOUND);
+    if (channel) return channel;
+    const newChannel = await this.prisma.channel.create({
+      data: {
+        isGroup: false,
+        isPublic: false,
+        isPasswordProtected: false,
+        name: '',
+      },
+    });
+    await this.prisma.member.create({
+      data: {
+        role: 'OWNER',
+        user: {
+          connect: { id: user.id },
+        },
+        channel: {
+          connect: { id: newChannel.id },
+        },
+      },
+    });
+    await this.prisma.member.create({
+      data: {
+        role: 'OWNER',
+        user: {
+          connect: { id: otherId },
+        },
+        channel: {
+          connect: { id: newChannel.id },
+        },
+      },
+    });
+    return newChannel;
+  }
+
   getUsers(id: number) {
     return this.prisma.user.findMany({
       where: {
@@ -259,6 +309,10 @@ export class ChatService {
   }
 
   async addUser(channelId: number, userId: number) {
+    const newUser = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!newUser) throw new HttpException('User doesn\'t exist', HttpStatus.NOT_FOUND);
     const member = await this.prisma.member.findFirst({
       where: {
         userId: userId,
@@ -311,6 +365,10 @@ export class ChatService {
   }
 
   async banUser(channelId: number, userId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!user) throw new HttpException('User doesn\'t exist', HttpStatus.NOT_FOUND);
     const member = await this.prisma.member.findFirst({
       where: {
         channelId: channelId,
