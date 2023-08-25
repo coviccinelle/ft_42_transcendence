@@ -159,6 +159,15 @@ export class ChatService {
   }
 
   async leaveChannel(channelId: number, user: UserEntity) {
+    const channel = await this.prisma.channel.findUnique({
+      where: {
+        id: channelId,
+      },
+    });
+    if (!channel.isGroup) {
+      this.remove(channelId);
+      return;
+    }
     const member = await this.prisma.member.findFirst({
       where: {
         channelId: channelId,
@@ -166,8 +175,10 @@ export class ChatService {
       },
     });
     if (!member) throw new HttpException('Not a member of this channel', HttpStatus.NOT_FOUND);
+    if (member.role === 'OWNER') {
+      throw new HttpException('Owner can\'t leave channel', HttpStatus.FORBIDDEN);
+    }
     member.role = 'LEFT';
-    return member;
   }
 
   getUsers(id: number) {
@@ -353,7 +364,15 @@ export class ChatService {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} channel`;
+  async remove(id: number) {
+    await this.prisma.channel.delete({
+      where: {
+        id: id,
+      },
+      include: {
+        members: true,
+        messages: true,
+      },
+    });
   }
 }

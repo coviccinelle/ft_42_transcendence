@@ -70,12 +70,13 @@ export class ChatController {
   }
 
   @Get(':id/leave')
-  @ApiOkResponse()
+  @HttpCode(204)
+  @ApiNoContentResponse()
   leaveChannel(
     @User   () user: UserEntity,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    return this.chatService.leaveChannel(id, user);
+    this.chatService.leaveChannel(id, user);
   }
 
   @Get(':id')
@@ -165,8 +166,10 @@ export class ChatController {
   }
 
   @Delete(':id')
+  @HttpCode(204)
+  @ApiNoContentResponse()
   @Roles('owner')
   remove(@Param('id', ParseIntPipe) id: number) {
-    return this.chatService.remove(id);
+    this.chatService.remove(id);
   }
 }
