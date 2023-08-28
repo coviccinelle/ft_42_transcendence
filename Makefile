@@ -1,6 +1,9 @@
 dev:
 	docker compose up --build
 
+down:
+	docker compose down
+
 clean: # !!!!!! Removes the db !!!!!!
 	docker compose down -v
 
