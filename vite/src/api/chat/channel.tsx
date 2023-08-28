@@ -33,6 +33,16 @@ const putChannelName = async (channelId: number, name: string) => {
   }
 };
 
+const leaveChannel = async (channelId: number) => {
+  try {
+    const response = await axios.delete(`${API}/chat/${channelId}/leave`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const createChannel = async (
   name: string,
   isPublic: boolean,
@@ -57,6 +67,7 @@ const joinChannel = async (channelId: number, password: string) => {
       id: channelId,
       password: password,
     });
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -69,4 +80,5 @@ export default {
   createChannel,
   getAllChannels,
   joinChannel,
+  leaveChannel,
 };

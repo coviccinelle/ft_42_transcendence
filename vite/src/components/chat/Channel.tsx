@@ -87,6 +87,7 @@ function Channel(props: {
           setListOfUsersDialog={setListOfUsersDialog}
           leaveChannelDialog={leaveChannelDialog}
           setLeaveChannelDialog={setLeaveChannelDialog}
+          role={role}
         />
         <ChangeNameDialog
           changeNameDialog={changeNameDialog}
@@ -97,6 +98,7 @@ function Channel(props: {
           setChannels={props.setChannels}
         ></ChangeNameDialog>
         <AddSomeoneDialog
+          channelId={props.channelId}
           addSomeoneDialog={addSomeoneDialog}
           setAddSomeoneDialog={setAddSomeoneDialog}
         ></AddSomeoneDialog>
@@ -104,8 +106,11 @@ function Channel(props: {
           listOfUsersDialog={listOfUsersDialog}
           setListOfUsersDialog={setListOfUsersDialog}
           channelId={props.channelId}
+          userMe={userMe}
+          role={role}
         ></ListOfUsersDialog>
         <LeaveChannelDialog
+          channelId={props.channelId}
           leaveChannelDialog={leaveChannelDialog}
           setLeaveChannelDialog={setLeaveChannelDialog}
         ></LeaveChannelDialog>
@@ -122,6 +127,7 @@ function Channel(props: {
               author={message.author.user.firstName}
               avatar={message.author.user.picture}
               id={message.author.user.id}
+              user={userMe}
             />
           );
         })}

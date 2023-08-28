@@ -4,6 +4,7 @@ import User from './User';
 import apiUser from '../../../api/chat/user';
 
 function AddSomeoneDialog(props: {
+  channelId: number;
   addSomeoneDialog: any;
   setAddSomeoneDialog: any;
 }) {
@@ -18,7 +19,7 @@ function AddSomeoneDialog(props: {
     fetchUsers();
   }, [props.addSomeoneDialog]);
 
-  const filteredUsers = listOfUsers.filter((tab) => {
+  const filteredUsers = listOfUsers.filter((tab: any) => {
     return tab.firstName.toLowerCase().includes(search.toLowerCase());
   });
 
@@ -88,14 +89,23 @@ function AddSomeoneDialog(props: {
                   </form>
                 </div>
                 <div className="mt-2 no-scrollbar h-64 overflow-y-scroll ">
-                  {filteredUsers.map((user) => (
+                  {filteredUsers.map((user: any) => (
                     <User
                       key={user.id}
                       user={user}
-                      onClick={() => {
+                      onClick={async () => {
+                        await apiUser.addSomeoneToChannel(
+                          props.channelId,
+                          user.id,
+                        );
                         console.log('someone added');
                         props.setAddSomeoneDialog(false);
                       }}
+                      addSomeoneDialog={true}
+                      channelId={0}
+                      userMe={0}
+                      role={''}
+                      dialog={props.setAddSomeoneDialog}
                     />
                   ))}
                 </div>

@@ -1,9 +1,11 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import apiChannel from '../../../api/chat/channel';
 
 function LeaveChannelDialog(props: {
   leaveChannelDialog: any;
   setLeaveChannelDialog: any;
+  channelId: number;
 }) {
   function closeDialog() {
     props.setLeaveChannelDialog(false);
@@ -58,8 +60,8 @@ function LeaveChannelDialog(props: {
                   </div>
                   <button
                     className="mt-4 bg-red-500 hover:bg-red-600 text-red-950 font-bold py-2 px-4 rounded"
-                    onClick={() => {
-                      console.log('Leave channel');
+                    onClick={async () => {
+                      await apiChannel.leaveChannel(props.channelId);
                       closeDialog();
                     }}
                   >

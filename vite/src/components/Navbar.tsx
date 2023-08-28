@@ -31,8 +31,14 @@ function Navbar(props: { darkMode: boolean; toggleDarkMode: any }) {
           />
         </div>
         <div className="flex px-2 py-3 text-sm">
-          <span role="img" aria-label="avatar" className="cursor-pointer">
-            {/* TODO: Add avatar img */}
+          <span
+            role="img"
+            aria-label="avatar"
+            className="cursor-pointer"
+            onClick={() => {
+              window.location.href = '/profile';
+            }}
+          >
             👤
           </span>
         </div>

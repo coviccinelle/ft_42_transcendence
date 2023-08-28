@@ -1,30 +1,38 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
-import apiUser from '../../../api/chat/user';
-import User from './User';
+import apiChannel from '../../../api/chat/channel';
+import channel from '../../../api/chat/channel';
 
-function ListOfUsersDialog(props: {
-  listOfUsersDialog: any;
-  setListOfUsersDialog: any;
+function PasswordDialog(props: {
+  passwordDialog: any;
+  setPasswordDialog: any;
   channelId: number;
-  userMe: any;
-  role: string;
 }) {
-  const [listOfUsers, setListOfUsers] = useState([]);
-  useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await apiUser.getUsersInChannel(props.channelId);
-      setListOfUsers(response);
-    };
-    if (props.channelId) fetchUsers();
-  }, [props.channelId]);
   function closeDialog() {
-    props.setListOfUsersDialog(false);
+    props.setPasswordDialog(false);
+  }
+
+  const [password, setPassword] = useState('');
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setPassword(e.target.value);
+  }
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const res = await apiChannel.joinChannel(props.channelId, password);
+    if (res === 'wrong password') {
+      setPassword('');
+      alert('wrong password');
+      return;
+    }
+    console.log(res);
+    setPassword('');
+    props.setPasswordDialog(false);
   }
 
   return (
     <>
-      <Transition appear show={props.listOfUsersDialog} as={Fragment}>
+      <Transition appear show={props.passwordDialog} as={Fragment}>
         <Dialog
           as="div"
           className="fixed inset-0 z-10 overflow-y-auto"
@@ -58,29 +66,23 @@ function ListOfUsersDialog(props: {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="inline-block w-full h-96 max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform dark:bg-gray-800 bg-rose-100 shadow-xl rounded-2xl">
+              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform dark:bg-gray-800 bg-rose-100 shadow-xl rounded-2xl">
                 <Dialog.Title
                   as="h3"
                   className="text-lg font-medium leading-6 dark:text-gray-200 text-gray-900"
                 >
-                  List of users in this channel
+                  Password protected
                 </Dialog.Title>
-                <div className="mt-2 no-scrollbar h-full overflow-y-scroll">
-                  {listOfUsers.map((user) => (
-                    <User
-                      key={user.id}
-                      user={user}
-                      onClick={() => {
-                        console.log('go to profile');
-                        props.setListOfUsersDialog(false);
-                      }}
-                      addSomeoneDialog={false}
-                      channelId={props.channelId}
-                      userMe={props.userMe}
-                      role={props.role}
-                      dialog={props.setListOfUsersDialog}
+                <div className="mt-2">
+                  <form action="submit" onSubmit={handleSubmit}>
+                    <input
+                      type="text"
+                      className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none dark:bg-blue-100 bg-white"
+                      placeholder="New name"
+                      value={password}
+                      onChange={handleChange}
                     />
-                  ))}
+                  </form>
                 </div>
               </div>
             </Transition.Child>
@@ -91,4 +93,4 @@ function ListOfUsersDialog(props: {
   );
 }
 
-export default ListOfUsersDialog;
+export default PasswordDialog;

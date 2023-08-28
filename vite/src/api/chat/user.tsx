@@ -30,8 +30,57 @@ const getUsersInChannel = async (channelId: number) => {
   }
 };
 
+const muteUser = async (channelId: number, userId: number, time: number) => {
+  try {
+    const response = await axios.post(`${API}/chat/${channelId}/mute`, {
+      userId: userId,
+      time: time,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const kickUser = async (channelId: number, userId: number) => {
+  try {
+    const response = await axios.post(`${API}/chat/${channelId}/kick`, {
+      id: userId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const addSomeoneToChannel = async (channelId: number, userId: number) => {
+  try {
+    const response = await axios.patch(`${API}/chat/${channelId}/adduser`, {
+      id: userId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const banUser = async (channelId: number, userId: number) => {
+  try {
+    const response = await axios.post(`${API}/chat/${channelId}/ban`, {
+      id: userId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export default {
   getUsers,
   getUsersInChannel,
   getMe,
+  muteUser,
+  kickUser,
+  banUser,
+  addSomeoneToChannel,
 };

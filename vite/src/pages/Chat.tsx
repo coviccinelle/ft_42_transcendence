@@ -9,7 +9,7 @@ import ChatTabAdd from '../components/chat/ChatTabAdd';
 import Navbar from '../components/Navbar';
 
 function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
-  const [channels, setChannels] = useState([]); // need to map channels from server
+  const [channels, setChannels] = useState([]);
   const [currentChannel, setCurrentChannel] = useState(0);
   const [messages, setMessages] = useState([]);
   const [channelName, setChannelName] = useState('');
@@ -19,7 +19,6 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
     const fetchChannels = async () => {
       const channels = await apiChannel.getChannels();
       console.log(channels);
-      console.log('JJHG@EGHH@NJK@HDKJ');
       setChannels(channels);
     };
     fetchChannels();
@@ -95,7 +94,7 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
                       setCurrentChannel(tab.id);
                     }}
                     type={
-                      tab.isPublic
+                      tab.isPublic && !tab.isPasswordProtected
                         ? 'Public'
                         : tab.isPasswordProtected
                         ? 'Protected'
