@@ -87,7 +87,7 @@ function Carrousel(): JSX.Element {
   return <div>{stickers}</div>;
 }
 
-function Home(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
+function Home(): JSX.Element {
   return (
     <>
       <div
