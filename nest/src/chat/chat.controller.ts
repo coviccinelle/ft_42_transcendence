@@ -33,6 +33,7 @@ import { userIdDto } from '../users/dto/user-id.dto';
 import { JoinChannelDto } from './dto/join-channel.dto';
 import { UserMemberEntity } from './entities/user-member.entity';
 import { MuteUserDto } from './dto/mute-user.dto';
+import { UpdateChannelPasswordDto } from './dto/update-channel-password.dto';
 
 @Controller('chat')
 @ApiTags('chat')
@@ -73,6 +74,7 @@ export class ChatController {
 
   @Get(':id/leave')
   @HttpCode(204)
+  @Roles('regular')
   @ApiNoContentResponse()
   leaveChannel(
     @User   () user: UserEntity,
@@ -218,6 +220,17 @@ export class ChatController {
     @Body() channelAddUserDto: userIdDto,
   ) {
     this.chatService.addUser(id, channelAddUserDto.id);
+  }
+
+  @Patch(':id/password')
+  @HttpCode(204)
+  @ApiNoContentResponse()
+  @Roles('owner')
+  updatePassword(
+    @Param('id', ParseIntPipe) channelId: number,
+    @Body() updateChannelPasswordDto: UpdateChannelPasswordDto,
+  ) {
+    this.chatService.updatePassword(channelId, updateChannelPasswordDto.password);
   }
 
   @Patch(':id/owner')

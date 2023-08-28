@@ -165,6 +165,7 @@ export class ChatService {
         id: channelId,
       },
     });
+    if (!channel) throw new HttpException('Channel not found', HttpStatus.NOT_FOUND);
     if (!channel.isGroup) {
       this.remove(channelId);
       return;
@@ -179,7 +180,10 @@ export class ChatService {
     if (member.role === 'OWNER') {
       throw new HttpException('Owner can\'t leave channel', HttpStatus.FORBIDDEN);
     }
-    member.role = 'LEFT';
+    await this.prisma.member.update({
+      where: { id: member.id },
+      data: { role: 'LEFT' },
+    });
   }
 
   async openDM(user: UserEntity, otherId: number) {
@@ -515,6 +519,27 @@ export class ChatService {
         mutedUntil: date.toISOString(),
       },
     });
+  }
+
+  async updatePassword(channelId: number, password: string) {
+    if (password) {
+      await this.prisma.channel.update({
+        where: { id: channelId },
+        data: {
+          isPasswordProtected: false,
+          password: null,
+        },
+      });
+    } else {
+      const hashedPassword = await hash(password, roundsOfHashing);
+      await this.prisma.channel.update({
+        where: { id: channelId },
+        data: {
+          isPasswordProtected: true,
+          password: hashedPassword,
+        },
+      });
+    }
   }
 
   async transferOwnership(channelId: number, owner: UserEntity, newOwnerId: number) {
