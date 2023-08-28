@@ -17,4 +17,7 @@ export class MemberEntity implements Member {
 
   @ApiProperty()
   channelId: number;
+
+  @ApiProperty()
+  mutedUntil: Date;
 }

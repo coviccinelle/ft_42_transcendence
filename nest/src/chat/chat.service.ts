@@ -9,6 +9,7 @@ import { hash } from 'bcrypt';
 import { roundsOfHashing } from 'src/users/users.service';
 import { ChannelEntity } from './entities/channel.entity';
 import { JoinChannelDto } from './dto/join-channel.dto';
+import { MuteUserDto } from './dto/mute-user.dto';
 
 @Injectable()
 export class ChatService {
@@ -284,6 +285,10 @@ export class ChatService {
       },
     });
     if (!member) throw new HttpException('Not a member of this channel', HttpStatus.FORBIDDEN);
+    const dateNow = new Date();
+    if (member.mutedUntil > dateNow) {
+      throw new HttpException('You are muted', HttpStatus.FORBIDDEN);
+    }
     const message = await this.prisma.message.create({
       data: {
         content: createMessageDto.content,
@@ -464,6 +469,50 @@ export class ChatService {
       },
       data: {
         role: 'REGULAR',
+      },
+    });
+  }
+
+  async muteUser(channelId: number, muteUserDto: MuteUserDto) {
+    const member = await this.prisma.member.findFirst({
+      where: {
+        channelId: channelId,
+        userId: muteUserDto.userId,
+      },
+    });
+    if (!member || member.role === 'LEFT' || member.role === 'BANNED') {
+      throw new HttpException('Can\'t find user', HttpStatus.NOT_FOUND);
+    }
+    if (member.role === 'OWNER') {
+      throw new HttpException('Can\'t mute owner', HttpStatus.FORBIDDEN);
+    }
+    const date = new Date(Date.now() + muteUserDto.time * 60 * 1000)
+    await this.prisma.member.update({
+      where: { id: member.id },
+      data: {
+        mutedUntil: date.toISOString(),
+      },
+    });
+  }
+
+  async unmuteUser(channelId: number, muteUserDto: MuteUserDto) {
+    const member = await this.prisma.member.findFirst({
+      where: {
+        channelId: channelId,
+        userId: muteUserDto.userId,
+      },
+    });
+    if (!member || member.role === 'LEFT' || member.role === 'BANNED') {
+      throw new HttpException('Can\'t find user', HttpStatus.NOT_FOUND);
+    }
+    if (member.role === 'OWNER') {
+      throw new HttpException('Can\'t unmute owner', HttpStatus.FORBIDDEN);
+    }
+    const date = new Date();
+    await this.prisma.member.update({
+      where: { id: member.id },
+      data: {
+        mutedUntil: date.toISOString(),
       },
     });
   }

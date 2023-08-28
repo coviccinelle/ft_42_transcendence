@@ -32,6 +32,7 @@ import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
 import { ChannelAddUserDto } from './dto/channel-add-user.dto';
 import { JoinChannelDto } from './dto/join-channel.dto';
 import { UserMemberEntity } from './entities/user-member.entity';
+import { MuteUserDto } from './dto/mute-user.dto';
 
 @Controller('chat')
 @ApiTags('chat')
@@ -184,6 +185,28 @@ export class ChatController {
     @Body() userId: number,
   ) {
     this.chatService.demoteUser(id, userId);
+  }
+
+  @Post(':id/mute')
+  @HttpCode(204)
+  @ApiNoContentResponse()
+  @Roles('admin')
+  muteUser(
+    @Param(':id', ParseIntPipe) id: number,
+    @Body() muteUserDto: MuteUserDto,
+  ) {
+    this.chatService.muteUser(id, muteUserDto);
+  }
+
+  @Post(':id/unmute')
+  @HttpCode(204)
+  @ApiNoContentResponse()
+  @Roles('admin')
+  unmuteUser(
+    @Param(':id', ParseIntPipe) id: number,
+    @Body() muteUserDto: MuteUserDto,
+  ) {
+    this.chatService.unmuteUser(id, muteUserDto);
   }
 
   @Patch(':id/adduser')

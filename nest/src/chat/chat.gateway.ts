@@ -54,6 +54,10 @@ export class ChatGateway implements OnGatewayConnection {
         channelId: createMessageDto.channelId,
       },
     });
+    const dateNow = new Date();
+    if (member.mutedUntil > dateNow) {
+      return;
+    }
     const message = await this.prisma.message.create({
       data: {
         content: createMessageDto.content,
