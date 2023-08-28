@@ -29,7 +29,7 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { Roles } from './roles.decorator';
 import { RolesGuard } from './roles.guard';
 import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
-import { ChannelAddUserDto } from './dto/channel-add-user.dto';
+import { userIdDto } from '../users/dto/user-id.dto';
 import { JoinChannelDto } from './dto/join-channel.dto';
 import { UserMemberEntity } from './entities/user-member.entity';
 import { MuteUserDto } from './dto/mute-user.dto';
@@ -91,10 +91,10 @@ export class ChatController {
   @Post('newDM')
   @ApiCreatedResponse()
   openDM(
-    @Body() otherId: number,
+    @Body() other: userIdDto,
     @User() user: UserEntity,
   ) {
-    return this.chatService.openDM(user, otherId);
+    return this.chatService.openDM(user, other.id);
   }
 
   @Get(':id/users')
@@ -138,9 +138,9 @@ export class ChatController {
   @Roles('admin')
   kickUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body() userId: number,
+    @Body() user: userIdDto,
   ) {
-    this.chatService.kickUser(id, userId);
+    this.chatService.kickUser(id, user.id);
   }
 
   @Post(':id/ban')
@@ -149,9 +149,9 @@ export class ChatController {
   @Roles('admin')
   banUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body() userId: number,
+    @Body() user: userIdDto,
   ) {
-    this.chatService.banUser(id, userId);
+    this.chatService.banUser(id, user.id);
   }
 
   @Post(':id/unban')
@@ -160,9 +160,9 @@ export class ChatController {
   @Roles('admin')
   unbanUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body() userId: number,
+    @Body() user: userIdDto,
   ) {
-    this.chatService.unbanUser(id, userId);
+    this.chatService.unbanUser(id, user.id);
   }
 
   @Post(':id/promoteAdmin')
@@ -171,9 +171,9 @@ export class ChatController {
   @Roles('admin')
   promoteUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body() userId: number,
+    @Body() user: userIdDto,
   ) {
-    this.chatService.promoteUser(id, userId);
+    this.chatService.promoteUser(id, user.id);
   }
 
   @Post(':id/demoteAdmin')
@@ -182,9 +182,9 @@ export class ChatController {
   @Roles('admin')
   demoteUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body() userId: number,
+    @Body() user: userIdDto,
   ) {
-    this.chatService.demoteUser(id, userId);
+    this.chatService.demoteUser(id, user.id);
   }
 
   @Post(':id/mute')
@@ -215,7 +215,7 @@ export class ChatController {
   @Roles('admin')
   async addUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body() channelAddUserDto: ChannelAddUserDto,
+    @Body() channelAddUserDto: userIdDto,
   ) {
     this.chatService.addUser(id, channelAddUserDto.id);
   }
@@ -226,10 +226,10 @@ export class ChatController {
   @Roles('owner')
   transferOwnership(
     @Param('id', ParseIntPipe) channelId: number,
-    @Body() userId: number,
+    @Body() user: userIdDto,
     @User() owner: UserEntity,
   ) {
-    this.chatService.transferOwnership(channelId, owner, userId);
+    this.chatService.transferOwnership(channelId, owner, user.id);
   }
 
   @Delete(':id')
