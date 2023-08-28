@@ -60,7 +60,24 @@ export class ChatGateway implements OnGatewayConnection {
         authorId: member.id,
         channelId: createMessageDto.channelId,
       },
+      include: {
+        author: {
+          select: {
+            user: {
+              select: {
+                id: true,
+                email: true,
+                firstName: true,
+                lastName: true,
+                picture: true,
+                password: true,
+              },
+            },
+          },
+        },
+      },
     });
+    message.author.user.password = null;
     // client.to(createMessageDto.channelId.toString()).emit('message', message);
     this.broadcastMessage(message);
   }
