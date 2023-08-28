@@ -5,13 +5,13 @@
 :root {
   color-scheme: light;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #FFD6A5;
+  background-color: #ffd6a5;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-image: url("https://www.transparenttextures.com/patterns/inspiration-geometry.png");
+  background-image: url('https://www.transparenttextures.com/patterns/inspiration-geometry.png');
 }
 
 .dark {
@@ -19,8 +19,8 @@
   background-color: #374259;
 }
 
-#root {
-  text-align: center;
+#root {	
+  text-align: center;	
 }
 
 /* .body {
@@ -59,133 +59,114 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 } */
 
-#sticker:hover
-{
+#sticker:hover {
   transform: scale(1.5);
 }
 
-#home-menu
-{
+#home-menu {
   position: relative;
   transform: skewY(-15deg);
 }
 
-#home-menu li
-{
-    position: relative;
-    list-style: none;
-    width: 200px;
-    background: #ffc750;
-    padding: 15px;
-    z-index: var(--i);
-    transition: 0.5s;
+#home-menu li {
+  position: relative;
+  list-style: none;
+  width: 200px;
+  background: #ffc750;
+  padding: 15px;
+  z-index: var(--i);
+  transition: 0.5s;
 }
 /* LOGIN / LOGOUT COLOR */
 #home-menu li.login,
 #home-menu li.login::before,
-#home-menu li.login::after
-{
+#home-menu li.login::after {
   background: #a0d15f;
 }
 
 #home-menu li.login:hover,
-#home-menu li.login:hover::after
-{
+#home-menu li.login:hover::after {
   background: #71a32e;
 }
-#home-menu li.login:hover::before
-{
+#home-menu li.login:hover::before {
   background: #496b18;
 }
 
-#home-menu li.login:last-child::after
-{
+#home-menu li.login:last-child::after {
   box-shadow: -120px 120px 20px #277027;
 }
 
 #home-menu li.logout,
 #home-menu li.logout::before,
-#home-menu li.logout::after
-{
+#home-menu li.logout::after {
   background: #ec5e4b;
 }
 
 #home-menu li.logout:hover,
-#home-menu li.logout:hover::after
-{
+#home-menu li.logout:hover::after {
   background: #d85241;
 }
-#home-menu li.logout:hover::before
-{
+#home-menu li.logout:hover::before {
   background: #913225;
 }
 
-#home-menu li.logout:last-child::after
-{
+#home-menu li.logout:last-child::after {
   box-shadow: -120px 120px 20px #863e3e;
 }
 /* ------------ */
 
-#home-menu li:hover
-{
-    background: #33a3ee;
-    transform: translateX(50px);
+#home-menu li:hover {
+  background: #33a3ee;
+  transform: translateX(50px);
 }
 
-#home-menu li::before
-{
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -40px;
-    width: 40px;
-    height: 100%;
-    background: #ffc700;
-    transform-origin: right;
-    transform: skewY(45deg);
-    transition: 0.5s;
+#home-menu li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -40px;
+  width: 40px;
+  height: 100%;
+  background: #ffc700;
+  transform-origin: right;
+  transform: skewY(45deg);
+  transition: 0.5s;
 }
 
-#home-menu li:hover::before
-{
-    background: #1f5378;
+#home-menu li:hover::before {
+  background: #1f5378;
 }
 
-#home-menu li::after
-{
-    content: '';
-    position: absolute;
-    top: -40px;
-    left: 0;
-    width: 100%;
-    height: 40px;
-    background: #ffc770;
-    transform-origin: bottom;
-    transform: skewX(45deg);
-    transition: 0.5s;
+#home-menu li::after {
+  content: '';
+  position: absolute;
+  top: -40px;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background: #ffc770;
+  transform-origin: bottom;
+  transform: skewX(45deg);
+  transition: 0.5s;
 }
 
-#home-menu li:hover::after
-{
-    background: #33a3ee;
+#home-menu li:hover::after {
+  background: #33a3ee;
 }
 
-#home-menu li a
-{
-    text-decoration: none;
-    color: #999;
-    display: block;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    transition: 0.5s;
+#home-menu li a {
+  text-decoration: none;
+  color: #999;
+  display: block;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: 0.5s;
 }
 
-#home-menu li:hover a
-{
-    color: #fff;
+#home-menu li:hover a {
+  color: #fff;
 }
 
-#home-menu li:last-child::after
-{
-    box-shadow: -120px 120px 20px rgba(0,0,0,0.25);
+#home-menu li:last-child::after {
+  box-shadow: -120px 120px 20px rgba(0, 0, 0, 0.25);
 }

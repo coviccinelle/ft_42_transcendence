@@ -24,23 +24,25 @@ model User {
 }
 
 model Member {
-  id        Int       @id @default(autoincrement())
-  role      Role
-  left      Boolean
-  user      User      @relation(fields: [userId], references: [id])
-  userId    Int
-  channel   Channel   @relation(fields: [channelId], references: [id])
-  channelId Int
-  messages  Message[]
+  id          Int       @id @default(autoincrement())
+  role        Role
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  channel     Channel   @relation(fields: [channelId], references: [id])
+  channelId   Int
+  messages    Message[]
+  mutedUntil  DateTime  @default("1970-01-01T00:00:00+00:00")
 }
 
 model Channel {
-  id        Int       @id @default(autoincrement())
-  name      String
-  isGroup   Boolean
-  isPublic  Boolean
-  members   Member[]
-  messages  Message[]
+  id                  Int       @id @default(autoincrement())
+  name                String
+  isGroup             Boolean
+  isPublic            Boolean
+  isPasswordProtected Boolean
+  password            String?
+  members             Member[]
+  messages            Message[]
 }
 
 model Message {
@@ -57,4 +59,6 @@ enum Role {
   OWNER
   ADMIN
   REGULAR
+  LEFT
+  BANNED
 }

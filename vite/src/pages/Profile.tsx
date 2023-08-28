@@ -1,8 +1,9 @@
 import { client } from '../main';
 import { useEffect, useState } from 'react';
 import { getUser, handleLogout } from '../App';
+import Navbar from '../components/Navbar';
 
-function Profile() {
+function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
   const [firstName, setFirstName] = useState(String);
   const [lastName, setLastName] = useState(String);
   const [img, setImg] = useState(String);
@@ -13,8 +14,7 @@ function Profile() {
       setLastName(data.lastName);
       if (data.picture === null) {
         setImg('../assets/duckie_bg_rm/sticker1.png');
-      }
-      else {
+      } else {
         setImg(data.picture);
       }
     });
@@ -22,6 +22,7 @@ function Profile() {
 
   return (
     <>
+     <Navbar darkMode={props.darkMode} toggleDarkMode={props.toggleDarkMode} />
       <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/styles/tailwind.css" />
       <link rel="stylesheet" href="https://demos.creative-tim.com/notus-js/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" />
 

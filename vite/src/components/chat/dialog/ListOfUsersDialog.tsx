@@ -1,31 +1,21 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
+import apiUser from '../../../api/chat/user';
 import User from './User';
 
 function ListOfUsersDialog(props: {
   listOfUsersDialog: any;
   setListOfUsersDialog: any;
+  channelId: number;
 }) {
-  const [listOfUsers, setListOfUsers] = useState([
-    {
-      id: 1,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 2,
-      name: 'Jane',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 3,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-  ]);
+  const [listOfUsers, setListOfUsers] = useState([]);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await apiUser.getUsersInChannel(props.channelId);
+      setListOfUsers(response);
+    };
+    if (props.channelId) fetchUsers();
+  }, [props.channelId]);
   function closeDialog() {
     props.setListOfUsersDialog(false);
   }
@@ -66,16 +56,23 @@ function ListOfUsersDialog(props: {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform bg-gray-800 shadow-xl rounded-2xl">
+              <div className="inline-block w-full h-96 max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform dark:bg-gray-800 bg-rose-100 shadow-xl rounded-2xl">
                 <Dialog.Title
                   as="h3"
-                  className="text-lg font-medium leading-6 text-gray-200"
+                  className="text-lg font-medium leading-6 dark:text-gray-200 text-gray-900"
                 >
                   List of users in this channel
                 </Dialog.Title>
-                <div className="mt-2 no-scrollbar h-96 overflow-y-scroll">
+                <div className="mt-2 no-scrollbar h-full overflow-y-scroll">
                   {listOfUsers.map((user) => (
-                    <User key={user.id} user={user} />
+                    <User
+                      key={user.id}
+                      user={user}
+                      onClick={() => {
+                        console.log('go to profile');
+                        props.setListOfUsersDialog(false);
+                      }}
+                    />
                   ))}
                 </div>
               </div>

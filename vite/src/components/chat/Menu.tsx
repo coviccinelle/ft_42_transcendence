@@ -20,7 +20,7 @@ function MyMenu(props: {
             {({ open }) => (
               <>
                 <span className="rounded-md shadow-sm">
-                  <Menu.Button className="inline-flex justify-center w-full px-4 py-2 text-sm transition duration-150 bg-gray-700 border border-gray-700 text-gray-200 rounded-md hover:text-gray-500 focus:outline-none focus:border-gray-4 	00 focus:shadow-outline-blue active:bg-blue-200 active:text-gray-800">
+                  <Menu.Button className="inline-flex justify-center w-full px-4 py-2 text-sm transition duration-150 dark:bg-gray-900 bg-rose-100 dark:border border-gray-700 dark:text-gray-200 text-black rounded-md hover:text-gray-500 focus:outline-none focus:border-gray-4 	00 focus:shadow-outline-blue active:bg-blue-200 active:text-gray-800">
                     <span>Options</span>
                     <svg
                       viewBox="0 0 20 20"
@@ -41,9 +41,9 @@ function MyMenu(props: {
                 >
                   <Menu.Items
                     static
-                    className="absolute w-56 right-0 mt-2 origin-top-right bg-gray-950 border border-gray-700 rounded-md shadow-lg outline-none"
+                    className="absolute w-56 right-0 mt-2 origin-top-right dark:bg-gray-950 bg-rose-100 dark:border border-gray-700 rounded-md shadow-lg outline-none"
                   >
-                    <div className="px-4 py-3 border-b-2 border-gray-700 text-gray-400">
+                    <div className="px-4 py-3 border-b-2 dark:border-gray-700 border-amber-300 dark:text-gray-400 text-gray-900">
                       <p className="text-sm truncate">
                         Settings :{' '}
                         <a className="text-blue-500">{props.channelName}</a>
@@ -56,8 +56,8 @@ function MyMenu(props: {
                           <button
                             className={`${
                               active
-                                ? 'bg-gray-700 text-gray-200'
-                                : 'text-gray-400'
+                                ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
+                                : 'dark:text-gray-400 text-gray-900'
                             } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
                             onClick={() => {
                               props.setChangeNameDialog(true);
@@ -73,8 +73,8 @@ function MyMenu(props: {
                             href="#add_user"
                             className={`${
                               active
-                                ? 'bg-gray-700 text-gray-200'
-                                : 'text-gray-400'
+                                ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
+                                : 'dark:text-gray-400 text-gray-900'
                             } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
                             onClick={() => {
                               props.setAddSomeoneDialog(true);
@@ -90,8 +90,8 @@ function MyMenu(props: {
                             href="#list_user"
                             className={`${
                               active
-                                ? 'bg-gray-700 text-gray-200'
-                                : 'text-gray-400'
+                                ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
+                                : 'dark:text-gray-400 text-gray-900'
                             } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
                             onClick={() => {
                               props.setListOfUsersDialog(true);
@@ -107,8 +107,8 @@ function MyMenu(props: {
                             href="#leave_channel"
                             className={`${
                               active
-                                ? 'bg-gray-700 text-red-600'
-                                : 'text-red-400'
+                                ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
+                                : 'dark:text-gray-400 text-gray-900'
                             } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
                             onClick={() => {
                               props.setLeaveChannelDialog(true);

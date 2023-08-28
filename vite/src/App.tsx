@@ -13,10 +13,9 @@ import { UserEntity, client } from './main';
 
 export const getUser = async (): Promise<any> => {
   const { data } = await client.get('/users/me');
-  if (!data)
-    return (null);
-  return (data);
-}
+  if (!data) return null;
+  return data;
+};
 
 export async function handleLogout() {
   await client.get(`/auth/logout`);
@@ -51,35 +50,38 @@ function App() {
     }
   };
 
-
-
   return (
-    <div>
-    <div style={{zIndex: 9999}} //putting the dark mode toggle on top of everything
-    className="top-4 fixed right-4 p-2 rounded-full cursor-pointer dark:bg-yellow-200 bg-gray-600" onClick={toggleDarkMode}>
-      <span
-        role="img"
-        aria-label="dark"
-        className="cursor-pointer"
-      >
-        {darkMode ? '🌻' : '🌙'}
-      </span>
-      <label htmlFor="darkModeToggle" className="cursor-pointer"/>
-      <input
-        type="checkbox"
-        id="darkModeToggle"
-        className="hidden"
-        onChange={toggleDarkMode}
-      />
-    </div>
-
+    <div className="flex h-screen flex-col">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={
+              <Home darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile />} />
-          <Route path="/leaderboard" element={<LeaderBoard />} />
-          <Route path="/chat" element={<Chat />} />
+          <Route
+            path="/profile"
+            element={
+              <Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
+          <Route
+            path="/leaderboard"
+            element={
+              <LeaderBoard
+                darkMode={darkMode}
+                toggleDarkMode={toggleDarkMode}
+              />
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <Chat darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
           <Route path="/game" element={<Game />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="*" element={<P404 />} />
