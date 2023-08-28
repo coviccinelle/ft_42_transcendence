@@ -8,6 +8,7 @@ function ChangeNameDialog(props: {
   nameOfChannel: string;
   setNameOfChannel: any;
   channelId: number;
+  setChannels: any;
 }) {
   const [nameOfChannel, setNameOfChannel] = useState(props.nameOfChannel);
   useEffect(() => {
@@ -30,9 +31,17 @@ function ChangeNameDialog(props: {
     }
     props.setNameOfChannel(nameOfChannel);
     await apiChannel.putChannelName(props.channelId, nameOfChannel);
-    // api.changeChannelName(props.nameOfChannel, props.channelId);!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
     props.setChangeNameDialog(false);
   }
+
+  useEffect(() => {
+    const fetchChannels = async () => {
+      const channels = await apiChannel.getChannels();
+      props.setChannels(channels);
+      setNameOfChannel(props.nameOfChannel);
+    };
+    fetchChannels();
+  }, [props.changeNameDialog]);
 
   return (
     <>

@@ -19,16 +19,12 @@ function CreateChannelDialog(props: {
       const allChannels = await apiChannel.getAllChannels();
       setAllChannels(allChannels);
     };
-    fetchAllChannels();
-    console.log('allChannels : ', allChannels);
-  }, [props.createChannelDialog]);
-
-  useEffect(() => {
     const fetchChannels = async () => {
       const channels = await apiChannel.getChannels();
       props.setChannels(channels);
     };
     fetchChannels();
+    fetchAllChannels();
   }, [props.createChannelDialog]);
 
   function closeDialog() {

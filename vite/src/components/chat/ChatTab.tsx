@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import apiMessage from '../../api/chat/message';
 
 function ChatTab(props: {
+  messages: any;
   name: string;
   id: any;
   avatar: string;
@@ -20,10 +21,9 @@ function ChatTab(props: {
     if (props.id && props.createChannel === false) {
       fetchMessages();
     }
-  }, []);
+  }, [props.id, props.messages]);
 
   function displayMessageOrType() {
-    console.log('type : ', props.type);
     if (props.type === 'Public' && messages.length > 0) {
       return (
         <p className="dark:text-gray-300 text-gray-800 hidden sm:flex">
@@ -55,9 +55,9 @@ function ChatTab(props: {
             {props.name}
           </p>
         </div>
-        <p className="dark:text-gray-300 text-gray-800 hidden sm:flex">
+        <div className="dark:text-gray-300 text-gray-800 hidden sm:flex">
           {displayMessageOrType()}
-        </p>
+        </div>
       </div>
     </div>
   );

@@ -1,97 +1,21 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
+import apiUser from '../../../api/chat/user';
 import User from './User';
 
 function ListOfUsersDialog(props: {
   listOfUsersDialog: any;
   setListOfUsersDialog: any;
+  channelId: number;
 }) {
-  const [listOfUsers, setListOfUsers] = useState([
-    {
-      id: 1,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 2,
-      name: 'Jane',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 3,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 4,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 5,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 5,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 5,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 5,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 5,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 5,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 5,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 5,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 5,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 5,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-  ]);
+  const [listOfUsers, setListOfUsers] = useState([]);
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await apiUser.getUsersInChannel(props.channelId);
+      setListOfUsers(response);
+    };
+    if (props.channelId) fetchUsers();
+  }, [props.channelId]);
   function closeDialog() {
     props.setListOfUsersDialog(false);
   }

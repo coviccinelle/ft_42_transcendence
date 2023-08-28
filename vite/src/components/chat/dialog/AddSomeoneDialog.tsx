@@ -1,46 +1,25 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
 import User from './User';
+import apiUser from '../../../api/chat/user';
 
 function AddSomeoneDialog(props: {
   addSomeoneDialog: any;
   setAddSomeoneDialog: any;
 }) {
-  const [listOfUsers, setListOfUsers] = useState([
-    {
-      id: 1,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 2,
-      name: 'Jane',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 3,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 4,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-    {
-      id: 3,
-      name: 'John',
-      avatar:
-        'https://mellitahog.ly/en/wp-content/uploads/2021/09/randomUser.jpg',
-    },
-  ]);
+  const [listOfUsers, setListOfUsers] = useState([]);
   const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      const response = await apiUser.getUsers();
+      setListOfUsers(response);
+    };
+    fetchUsers();
+  }, [props.addSomeoneDialog]);
+
   const filteredUsers = listOfUsers.filter((tab) => {
-    return tab.name.toLowerCase().includes(search.toLowerCase());
+    return tab.firstName.toLowerCase().includes(search.toLowerCase());
   });
 
   function closeDialog() {

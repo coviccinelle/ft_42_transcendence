@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 // import MessageOther from "./MessageOther";
-import Messages from './Messages';
-import api from '../../api/chat/message';
+import Message from './Message';
+import apiMessage from '../../api/chat/message';
+import apiUser from '../../api/chat/user';
 import MyMenu from './Menu';
 import ChangeNameDialog from './dialog/ChangeNameDialog';
 import AddSomeoneDialog from './dialog/AddSomeoneDialog';
@@ -16,16 +17,34 @@ function Channel(props: {
   channelName: string;
   setChannelName: any;
   socket: Socket;
+  setChannels: any;
 }) {
   const [message, setMessage] = useState('');
   const [addSomeoneDialog, setAddSomeoneDialog] = useState(false);
   const [changeNameDialog, setChangeNameDialog] = useState(false);
   const [leaveChannelDialog, setLeaveChannelDialog] = useState(false);
   const [listOfUsersDialog, setListOfUsersDialog] = useState(false);
+  const [userMe, setUserMe] = useState();
+  const [role, setRole] = useState('');
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const user = await apiUser.getMe();
+      setUserMe(user);
+    };
+    const fetchUsersInChannel = async () => {
+      const users = await apiUser.getUsersInChannel(props.channelId);
+      const role = users.find((user: any) => user.id === userMe?.id)?.members[0]
+        .role;
+      setRole(role);
+    };
+    fetchUser();
+    fetchUsersInChannel();
+  }, [props.channelId]);
 
   useEffect(() => {
     const fetchMessages = async () => {
-      const messages = await api.getMessages(props.channelId);
+      const messages = await apiMessage.getMessages(props.channelId);
       props.setMessages(messages);
     };
     if (props.channelId) {
@@ -39,8 +58,7 @@ function Channel(props: {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    api.sendMessage(message, props.channelId, props.socket);
-    // api.postMessage(message, props.channelId); // need to get channelId and authorId from server
+    apiMessage.sendMessage(message, props.channelId, props.socket);
     // console.log(messages);
     setMessage('');
   };
@@ -76,6 +94,7 @@ function Channel(props: {
           nameOfChannel={props.channelName}
           setNameOfChannel={props.setChannelName}
           channelId={props.channelId}
+          setChannels={props.setChannels}
         ></ChangeNameDialog>
         <AddSomeoneDialog
           addSomeoneDialog={addSomeoneDialog}
@@ -84,6 +103,7 @@ function Channel(props: {
         <ListOfUsersDialog
           listOfUsersDialog={listOfUsersDialog}
           setListOfUsersDialog={setListOfUsersDialog}
+          channelId={props.channelId}
         ></ListOfUsersDialog>
         <LeaveChannelDialog
           leaveChannelDialog={leaveChannelDialog}
@@ -96,12 +116,14 @@ function Channel(props: {
       >
         {props.messages.map((message: any) => {
           return (
-            <Messages
+            <Message
+              role={role}
               message={message.content}
-              author={'you'}
-              avatar="https://img-02.stickers.cloud/packs/1da1c0da-9330-4d89-9700-8d75b9c62635/webp/af435734-4fe8-4c6f-a37e-1ac423e849b3.webp"
+              author={message.author.user.firstName}
+              avatar={message.author.user.picture}
+              id={message.author.user.id}
             />
-          ); // need author and avatar from server
+          );
         })}
       </div>
       <div className="pt-auto pb-3 px-4">

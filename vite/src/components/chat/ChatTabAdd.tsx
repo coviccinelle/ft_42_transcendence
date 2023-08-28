@@ -19,7 +19,6 @@ function ChatTabAdd(props: {
             'https://cdn.icon-icons.com/icons2/495/PNG/512/add-circle-1_icon-icons.com_48714.png'
           } // image from group chat or other user
           className="object-cover h-12 w-12 rounded-full"
-          alt=""
         />
       </div>
       <div className="sm:w-full">

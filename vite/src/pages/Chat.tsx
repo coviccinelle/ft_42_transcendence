@@ -86,6 +86,7 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
               {filteredTabs.map((tab: any) => {
                 return (
                   <ChatTab
+                    messages={messages}
                     key={tab.id}
                     name={tab.name}
                     id={tab.id}
@@ -115,6 +116,7 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
               channelName={channelName}
               setChannelName={setChannelName}
               socket={socket}
+              setChannels={setChannels}
             />
           ) : (
             <div className="flex flex-col border-t-2 border-gray-950 items-center justify-center flex-auto">
