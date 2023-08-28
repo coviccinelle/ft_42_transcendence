@@ -56,6 +56,7 @@ function Test(props: { darkMode: boolean; toggleDarkMode: any }) {
                                 <svg className="w-5 h-5" aria-hidden="true" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2 2 2m6 7l-2-2-2 2m2-2v-6m2 18h6a2 2 0 002-2v-6m-2 8h-6a2 2 0 01-2-2v-6"></path>
                                 </svg>
+                                <span className="ml-4 text-green-400">Home</span>
                             </a>
                         </li>
                     </ul>
