@@ -87,13 +87,8 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
                 </div>
                 <div className="mt-10 py-10 border-t border-blueGray-200 text-center">
                   <div className="flex flex-wrap justify-center">
-                    <div className="w-full lg:w-9/12 px-4">
-                      <p className="mb-4 text-lg leading-relaxed text-blueGray-700">
-                        Passionate online pong player with lightning-fast reflexes and a strategic mind.
-                        Consistently aiming for the perfect bounce and paddle precision.
-                        Join me in the virtual arena for intense matches and friendly competition!
-                      </p>
-                      <a href="#pablo" className="font-normal text-pink-500">Show more</a>
+                    <div className="w-full lg:w-9/12 px-4 text-black">
+                    <p>Match history section here</p>                      
                     </div>
                   </div>
                 </div>
