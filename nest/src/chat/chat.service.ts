@@ -422,6 +422,52 @@ export class ChatService {
     });
   }
 
+  async promoteUser(channelId: number, userId: number) {
+    const member = await this.prisma.member.findFirst({
+      where: {
+        channelId: channelId,
+        userId: userId,
+      },
+    });
+    if (!member || member.role === 'LEFT' || member.role === 'BANNED') {
+      throw new HttpException('Can\'t find user', HttpStatus.NOT_FOUND);
+    }
+    if (member.role !== 'REGULAR') {
+      throw new HttpException('User isn\'t a regular member', HttpStatus.BAD_REQUEST);
+    }
+    this.prisma.member.update({
+      where: {
+        id: member.id,
+      },
+      data: {
+        role: 'ADMIN',
+      },
+    });
+  }
+
+  async demoteUser(channelId: number, userId: number) {
+    const member = await this.prisma.member.findFirst({
+      where: {
+        channelId: channelId,
+        userId: userId,
+      },
+    });
+    if (!member || member.role === 'LEFT' || member.role === 'BANNED') {
+      throw new HttpException('Can\'t find user', HttpStatus.NOT_FOUND);
+    }
+    if (member.role !== 'ADMIN') {
+      throw new HttpException('User isn\'t an admin member', HttpStatus.BAD_REQUEST);
+    }
+    this.prisma.member.update({
+      where: {
+        id: member.id,
+      },
+      data: {
+        role: 'REGULAR',
+      },
+    });
+  }
+
   async transferOwnership(channelId: number, owner: UserEntity, newOwnerId: number) {
     const user = await this.prisma.user.findUnique({
       where: { id: newOwnerId },

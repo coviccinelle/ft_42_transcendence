@@ -164,6 +164,28 @@ export class ChatController {
     this.chatService.unbanUser(id, userId);
   }
 
+  @Post(':id/promoteAdmin')
+  @HttpCode(204)
+  @ApiNoContentResponse()
+  @Roles('admin')
+  promoteUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() userId: number,
+  ) {
+    this.chatService.promoteUser(id, userId);
+  }
+
+  @Post(':id/demoteAdmin')
+  @HttpCode(204)
+  @ApiNoContentResponse()
+  @Roles('admin')
+  demoteUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() userId: number,
+  ) {
+    this.chatService.demoteUser(id, userId);
+  }
+
   @Patch(':id/adduser')
   @HttpCode(204)
   @ApiNoContentResponse()
