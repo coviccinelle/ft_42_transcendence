@@ -65,22 +65,22 @@ export class ChatController {
 
   @Post('join')
   @ApiCreatedResponse({ type: ChannelEntity })
-  joinChannel(
+  async joinChannel(
     @User() user: UserEntity,
     @Body() joinChannelDto: JoinChannelDto,
   ) {
-    return this.chatService.joinChannel(joinChannelDto, user);
+    return await this.chatService.joinChannel(joinChannelDto, user);
   }
 
   @Get(':id/leave')
   @HttpCode(204)
   @Roles('regular')
   @ApiNoContentResponse()
-  leaveChannel(
+  async leaveChannel(
     @User   () user: UserEntity,
     @Param('id', ParseIntPipe) id: number,
   ) {
-    this.chatService.leaveChannel(id, user);
+    await this.chatService.leaveChannel(id, user);
   }
 
   @Get(':id')
@@ -92,11 +92,11 @@ export class ChatController {
 
   @Post('newDM')
   @ApiCreatedResponse()
-  openDM(
+  async openDM(
     @Body() other: userIdDto,
     @User() user: UserEntity,
   ) {
-    return this.chatService.openDM(user, other.id);
+    return await this.chatService.openDM(user, other.id);
   }
 
   @Get(':id/users')
@@ -127,11 +127,11 @@ export class ChatController {
   @Patch(':id/name')
   @ApiOkResponse({ type: ChannelEntity })
   @Roles('admin')
-  updateName(
+  async updateName(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateChannelNameDto: UpdateChannelNameDto,
   ) {
-    return this.chatService.updateName(id, updateChannelNameDto);
+    return await this.chatService.updateName(id, updateChannelNameDto);
   }
 
   @Post(':id/kick')
@@ -149,11 +149,11 @@ export class ChatController {
   @HttpCode(204)
   @ApiNoContentResponse()
   @Roles('admin')
-  banUser(
+  async banUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() user: userIdDto,
   ) {
-    this.chatService.banUser(id, user.id);
+    await this.chatService.banUser(id, user.id);
   }
 
   @Post(':id/unban')
@@ -171,44 +171,44 @@ export class ChatController {
   @HttpCode(204)
   @ApiNoContentResponse()
   @Roles('admin')
-  promoteUser(
+  async promoteUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() user: userIdDto,
   ) {
-    this.chatService.promoteUser(id, user.id);
+    await this.chatService.promoteUser(id, user.id);
   }
 
   @Post(':id/demoteAdmin')
   @HttpCode(204)
   @ApiNoContentResponse()
   @Roles('admin')
-  demoteUser(
+  async demoteUser(
     @Param('id', ParseIntPipe) id: number,
     @Body() user: userIdDto,
   ) {
-    this.chatService.demoteUser(id, user.id);
+    await this.chatService.demoteUser(id, user.id);
   }
 
   @Post(':id/mute')
   @HttpCode(204)
   @ApiNoContentResponse()
   @Roles('admin')
-  muteUser(
+  async muteUser(
     @Param(':id', ParseIntPipe) id: number,
     @Body() muteUserDto: MuteUserDto,
   ) {
-    this.chatService.muteUser(id, muteUserDto);
+    await this.chatService.muteUser(id, muteUserDto);
   }
 
   @Post(':id/unmute')
   @HttpCode(204)
   @ApiNoContentResponse()
   @Roles('admin')
-  unmuteUser(
+  async unmuteUser(
     @Param(':id', ParseIntPipe) id: number,
     @Body() muteUserDto: MuteUserDto,
   ) {
-    this.chatService.unmuteUser(id, muteUserDto);
+    await this.chatService.unmuteUser(id, muteUserDto);
   }
 
   @Patch(':id/adduser')
@@ -219,7 +219,7 @@ export class ChatController {
     @Param('id', ParseIntPipe) id: number,
     @Body() channelAddUserDto: userIdDto,
   ) {
-    this.chatService.addUser(id, channelAddUserDto.id);
+    await this.chatService.addUser(id, channelAddUserDto.id);
   }
 
   @Patch(':id/password')
@@ -237,12 +237,12 @@ export class ChatController {
   @HttpCode(204)
   @ApiNoContentResponse()
   @Roles('owner')
-  transferOwnership(
+  async transferOwnership(
     @Param('id', ParseIntPipe) channelId: number,
     @Body() user: userIdDto,
     @User() owner: UserEntity,
   ) {
-    this.chatService.transferOwnership(channelId, owner, user.id);
+    await this.chatService.transferOwnership(channelId, owner, user.id);
   }
 
   @Delete(':id')
