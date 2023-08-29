@@ -34,7 +34,7 @@ const putChannelName = async (channelId: number, name: string) => {
 
 const leaveChannel = async (channelId: number) => {
   try {
-    const response = await axios.delete(`${API}/chat/${channelId}/leave`);
+    const response = await axios.get(`${API}/chat/${channelId}/leave`);
     console.log(response.data);
     return response.data;
   } catch (error) {

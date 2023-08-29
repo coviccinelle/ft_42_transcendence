@@ -6,8 +6,8 @@ import MyMenu from './Menu';
 import ChangeNameDialog from './dialog/ChangeNameDialog';
 import AddSomeoneDialog from './dialog/AddSomeoneDialog';
 import ListOfUsersDialog from './dialog/ListOfUsersDialog';
-import LeaveChannelDialog from './dialog/LeaveChannelDialog';
 import { Socket } from 'socket.io-client';
+import AdminDialog from './dialog/AdminDialog';
 
 function Channel(props: {
   channelId: number;
@@ -18,12 +18,14 @@ function Channel(props: {
   socket: Socket;
   channels: any;
   setChannels: any;
+  leaveChannelDialog: any;
+  setLeaveChannelDialog: any;
 }) {
   const [message, setMessage] = useState('');
   const [addSomeoneDialog, setAddSomeoneDialog] = useState(false);
   const [changeNameDialog, setChangeNameDialog] = useState(false);
-  const [leaveChannelDialog, setLeaveChannelDialog] = useState(false);
   const [listOfUsersDialog, setListOfUsersDialog] = useState(false);
+  const [adminDialog, setAdminDialog] = useState(false);
   const [userMe, setUserMe] = useState<any>();
   const [role, setRole] = useState('');
 
@@ -87,8 +89,9 @@ function Channel(props: {
           setAddSomeoneDialog={setAddSomeoneDialog}
           listOfUsersDialog={listOfUsersDialog}
           setListOfUsersDialog={setListOfUsersDialog}
-          leaveChannelDialog={leaveChannelDialog}
-          setLeaveChannelDialog={setLeaveChannelDialog}
+          leaveChannelDialog={props.leaveChannelDialog}
+          setLeaveChannelDialog={props.setLeaveChannelDialog}
+          setAdminDialog={setAdminDialog}
           role={role}
           channel={props.channels.find(
             (channel: any) => channel.id === props.channelId,
@@ -114,11 +117,13 @@ function Channel(props: {
           userMe={userMe}
           role={role}
         ></ListOfUsersDialog>
-        <LeaveChannelDialog
+        <AdminDialog
+          adminDialog={adminDialog}
+          setAdminDialog={setAdminDialog}
           channelId={props.channelId}
-          leaveChannelDialog={leaveChannelDialog}
-          setLeaveChannelDialog={setLeaveChannelDialog}
-        ></LeaveChannelDialog>
+          userMe={userMe}
+          role={role}
+        ></AdminDialog>
       </div>
       <div
         id="messages"
@@ -127,6 +132,7 @@ function Channel(props: {
         {props.messages.map((message: any) => {
           return (
             <Message
+              key={message.id}
               role={role}
               message={message.content}
               author={message.author.user.firstName}

@@ -1,40 +1,32 @@
+import React, { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useEffect, useState } from 'react';
 import User from './User';
 import apiUser from '../../../api/chat/user';
 
-function AddSomeoneDialog(props: {
+function AdminDialog(props: {
   channelId: number;
-  addSomeoneDialog: any;
-  setAddSomeoneDialog: any;
+  adminDialog: any;
+  setAdminDialog: any;
+  userMe: any;
+  role: string;
 }) {
   const [listOfUsers, setListOfUsers] = useState([]);
-  const [search, setSearch] = useState('');
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await apiUser.getUsers();
+      const response = await apiUser.getUsersInChannel(props.channelId);
       setListOfUsers(response);
     };
     fetchUsers();
-  }, [props.addSomeoneDialog]);
-
-  const filteredUsers = listOfUsers.filter((tab: any) => {
-    return tab.firstName.toLowerCase().includes(search.toLowerCase());
-  });
+  }, [props.adminDialog]);
 
   function closeDialog() {
-    props.setAddSomeoneDialog(false);
-  }
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    console.log('someone added');
-    props.setAddSomeoneDialog(false);
+    props.setAdminDialog(false);
   }
 
   return (
     <>
-      <Transition appear show={props.addSomeoneDialog} as={Fragment}>
+      <Transition appear show={props.adminDialog} as={Fragment}>
         <Dialog
           as="div"
           className="fixed inset-0 z-10 overflow-y-auto"
@@ -73,40 +65,20 @@ function AddSomeoneDialog(props: {
                   as="h3"
                   className="text-lg font-medium leading-6 dark:text-gray-200 text-gray-900"
                 >
-                  Add someone to this channel
+                  Manage admins
                 </Dialog.Title>
-                <div className="mt-2">
-                  <form action="submit" onSubmit={handleSubmit}>
-                    <input
-                      type="text"
-                      className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none dark:bg-blue-100 bg-white placeholder-gray-400 dark:placeholder-gray-600 dark:text-gray-600"
-                      placeholder="Name"
-                      value={search}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setSearch(e.target.value);
-                      }}
-                    />
-                  </form>
-                </div>
                 <div className="mt-2 no-scrollbar h-64 overflow-y-scroll ">
-                  {filteredUsers.map((user: any) => (
+                  {listOfUsers.map((user: any) => (
                     <User
                       key={user.id}
                       user={user}
-                      onClick={async () => {
-                        await apiUser.addSomeoneToChannel(
-                          props.channelId,
-                          user.id,
-                        );
-                        console.log('someone added');
-                        props.setAddSomeoneDialog(false);
-                      }}
+                      onClick={() => {}}
+                      adminDialog={true}
                       listOfUsersDialog={false}
-                      adminDialog={false}
-                      channelId={0}
-                      userMe={0}
-                      role={''}
-                      dialog={props.setAddSomeoneDialog}
+                      channelId={props.channelId}
+                      userMe={props.userMe}
+                      role={props.role}
+                      dialog={props.setAdminDialog}
                     />
                   ))}
                 </div>
@@ -119,4 +91,4 @@ function AddSomeoneDialog(props: {
   );
 }
 
-export default AddSomeoneDialog;
+export default AdminDialog;

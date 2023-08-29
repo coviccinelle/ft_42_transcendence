@@ -74,6 +74,28 @@ const banUser = async (channelId: number, userId: number) => {
   }
 };
 
+const promoteAdmin = async (channelId: number, userId: number) => {
+  try {
+    const response = await axios.post(`${API}/chat/${channelId}/promoteAdmin`, {
+      id: userId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const demoteAdmin = async (channelId: number, userId: number) => {
+  try {
+    const response = await axios.post(`${API}/chat/${channelId}/demoteAdmin`, {
+      id: userId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export default {
   getUsers,
   getUsersInChannel,
@@ -82,4 +104,6 @@ export default {
   kickUser,
   banUser,
   addSomeoneToChannel,
+  promoteAdmin,
+  demoteAdmin,
 };

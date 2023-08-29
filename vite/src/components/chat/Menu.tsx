@@ -3,6 +3,7 @@ import { Transition } from '@headlessui/react';
 import PasswordDialog from './dialog/PasswordDialog';
 import { useState } from 'react';
 import apiChannel from '../../api/chat/channel';
+import ListOfUsersDialog from './dialog/ListOfUsersDialog';
 
 function MyMenu(props: {
   channelName: string;
@@ -14,6 +15,7 @@ function MyMenu(props: {
   setListOfUsersDialog: any;
   leaveChannelDialog: any;
   setLeaveChannelDialog: any;
+  setAdminDialog: any;
   role: string;
   channel: any;
 }) {
@@ -27,8 +29,10 @@ function MyMenu(props: {
             passwordDialog={passwordDialog}
             setPasswordDialog={setPasswordDialog}
             channelId={props.channel.id}
-            handleSubmit={async () => {
+            handleSubmit={async (e: any) => {
+              e.preventDefault();
               await apiChannel.changePassword(props.channel.id, password);
+              setPasswordDialog(false);
             }}
             password={password}
             setPassword={setPassword}
@@ -145,6 +149,27 @@ function MyMenu(props: {
                             >
                               <p className="overflow-hidden overflow-ellipsis">
                                 Leave {props.channelName}
+                              </p>
+                            </a>
+                          )}
+                        </Menu.Item>
+                      )}
+                      {props.role === 'OWNER' && (
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#admin_panel"
+                              className={`${
+                                active
+                                  ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
+                                  : 'dark:text-gray-400 text-gray-900'
+                              } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                              onClick={() => {
+                                props.setAdminDialog(true);
+                              }}
+                            >
+                              <p className="overflow-hidden overflow-ellipsis">
+                                Manage admins of {props.channelName}
                               </p>
                             </a>
                           )}

@@ -7,6 +7,7 @@ import apiMessage from '../api/chat/message';
 import { Socket, io } from 'socket.io-client';
 import ChatTabAdd from '../components/chat/ChatTabAdd';
 import Navbar from '../components/Navbar';
+import LeaveChannelDialog from '../components/chat/dialog/LeaveChannelDialog';
 
 function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
   const [channels, setChannels] = useState<any>([]);
@@ -14,6 +15,7 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
   const [messages, setMessages] = useState<any>([]);
   const [channelName, setChannelName] = useState('');
   const [socket, setSocket] = useState(io('/chat', { autoConnect: false }));
+  const [leaveChannelDialog, setLeaveChannelDialog] = useState(false);
 
   useEffect(() => {
     const fetchChannels = async () => {
@@ -47,7 +49,13 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
     }
     function handleLeaveChannel(channelId: number) {
       console.log(`Leaving channel ${channelId}`);
-      //TODO trigger update for that channel
+      const fetchChannels = async () => {
+        const channels = await apiChannel.getChannels();
+        console.log(channels);
+        setChannels(channels);
+      };
+      setCurrentChannel(0);
+      fetchChannels();
     }
     function handleConnection() {
       console.log('Socket connected');
@@ -110,6 +118,11 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
               })}
             </div>
           </div>
+          <LeaveChannelDialog
+            channelId={currentChannel}
+            leaveChannelDialog={leaveChannelDialog}
+            setLeaveChannelDialog={setLeaveChannelDialog}
+          />
           {currentChannel ? (
             <Channel
               channelId={currentChannel}
@@ -120,6 +133,8 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
               socket={socket}
               channels={channels}
               setChannels={setChannels}
+              leaveChannelDialog={leaveChannelDialog}
+              setLeaveChannelDialog={setLeaveChannelDialog}
             />
           ) : (
             <div className="flex flex-col border-t-2 border-gray-950 items-center justify-center flex-auto">

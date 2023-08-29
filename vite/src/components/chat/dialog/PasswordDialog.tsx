@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment } from 'react';
 
 function PasswordDialog(props: {
   passwordDialog: any;
@@ -65,7 +65,7 @@ function PasswordDialog(props: {
                     <input
                       type="text"
                       className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none dark:bg-blue-100 bg-white"
-                      placeholder="New name"
+                      placeholder="password"
                       value={props.password}
                       onChange={handleChange}
                     />

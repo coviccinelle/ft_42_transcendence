@@ -68,7 +68,7 @@ function ListOfUsersDialog(props: {
                   List of users in this channel
                 </Dialog.Title>
                 <div className="mt-2 no-scrollbar h-full overflow-y-scroll">
-                  {listOfUsers.map((user) => (
+                  {listOfUsers.map((user: any) => (
                     <User
                       key={user.id}
                       user={user}
@@ -76,9 +76,10 @@ function ListOfUsersDialog(props: {
                         console.log('go to profile');
                         props.setListOfUsersDialog(false);
                       }}
-                      addSomeoneDialog={false}
+                      listOfUsersDialog={true}
                       channelId={props.channelId}
                       userMe={props.userMe}
+                      adminDialog={false}
                       role={props.role}
                       dialog={props.setListOfUsersDialog}
                     />

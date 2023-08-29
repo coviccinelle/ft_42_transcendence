@@ -3,34 +3,39 @@ import apiUser from '../../../api/chat/user';
 function User(props: {
   user: any;
   onClick: any;
-  addSomeoneDialog: boolean;
+  listOfUsersDialog: boolean;
   channelId: number;
   userMe: any;
   role: string;
   dialog: any;
+  adminDialog: boolean;
 }) {
   if (!props.user.picture) {
     props.user.picture = 'https://i.imgur.com/6VBx3io.png';
   }
+  console.log(props.user.members[0].role);
   return (
     <div className="flex flex-row">
-      <div
-        className="flex flex-row py-4 px-2 items-center dark:hover:bg-gray-600 cursor-pointer dark:text-white text-gray-900 hover:bg-rose-300 w-full"
-        onClick={props.onClick}
-      >
-        <div className="w-1/4">
-          <img
-            src={props.user.picture}
-            className="object-cover h-12 w-12 rounded-full"
-          />
+      {props.user.id !== props.userMe.id && (
+        <div
+          className="flex flex-row py-4 px-2 items-center dark:hover:bg-gray-600 cursor-pointer dark:text-white text-gray-900 hover:bg-rose-300 w-full"
+          onClick={props.onClick}
+        >
+          <div className="w-1/4">
+            <img
+              src={props.user.picture}
+              className="object-cover h-12 w-12 rounded-full"
+            />
+          </div>
+          <div className="w-full">
+            <div className="textLg font-semibold">{props.user.firstName}</div>{' '}
+          </div>
         </div>
-        <div className="w-full">
-          <div className="text-lg font-semibold">{props.user.firstName}</div>{' '}
-        </div>
-      </div>
-      {!props.addSomeoneDialog &&
+      )}
+      {props.listOfUsersDialog &&
         props.user.id !== props.userMe.id &&
-        (props.role === 'OWNER' || props.role === 'ADMIN') && (
+        (props.role === 'OWNER' || props.role === 'ADMIN') &&
+        props.user.members[0].role !== 'OWNER' && (
           <div className="flex flex-row space w-1/4 justify-center py-7">
             <div
               className="flex cursor-pointer"
@@ -95,6 +100,64 @@ function User(props: {
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 015.636 5.636m12.728 12.728L5.636 5.636"
+                />
+              </svg>
+            </div>
+          </div>
+        )}
+      {props.adminDialog &&
+        props.role === 'OWNER' &&
+        props.user.id !== props.userMe.id &&
+        props.user.members[0].role !== 'ADMIN' && (
+          <div className="flex flex-row space w-1/4 justify-center py-7">
+            <div
+              className="flex cursor-pointer"
+              onClick={async () => {
+                await apiUser.promoteAdmin(props.channelId, props.user.id);
+                props.dialog(false);
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-6 h-6 dark:text-white text-gray-900"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                />
+              </svg>
+            </div>
+          </div>
+        )}
+      {props.adminDialog &&
+        props.role === 'OWNER' &&
+        props.user.id !== props.userMe.id &&
+        props.user.members[0].role === 'ADMIN' && (
+          <div className="flex flex-row space w-1/4 justify-center py-7">
+            <div
+              className="flex cursor-pointer"
+              onClick={async () => {
+                await apiUser.demoteAdmin(props.channelId, props.user.id);
+                props.dialog(false);
+              }}
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth="1.5"
+                stroke="currentColor"
+                className="w-6 h-6 dark:text-white text-gray-900"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M19.5 12h-15"
                 />
               </svg>
             </div>
