@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { getUser, logoutUser } from '../App';
+import { getUser } from '../App';
+import '../styles/App.css';
+import LoadingScreen from "../components/LoadingScreen";
 import { UserEntity } from '../main';
 
 interface ScreenSize {
@@ -15,25 +17,12 @@ interface StickerProps {
   screenSize: ScreenSize;
 }
 
-function LoginTile(): JSX.Element {
-  const [user, setUser] = useState<UserEntity>();
-  const tileId = { '--i': 0 } as React.CSSProperties;
+function LoginTile({user}: {user: any}): JSX.Element {
+	const loginTileId = { "--i": 0 } as React.CSSProperties;
 
-  useEffect(() => {
-    getUser().then((res) => setUser(res));
-  }, []);
-  console.log(user);
-  if (user != null)
-    return (
-      <li className="logout" style={tileId}>
-        <a href="/api/auth/logout">Logout</a>
-      </li>
-    );
-  return (
-    <li className="login" style={tileId}>
-      <Link to="/login">Login</Link>
-    </li>
-  );
+	if (user === null)
+		return (<li className="login" style={loginTileId}><Link to="/login">Login</Link></li>);
+	return (<li className="logout" style={loginTileId}><a href="/api/auth/logout">Logout</a></li>);
 }
 
 function Sticker(props: StickerProps): JSX.Element {
@@ -43,7 +32,7 @@ function Sticker(props: StickerProps): JSX.Element {
   const yPos = props.screenSize.height / 2 + props.screenSize.radius * Math.sin(props.angle) - 100 / 2;
 
   return (
-    <img id="sticker" className="absolute w-10 h-10 lg:w-24 lg:h-24 object-cover transform transition-transform hover:scale-150" style={{ left: xPos, top: yPos }} src={`./src/assets/duckie_bg_rm/sticker${props.id}.png`} />
+    <img id="sticker" className="unselectable absolute w-10 h-10 lg:w-24 lg:h-24 object-cover transform transition-transform hover:scale-150" style={{ left: xPos, top: yPos }} src={`./src/assets/duckie_bg_rm/sticker${props.id}.png`} />
   )
 }
 
@@ -84,12 +73,45 @@ function Carrousel(): JSX.Element {
     };
   }, [screenSize]);
 
-  return <div>{stickers}</div>;
+  	return (
+    	<div className="unselectable">
+			{stickers} 
+    	</div>
+  	)
 }
 
-function Home(): JSX.Element {
+function SelectMenu({user}: {user: any}): JSX.Element {
+	return (
+		<ul id="home-menu">
+      <li style={{ '--i': 3 } as React.CSSProperties}> <a href="/game">Game</a></li>
+      <li style={{ '--i': 2 } as React.CSSProperties}> <a href="/chat">Chat</a></li>
+      <li style={{ '--i': 1 } as React.CSSProperties}> <a href="/profile">Profile</a></li>
+      {/* <li style={{ '--i': 1 } as React.CSSProperties}> <a href="/leaderboard">Leaderboard</a></li> */}
+      <LoginTile user={user} />
+    </ul>
+	)
+}
+
+function Home(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
+  const [isLoading, setIsLoading] = useState(true);
+	const [user, setUser] = useState<UserEntity | null>();
+
+	useEffect(() => {
+		if (isLoading)
+		{
+			getUser().then((res) => {
+				setUser(res);
+				console.log(user);
+			});
+			setTimeout(() => {
+				setIsLoading(false);
+			}, 500);
+		}
+	})
+
   return (
     <>
+      <LoadingScreen isLoading={isLoading} />
       <div
         id="center"
         className="fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center"
@@ -97,15 +119,7 @@ function Home(): JSX.Element {
         <h1 className="mb-16 pb-2 animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl font-black">
           Pooong?
         </h1>
-        <ul id="home-menu">
-          <li style={{ '--i': 4 } as React.CSSProperties}> <a href="/profile">Profile</a></li>
-          <li style={{ '--i': 3 } as React.CSSProperties}> <a href="/game">Game</a></li>
-          <li style={{ '--i': 2 } as React.CSSProperties}> <a href="/chat">Chat</a></li>
-          <li style={{ '--i': 1 } as React.CSSProperties}> <a href="/leaderboard">Leaderboard</a></li>
-          {/* If user not logged redirect to login page */}
-          <LoginTile />
-          {/* If user logged redirect to logout */}
-        </ul>
+        <SelectMenu user={user} />
         <Carrousel />
       </div>
     </>

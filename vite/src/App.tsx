@@ -12,7 +12,7 @@ import Test from './pages/Test';
 import './styles/App.css';
 import { UserEntity, client } from './main';
 
-export const getUser = async (): Promise<any> => {
+export const getUser = async (): Promise<UserEntity | null> => {
   const { data } = await client.get('/users/me');
   if (!data) return null;
   return data;
