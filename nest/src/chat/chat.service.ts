@@ -383,7 +383,7 @@ export class ChatService {
       },
     });
     if (!member || member.role === 'BANNED' || member.role === 'LEFT') return;
-    this.prisma.member.update({
+    await this.prisma.member.update({
       where: {
         id: member.id,
       },
@@ -544,20 +544,20 @@ export class ChatService {
 
   async updatePassword(channelId: number, password: string) {
     if (password) {
-      await this.prisma.channel.update({
-        where: { id: channelId },
-        data: {
-          isPasswordProtected: false,
-          password: null,
-        },
-      });
-    } else {
       const hashedPassword = await hash(password, roundsOfHashing);
       await this.prisma.channel.update({
         where: { id: channelId },
         data: {
           isPasswordProtected: true,
           password: hashedPassword,
+        },
+      });
+    } else {
+      await this.prisma.channel.update({
+        where: { id: channelId },
+        data: {
+          isPasswordProtected: false,
+          password: null,
         },
       });
     }
