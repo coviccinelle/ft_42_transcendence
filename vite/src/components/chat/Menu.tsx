@@ -1,5 +1,8 @@
 import { Menu } from '@headlessui/react';
 import { Transition } from '@headlessui/react';
+import PasswordDialog from './dialog/PasswordDialog';
+import { useState } from 'react';
+import apiChannel from '../../api/chat/channel';
 
 function MyMenu(props: {
   channelName: string;
@@ -12,11 +15,24 @@ function MyMenu(props: {
   leaveChannelDialog: any;
   setLeaveChannelDialog: any;
   role: string;
+  channel: any;
 }) {
   {
+    const [password, setPassword] = useState('');
+    const [passwordDialog, setPasswordDialog] = useState(false);
     return (
       <div className="flex">
         <div className="relative inline-block">
+          <PasswordDialog
+            passwordDialog={passwordDialog}
+            setPasswordDialog={setPasswordDialog}
+            channelId={props.channel.id}
+            handleSubmit={async () => {
+              await apiChannel.changePassword(props.channel.id, password);
+            }}
+            password={password}
+            setPassword={setPassword}
+          />
           <Menu>
             {({ open }) => (
               <>
@@ -134,6 +150,28 @@ function MyMenu(props: {
                           )}
                         </Menu.Item>
                       )}
+                      {props.role === 'OWNER' &&
+                        props.channel.isPasswordProtected && (
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                href="#change_password"
+                                className={`${
+                                  active
+                                    ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
+                                    : 'dark:text-gray-400 text-gray-900'
+                                } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                                onClick={() => {
+                                  setPasswordDialog(true);
+                                }}
+                              >
+                                <p className="overflow-hidden overflow-ellipsis">
+                                  Change password of {props.channelName}
+                                </p>
+                              </a>
+                            )}
+                          </Menu.Item>
+                        )}
                       {props.role === 'OWNER' && (
                         <Menu.Item>
                           {({ active }) => (

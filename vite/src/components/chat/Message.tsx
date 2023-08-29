@@ -1,6 +1,3 @@
-import { useEffect, useState } from 'react';
-import apiUser from '../../api/chat/user';
-
 function Message(props: {
   role: string;
   message: string;

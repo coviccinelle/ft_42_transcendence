@@ -9,9 +9,9 @@ import ChatTabAdd from '../components/chat/ChatTabAdd';
 import Navbar from '../components/Navbar';
 
 function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
-  const [channels, setChannels] = useState([]);
+  const [channels, setChannels] = useState<any>([]);
   const [currentChannel, setCurrentChannel] = useState(0);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<any>([]);
   const [channelName, setChannelName] = useState('');
   const [socket, setSocket] = useState(io('/chat', { autoConnect: false }));
 
@@ -26,7 +26,7 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
 
   useEffect(() => {
     const channelName = channels.find(
-      (channel) => channel.id === currentChannel,
+      (channel: any) => channel.id === currentChannel,
     )?.name;
     setChannelName(channelName || '');
   }, [currentChannel]);
@@ -69,8 +69,13 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
   }, [currentChannel, messages]);
 
   const [search, setSearch] = useState('');
-  const filteredTabs = channels.filter((tab) => {
+  const filteredTabs = channels.filter((tab: any) => {
     return tab.name.toLowerCase().includes(search.toLowerCase());
+  });
+
+  const sortedTabs = [...filteredTabs];
+  sortedTabs.sort((a: any, b: any) => {
+    return a.name.localeCompare(b.name);
   });
 
   return (
@@ -82,7 +87,7 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
             <SearchChat search={search} setSearch={setSearch} />
             <div className="flex-col flex overflow-y-scroll overflow-y-auto no-scrollbar">
               <ChatTabAdd setChannels={setChannels} channels={channels} />
-              {filteredTabs.map((tab: any) => {
+              {sortedTabs.map((tab: any) => {
                 return (
                   <ChatTab
                     messages={messages}
@@ -106,7 +111,6 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
               })}
             </div>
           </div>
-
           {currentChannel ? (
             <Channel
               channelId={currentChannel}
@@ -115,6 +119,7 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
               channelName={channelName}
               setChannelName={setChannelName}
               socket={socket}
+              channels={channels}
               setChannels={setChannels}
             />
           ) : (

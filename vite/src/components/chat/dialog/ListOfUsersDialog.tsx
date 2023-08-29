@@ -11,13 +11,15 @@ function ListOfUsersDialog(props: {
   role: string;
 }) {
   const [listOfUsers, setListOfUsers] = useState([]);
+
   useEffect(() => {
     const fetchUsers = async () => {
       const response = await apiUser.getUsersInChannel(props.channelId);
       setListOfUsers(response);
     };
     if (props.channelId) fetchUsers();
-  }, [props.channelId]);
+  }, [props.channelId, props.listOfUsersDialog]);
+
   function closeDialog() {
     props.setListOfUsersDialog(false);
   }

@@ -1,5 +1,4 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { Socket } from 'socket.io-client';
 
 const API = '/api';
 
@@ -74,6 +73,18 @@ const joinChannel = async (channelId: number, password: string) => {
   }
 };
 
+const changePassword = async (channelId: number, newPassword: string) => {
+  try {
+    const response = await axios.patch(`${API}/chat/${channelId}/password`, {
+      password: newPassword,
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export default {
   getChannels,
   putChannelName,
@@ -81,4 +92,5 @@ export default {
   getAllChannels,
   joinChannel,
   leaveChannel,
+  changePassword,
 };

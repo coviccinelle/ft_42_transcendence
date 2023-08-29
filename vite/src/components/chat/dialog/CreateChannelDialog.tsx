@@ -52,13 +52,26 @@ function CreateChannelDialog(props: {
     props.setCreateChannelDialog(false);
   }
   const [channelId, setChannelId] = useState(0);
-
+  const [passwordGuess, setPasswordGuess] = useState('');
   return (
     <>
       <PasswordDialog
         passwordDialog={passwordDialog}
         setPasswordDialog={setPasswordDialog}
         channelId={channelId}
+        handleSubmit={async () => {
+          const res = await apiChannel.joinChannel(channelId, passwordGuess);
+          if (res === 'wrong password') {
+            setPasswordGuess('');
+            alert('wrong password');
+            return;
+          }
+          console.log(res);
+          setPasswordGuess('');
+          setPasswordDialog(false);
+        }}
+        password={passwordGuess}
+        setPassword={setPasswordGuess}
       />
       <Transition appear show={props.createChannelDialog} as={Fragment}>
         <Dialog
@@ -94,8 +107,8 @@ function CreateChannelDialog(props: {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="inline-block w-full max-h-96 max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform dark:bg-gray-800 bg-rose-100 shadow-xl rounded-2xl">
-                <Tab.Group>
+              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform dark:bg-gray-800 bg-rose-100 shadow-xl rounded-2xl">
+                <Tab.Group as="div" className="flex flex-col h-full">
                   <Tab.List className="flex p-1 space-x-1 bg-blue-900/20 rounded-xl">
                     <Tab
                       className={({ selected }) =>
@@ -137,8 +150,8 @@ function CreateChannelDialog(props: {
                           <div className="mt-2">
                             <form action="submit" onSubmit={handleSubmit}>
                               <input
-                                type="passwordCreate"
-                                className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none bg-blue-100"
+                                type="password"
+                                className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none dark:bg-blue-100 bg-white"
                                 placeholder="PasswordCreate"
                                 value={passwordCreate}
                                 onChange={handleChangePasswordCreate}

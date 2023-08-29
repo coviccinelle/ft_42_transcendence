@@ -1,33 +1,20 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
-import apiChannel from '../../../api/chat/channel';
-import channel from '../../../api/chat/channel';
 
 function PasswordDialog(props: {
   passwordDialog: any;
   setPasswordDialog: any;
   channelId: number;
+  handleSubmit: any;
+  password: any;
+  setPassword: any;
 }) {
   function closeDialog() {
     props.setPasswordDialog(false);
   }
 
-  const [password, setPassword] = useState('');
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setPassword(e.target.value);
-  }
-
-  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const res = await apiChannel.joinChannel(props.channelId, password);
-    if (res === 'wrong password') {
-      setPassword('');
-      alert('wrong password');
-      return;
-    }
-    console.log(res);
-    setPassword('');
-    props.setPasswordDialog(false);
+    props.setPassword(e.target.value);
   }
 
   return (
@@ -74,12 +61,12 @@ function PasswordDialog(props: {
                   Password protected
                 </Dialog.Title>
                 <div className="mt-2">
-                  <form action="submit" onSubmit={handleSubmit}>
+                  <form action="submit" onSubmit={props.handleSubmit}>
                     <input
                       type="text"
                       className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none dark:bg-blue-100 bg-white"
                       placeholder="New name"
-                      value={password}
+                      value={props.password}
                       onChange={handleChange}
                     />
                   </form>

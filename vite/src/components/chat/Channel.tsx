@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-// import MessageOther from "./MessageOther";
 import Message from './Message';
 import apiMessage from '../../api/chat/message';
 import apiUser from '../../api/chat/user';
@@ -17,6 +16,7 @@ function Channel(props: {
   channelName: string;
   setChannelName: any;
   socket: Socket;
+  channels: any;
   setChannels: any;
 }) {
   const [message, setMessage] = useState('');
@@ -24,7 +24,7 @@ function Channel(props: {
   const [changeNameDialog, setChangeNameDialog] = useState(false);
   const [leaveChannelDialog, setLeaveChannelDialog] = useState(false);
   const [listOfUsersDialog, setListOfUsersDialog] = useState(false);
-  const [userMe, setUserMe] = useState();
+  const [userMe, setUserMe] = useState<any>();
   const [role, setRole] = useState('');
 
   useEffect(() => {
@@ -32,15 +32,18 @@ function Channel(props: {
       const user = await apiUser.getMe();
       setUserMe(user);
     };
+    fetchUser();
+  }, [props.channelId]);
+
+  useEffect(() => {
     const fetchUsersInChannel = async () => {
       const users = await apiUser.getUsersInChannel(props.channelId);
       const role = users.find((user: any) => user.id === userMe?.id)?.members[0]
         .role;
       setRole(role);
     };
-    fetchUser();
     fetchUsersInChannel();
-  }, [props.channelId]);
+  }, [props.channelId, userMe]);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -59,7 +62,6 @@ function Channel(props: {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     apiMessage.sendMessage(message, props.channelId, props.socket);
-    // console.log(messages);
     setMessage('');
   };
 
@@ -88,6 +90,9 @@ function Channel(props: {
           leaveChannelDialog={leaveChannelDialog}
           setLeaveChannelDialog={setLeaveChannelDialog}
           role={role}
+          channel={props.channels.find(
+            (channel: any) => channel.id === props.channelId,
+          )}
         />
         <ChangeNameDialog
           changeNameDialog={changeNameDialog}
