@@ -8,6 +8,8 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -101,7 +103,11 @@ export class UsersController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
+    @User() user: UserEntity,
   ) {
+    if (user.id !== id) {
+      throw new HttpException('Can\'t modify another user', HttpStatus.FORBIDDEN);
+    }
     return new UserEntity(await this.usersService.update(id, updateUserDto));
   }
 
@@ -109,7 +115,13 @@ export class UsersController {
   @UseGuards(AuthenticatedGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(
+    @Param('id', ParseIntPipe) id: number,
+    @User() user: UserEntity
+  ) {
+    if (user.id !== id) {
+      throw new HttpException('Can\'t delete another user', HttpStatus.FORBIDDEN);
+    }
     return new UserEntity(await this.usersService.remove(id));
   }
 
