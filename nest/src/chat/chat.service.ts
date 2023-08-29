@@ -5,7 +5,7 @@ import { UpdateChannelNameDto } from './dto/update-channel-name.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatGateway } from './chat.gateway';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { hash } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { roundsOfHashing } from 'src/users/users.service';
 import { ChannelEntity } from './entities/channel.entity';
 import { JoinChannelDto } from './dto/join-channel.dto';
@@ -123,10 +123,8 @@ export class ChatService {
     if (!channel) throw new HttpException('Channel doesn\'t exist', HttpStatus.NOT_FOUND);
     if (!channel.isPublic) throw new HttpException('Channel is private', HttpStatus.FORBIDDEN);
     if (channel.password) {
-      if (
-        !joinChannelDto.password
-        || await hash(joinChannelDto.password, roundsOfHashing) !== channel.password
-      ) {
+      const passwordIsValid = await compare(joinChannelDto.password, channel.password);
+      if (!joinChannelDto.password || !passwordIsValid) {
         throw new HttpException('Incorrect password', HttpStatus.FORBIDDEN);
       }
     }
