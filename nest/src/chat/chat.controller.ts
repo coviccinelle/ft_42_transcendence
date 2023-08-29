@@ -197,7 +197,7 @@ export class ChatController {
   @ApiNoContentResponse()
   @Roles('admin')
   async muteUser(
-    @Param(':id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() muteUserDto: MuteUserDto,
   ) {
     await this.chatService.muteUser(id, muteUserDto);
@@ -208,7 +208,7 @@ export class ChatController {
   @ApiNoContentResponse()
   @Roles('admin')
   async unmuteUser(
-    @Param(':id', ParseIntPipe) id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() muteUserDto: MuteUserDto,
   ) {
     await this.chatService.unmuteUser(id, muteUserDto);
