@@ -45,10 +45,9 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
         setMessages([...messages, message]);
       }
     }
-    function handleUpdate(channelId: number) {
-      console.log(`Received update for channel ${channelId}`);
+    function handleLeaveChannel(channelId: number) {
+      console.log(`Leaving channel ${channelId}`);
       //TODO trigger update for that channel
-      //Maybe transmit new channel through websocket
     }
     function handleConnection() {
       console.log('Socket connected');
@@ -57,12 +56,12 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
       console.log('Socket disconnected');
     }
     socket.on('message', handleIncomingMessage);
-    socket.on('update', handleUpdate);
+    socket.on('Leave channel', handleLeaveChannel);
     socket.on('connect', handleConnection);
     socket.on('disconnect', handleDisconnect);
     return () => {
       socket.off('message', handleIncomingMessage);
-      socket.off('update', handleUpdate);
+      socket.off('Leave channel', handleLeaveChannel);
       socket.off('connect', handleConnection);
       socket.off('disconnect', handleDisconnect);
     };

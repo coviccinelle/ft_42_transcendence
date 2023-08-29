@@ -182,6 +182,7 @@ export class ChatService {
       where: { id: member.id },
       data: { role: 'LEFT' },
     });
+    this.gateway.broadcastLeaveChannel(user.id, channelId);
   }
 
   async openDM(user: UserEntity, otherId: number) {
@@ -327,7 +328,6 @@ export class ChatService {
       },
     });
     if (!channel) throw new HttpException('Channel doesn\'t exist', HttpStatus.NOT_FOUND);
-    this.gateway.broadcastUpdateChannel(id);
     channel.password = null;
     return channel;
   }
@@ -370,7 +370,6 @@ export class ChatService {
         },
       });
     }
-    this.gateway.broadcastUpdateUser(toAddId, channelId);
   }
 
   async kickUser(channelId: number, userId: number) {
@@ -389,7 +388,7 @@ export class ChatService {
         role: 'LEFT',
       },
     });
-    this.gateway.broadcastUpdateUser(userId, channelId);
+    this.gateway.broadcastLeaveChannel(userId, channelId);
   }
 
   async banUser(channelId: number, userId: number) {
@@ -429,7 +428,7 @@ export class ChatService {
         role: 'BANNED',
       },
     });
-    this.gateway.broadcastUpdateUser(userId, channelId);
+    this.gateway.broadcastLeaveChannel(userId, channelId);
   }
 
   async unbanUser(channelId: number, userId: number) {
@@ -607,6 +606,6 @@ export class ChatService {
         messages: true,
       },
     });
-    this.gateway.broadcastUpdateChannel(id);
+    await this.gateway.broadcastDeleteChannel(id);
   }
 }

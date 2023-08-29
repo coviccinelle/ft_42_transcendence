@@ -91,22 +91,21 @@ export class ChatGateway implements OnGatewayConnection {
     this.wss.to(payload.channelId.toString()).emit('message', payload);
   }
 
-  async broadcastUpdateChannel(channelId: number) {
-    const users = await this.prisma.user.findMany({
-      where: {
-        members: {
-          some: { channelId: channelId },
-        },
-      },
+  async broadcastDeleteChannel(channelId: number) {
+    const channel = await this.prisma.channel.findUnique({
+      where: { id: channelId },
+      include: { members: true },
     });
-    users.forEach((user) => this.broadcastUpdateUser(user.id, channelId));
+    for (const member of channel.members) {
+      this.broadcastLeaveChannel(member.userId, channelId);
+    }
   }
 
-  async broadcastUpdateUser(userId: number, channelId: number) {
+  async broadcastLeaveChannel(userId: number, channelId: number) {
     const sockets = await this.wss.fetchSockets();
     for (const socket of sockets) {
       if (socket.data.user.id === userId) {
-        socket.emit('update', channelId);
+        socket.emit('Leave channel', channelId);
       }
     }
   }
