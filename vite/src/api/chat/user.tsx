@@ -96,6 +96,17 @@ const demoteAdmin = async (channelId: number, userId: number) => {
   }
 };
 
+const transferOwnership = async (channelId: number, userId: number) => {
+  try {
+    const response = await axios.patch(`${API}/chat/${channelId}/owner`, {
+      id: userId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export default {
   getUsers,
   getUsersInChannel,
@@ -106,4 +117,5 @@ export default {
   addSomeoneToChannel,
   promoteAdmin,
   demoteAdmin,
+  transferOwnership,
 };
