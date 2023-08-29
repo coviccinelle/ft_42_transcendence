@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Message from './Message';
 import apiMessage from '../../api/chat/message';
 import apiUser from '../../api/chat/user';
+import apiChannel from '../../api/chat/channel';
 import MyMenu from './Menu';
 import ChangeNameDialog from './dialog/ChangeNameDialog';
 import AddSomeoneDialog from './dialog/AddSomeoneDialog';
@@ -28,6 +29,27 @@ function Channel(props: {
   const [adminDialog, setAdminDialog] = useState(false);
   const [userMe, setUserMe] = useState<any>();
   const [role, setRole] = useState('');
+  const [type, setType] = useState('');
+
+  useEffect(() => {
+    const fetchChannel = async () => {
+      const channel = await apiChannel.getChannel(props.channelId);
+      if (channel.isPublic && !channel.passwordProtected) {
+        setType('public');
+      } else if (channel.isPublic && channel.passwordProtected) {
+        setType('protected');
+      } else if (
+        !channel.isPublic &&
+        !channel.passwordProtected &&
+        channel.isGroup
+      ) {
+        setType('private');
+      } else {
+        setType('DM');
+      }
+    };
+    fetchChannel();
+  }, [props.channelId]);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -96,6 +118,7 @@ function Channel(props: {
           channel={props.channels.find(
             (channel: any) => channel.id === props.channelId,
           )}
+          type={type}
         />
         <ChangeNameDialog
           changeNameDialog={changeNameDialog}

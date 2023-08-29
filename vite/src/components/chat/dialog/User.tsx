@@ -13,7 +13,6 @@ function User(props: {
   if (!props.user.picture) {
     props.user.picture = 'https://i.imgur.com/6VBx3io.png';
   }
-  console.log(props.user.members[0].role);
   return (
     <div className="flex flex-row">
       {props.user.id !== props.userMe.id && (

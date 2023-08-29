@@ -3,7 +3,6 @@ import { Transition } from '@headlessui/react';
 import PasswordDialog from './dialog/PasswordDialog';
 import { useState } from 'react';
 import apiChannel from '../../api/chat/channel';
-import ListOfUsersDialog from './dialog/ListOfUsersDialog';
 
 function MyMenu(props: {
   channelName: string;
@@ -18,10 +17,12 @@ function MyMenu(props: {
   setAdminDialog: any;
   role: string;
   channel: any;
+  type: string;
 }) {
   {
     const [password, setPassword] = useState('');
     const [passwordDialog, setPasswordDialog] = useState(false);
+    console.log(props.type);
     return (
       <div className="flex">
         <div className="relative inline-block">
@@ -73,7 +74,7 @@ function MyMenu(props: {
 
                     <div className="py-1">
                       {props.role === 'ADMIN' ||
-                        (props.role === 'OWNER' && (
+                        (props.role === 'OWNER' && props.type != 'DM' && (
                           <Menu.Item>
                             {({ active }) => (
                               <button
@@ -94,7 +95,7 @@ function MyMenu(props: {
                           </Menu.Item>
                         ))}
                       {props.role === 'ADMIN' ||
-                        (props.role === 'OWNER' && (
+                        (props.role === 'OWNER' && props.type != 'DM' && (
                           <Menu.Item>
                             {({ active }) => (
                               <button
@@ -114,26 +115,28 @@ function MyMenu(props: {
                             )}
                           </Menu.Item>
                         ))}
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#list_user"
-                            className={`${
-                              active
-                                ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
-                                : 'dark:text-gray-400 text-gray-900'
-                            } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
-                            onClick={() => {
-                              props.setListOfUsersDialog(true);
-                            }}
-                          >
-                            <p className="overflow-hidden overflow-ellipsis">
-                              List of users in {props.channelName}
-                            </p>
-                          </a>
-                        )}
-                      </Menu.Item>
-                      {props.role !== 'OWNER' && (
+                      {props.type !== 'DM' && (
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              href="#list_user"
+                              className={`${
+                                active
+                                  ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
+                                  : 'dark:text-gray-400 text-gray-900'
+                              } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                              onClick={() => {
+                                props.setListOfUsersDialog(true);
+                              }}
+                            >
+                              <p className="overflow-hidden overflow-ellipsis">
+                                List of users in {props.channelName}
+                              </p>
+                            </a>
+                          )}
+                        </Menu.Item>
+                      )}
+                      {props.role !== 'OWNER' && props.type !== 'DM' && (
                         <Menu.Item>
                           {({ active }) => (
                             <a
@@ -154,7 +157,7 @@ function MyMenu(props: {
                           )}
                         </Menu.Item>
                       )}
-                      {props.role === 'OWNER' && (
+                      {props.role === 'OWNER' && props.type !== 'DM' && (
                         <Menu.Item>
                           {({ active }) => (
                             <a
@@ -176,7 +179,8 @@ function MyMenu(props: {
                         </Menu.Item>
                       )}
                       {props.role === 'OWNER' &&
-                        props.channel.isPasswordProtected && (
+                        props.channel.isPasswordProtected &&
+                        props.type !== 'DM' && (
                           <Menu.Item>
                             {({ active }) => (
                               <a
@@ -207,8 +211,11 @@ function MyMenu(props: {
                                   ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
                                   : 'dark:text-gray-400 text-gray-900'
                               } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
-                              onClick={() => {
-                                console.log('delete channel');
+                              onClick={async () => {
+                                await apiChannel.deleteChannel(
+                                  props.channel.id,
+                                );
+                                window.location.reload();
                               }}
                             >
                               <p className="overflow-hidden overflow-ellipsis">

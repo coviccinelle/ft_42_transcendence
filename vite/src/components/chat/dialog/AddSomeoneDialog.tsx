@@ -26,11 +26,6 @@ function AddSomeoneDialog(props: {
   function closeDialog() {
     props.setAddSomeoneDialog(false);
   }
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    console.log('someone added');
-    props.setAddSomeoneDialog(false);
-  }
 
   return (
     <>
@@ -76,17 +71,15 @@ function AddSomeoneDialog(props: {
                   Add someone to this channel
                 </Dialog.Title>
                 <div className="mt-2">
-                  <form action="submit" onSubmit={handleSubmit}>
-                    <input
-                      type="text"
-                      className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none dark:bg-blue-100 bg-white placeholder-gray-400 dark:placeholder-gray-600 dark:text-gray-600"
-                      placeholder="Name"
-                      value={search}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setSearch(e.target.value);
-                      }}
-                    />
-                  </form>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none dark:bg-blue-100 bg-white placeholder-gray-400 dark:placeholder-gray-600 dark:text-gray-600"
+                    placeholder="Name"
+                    value={search}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setSearch(e.target.value);
+                    }}
+                  />
                 </div>
                 <div className="mt-2 no-scrollbar h-64 overflow-y-scroll ">
                   {filteredUsers.map((user: any) => (

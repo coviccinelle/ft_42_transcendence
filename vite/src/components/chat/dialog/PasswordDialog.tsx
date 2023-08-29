@@ -61,7 +61,7 @@ function PasswordDialog(props: {
                   Password protected
                 </Dialog.Title>
                 <div className="mt-2">
-                  <form action="submit" onSubmit={props.handleSubmit}>
+                  <form action="submit" onSubmit={(e) => props.handleSubmit(e)}>
                     <input
                       type="text"
                       className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none dark:bg-blue-100 bg-white"

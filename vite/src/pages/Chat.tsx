@@ -3,7 +3,6 @@ import SearchChat from '../components/chat/SearchChat';
 import ChatTab from '../components/chat/ChatTab';
 import { useEffect, useState } from 'react';
 import apiChannel from '../api/chat/channel';
-import apiMessage from '../api/chat/message';
 import { Socket, io } from 'socket.io-client';
 import ChatTabAdd from '../components/chat/ChatTabAdd';
 import Navbar from '../components/Navbar';
@@ -110,6 +109,8 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
                         ? 'Public'
                         : tab.isPasswordProtected
                         ? 'Protected'
+                        : !tab.isGroup
+                        ? 'DM'
                         : 'Private'
                     }
                     createChannel={false}
@@ -128,7 +129,7 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
               channelId={currentChannel}
               messages={messages}
               setMessages={setMessages}
-              channelName={channelName}
+              channelName={channelName || 'DM'}
               setChannelName={setChannelName}
               socket={socket}
               channels={channels}

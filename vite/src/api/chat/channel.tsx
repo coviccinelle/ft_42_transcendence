@@ -20,6 +20,15 @@ const getAllChannels = async () => {
   }
 };
 
+const getChannel = async (channelId: number) => {
+  try {
+    const response = await axios.get(`${API}/chat/${channelId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const putChannelName = async (channelId: number, name: string) => {
   try {
     const response = await axios.patch(`${API}/chat/${channelId}/name`, {
@@ -35,6 +44,16 @@ const putChannelName = async (channelId: number, name: string) => {
 const leaveChannel = async (channelId: number) => {
   try {
     const response = await axios.get(`${API}/chat/${channelId}/leave`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const deleteChannel = async (channelId: number) => {
+  try {
+    const response = await axios.delete(`${API}/chat/${channelId}`);
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -87,6 +106,8 @@ const changePassword = async (channelId: number, newPassword: string) => {
 
 export default {
   getChannels,
+  deleteChannel,
+  getChannel,
   putChannelName,
   createChannel,
   getAllChannels,

@@ -1,4 +1,3 @@
-import { client } from '../main';
 import { useEffect, useState } from 'react';
 import { getUser, handleLogout } from '../App';
 import Navbar from '../components/Navbar';

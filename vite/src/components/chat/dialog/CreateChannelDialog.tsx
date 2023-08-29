@@ -29,7 +29,7 @@ function CreateChannelDialog(props: {
     fetchAllChannels();
     setSelected('public');
     setPasswordCreate('');
-  }, [props.createChannelDialog]);
+  }, [props.createChannelDialog, passwordDialog]);
 
   function closeDialog() {
     props.setCreateChannelDialog(false);
