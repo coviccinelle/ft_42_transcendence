@@ -1,15 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { hash } from 'bcrypt';
 import { connect } from 'http2';
+import { UserEntity } from './entities/user.entity';
+import { ChatService } from 'src/chat/chat.service';
 
 export const roundsOfHashing = 10;
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private chatService: ChatService,
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
     if (createUserDto.password) {
@@ -20,18 +25,6 @@ export class UsersService {
       createUserDto.password = hashedPassword;
     }
     const newUser = await this.prisma.user.create({ data: createUserDto });
-    //Auto join general channel
-    await this.prisma.member.create({
-      data: {
-        role: 'REGULAR',
-        user: {
-          connect: { id: newUser.id },
-        },
-        channel: {
-          connect: { id: 1 },
-        },
-      },
-    });
     return newUser;
   }
 
@@ -59,5 +52,58 @@ export class UsersService {
 
   remove(id: number) {
     return this.prisma.user.delete({ where: { id } });
+  }
+
+  async block(user: UserEntity, blockId: number) {
+    const toBlock = await this.prisma.user.findUnique({
+      where: { id: blockId },
+    });
+    if (!toBlock) {
+      throw new HttpException('User doesn\'t exist', HttpStatus.NOT_FOUND);
+    }
+    //Delete DM channel
+    const channel = await this.prisma.channel.findFirst({
+      where: {
+        isGroup: false,
+        members: {
+          every: {
+            userId: { in: [user.id, blockId] },
+          },
+        },
+      },
+    });
+    if (channel) {
+      this.chatService.delete(channel.id);
+    }
+    return await this.prisma.user.update({
+      where: { id: user.id },
+      data: {
+        blocked: {
+          connect: { id: blockId },
+        },
+      },
+    });
+  }
+
+  async unblock(user: UserEntity, blockId: number) {
+    const toUnblock = await this.prisma.user.findUnique({
+      where: { id: blockId },
+      include: { blockedBy: true },
+    });
+    if (!toUnblock) {
+      throw new HttpException('User doesn\'t exist', HttpStatus.NOT_FOUND);
+    }
+    const userIsBlocked = toUnblock.blockedBy.includes(user);
+    if (userIsBlocked){
+      return await this.prisma.user.update({
+        where: { id: user.id },
+        data: {
+          blocked: {
+            disconnect: { id: blockId },
+          },
+        },
+      });
+    }
+    return user;
   }
 }

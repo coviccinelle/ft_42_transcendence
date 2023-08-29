@@ -167,7 +167,7 @@ export class ChatService {
     });
     if (!channel) throw new HttpException('Channel not found', HttpStatus.NOT_FOUND);
     if (!channel.isGroup) {
-      this.remove(channelId);
+      this.delete(channelId);
       return;
     }
     const member = await this.prisma.member.findFirst({
@@ -200,9 +200,19 @@ export class ChatService {
     });
     const otherUser = await this.prisma.user.findUnique({
       where: { id: otherId },
+      include: {
+        blocked: true,
+        blockedBy: true,
+      },
     });
     if (!otherUser) throw new HttpException('User doesn\'t exist', HttpStatus.NOT_FOUND);
     if (channel) return channel;
+    if (otherUser.blockedBy.includes(user)) {
+      throw new HttpException('You have blocked this user', HttpStatus.FORBIDDEN);
+    }
+    if (otherUser.blocked.includes(user)) {
+      throw new HttpException('You have been blocked by this user', HttpStatus.FORBIDDEN);
+    }
     const newChannel = await this.prisma.channel.create({
       data: {
         isGroup: false,
@@ -256,9 +266,9 @@ export class ChatService {
     });
   }
 
-  getMessages(id: number) {
-    return this.prisma.message.findMany({
-      where: { channelId: id },
+  async getMessages(channelId: number, userId: number) {
+    const messages = await this.prisma.message.findMany({
+      where: { channelId: channelId },
       include: {
         author: {
           select: {
@@ -274,6 +284,13 @@ export class ChatService {
           },
         },
       },
+    });
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { blocked: true },
+    })
+    return messages.filter((message) => {
+      return !user.blocked.find((blockedUser) => blockedUser.id === message.author.user.id)
     });
   }
 
@@ -317,14 +334,18 @@ export class ChatService {
     return channel;
   }
 
-  async addUser(channelId: number, userId: number) {
+  async addUser(channelId: number, toAddId: number, user: UserEntity) {
     const newUser = await this.prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: toAddId },
+      include: { blocked: true },
     });
     if (!newUser) throw new HttpException('User doesn\'t exist', HttpStatus.NOT_FOUND);
+    if (newUser.blocked.includes(user)) {
+      throw new HttpException('User has blocked you', HttpStatus.FORBIDDEN);
+    }
     const member = await this.prisma.member.findFirst({
       where: {
-        userId: userId,
+        userId: toAddId,
         channelId: channelId,
       },
     });
@@ -343,7 +364,7 @@ export class ChatService {
         data: {
           role: 'REGULAR',
           user: {
-            connect: { id: userId },
+            connect: { id: toAddId },
           },
           channel: {
             connect: { id: channelId },
@@ -351,7 +372,7 @@ export class ChatService {
         },
       });
     }
-    this.gateway.broadcastUpdateUser(userId, channelId);
+    this.gateway.broadcastUpdateUser(toAddId, channelId);
   }
 
   async kickUser(channelId: number, userId: number) {
@@ -578,7 +599,7 @@ export class ChatService {
     });
   }
 
-  async remove(id: number) {
+  async delete(id: number) {
     await this.prisma.channel.delete({
       where: {
         id: id,

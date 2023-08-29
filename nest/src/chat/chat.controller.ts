@@ -29,7 +29,7 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { Roles } from './roles.decorator';
 import { RolesGuard } from './roles.guard';
 import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
-import { userIdDto } from '../users/dto/user-id.dto';
+import { UserIdDto } from '../users/dto/user-id.dto';
 import { JoinChannelDto } from './dto/join-channel.dto';
 import { UserMemberEntity } from './entities/user-member.entity';
 import { MuteUserDto } from './dto/mute-user.dto';
@@ -93,7 +93,7 @@ export class ChatController {
   @Post('newDM')
   @ApiCreatedResponse()
   async openDM(
-    @Body() other: userIdDto,
+    @Body() other: UserIdDto,
     @User() user: UserEntity,
   ) {
     return await this.chatService.openDM(user, other.id);
@@ -109,8 +109,11 @@ export class ChatController {
   @Get(':id/messages')
   @ApiOkResponse({ type: MessageEntity, isArray: true })
   @Roles('regular')
-  async getMessages(@Param('id', ParseIntPipe) id: number) {
-    return await this.chatService.getMessages(id);
+  async getMessages(
+    @Param('id', ParseIntPipe) id: number,
+    @User() user: UserEntity,
+  ) {
+    return await this.chatService.getMessages(id, user.id);
   }
 
   @Post(':id/message')
@@ -140,7 +143,7 @@ export class ChatController {
   @Roles('admin')
   kickUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body() user: userIdDto,
+    @Body() user: UserIdDto,
   ) {
     this.chatService.kickUser(id, user.id);
   }
@@ -151,7 +154,7 @@ export class ChatController {
   @Roles('admin')
   async banUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body() user: userIdDto,
+    @Body() user: UserIdDto,
   ) {
     await this.chatService.banUser(id, user.id);
   }
@@ -162,7 +165,7 @@ export class ChatController {
   @Roles('admin')
   unbanUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body() user: userIdDto,
+    @Body() user: UserIdDto,
   ) {
     this.chatService.unbanUser(id, user.id);
   }
@@ -173,7 +176,7 @@ export class ChatController {
   @Roles('admin')
   async promoteUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body() user: userIdDto,
+    @Body() user: UserIdDto,
   ) {
     await this.chatService.promoteUser(id, user.id);
   }
@@ -184,7 +187,7 @@ export class ChatController {
   @Roles('admin')
   async demoteUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body() user: userIdDto,
+    @Body() user: UserIdDto,
   ) {
     await this.chatService.demoteUser(id, user.id);
   }
@@ -217,9 +220,10 @@ export class ChatController {
   @Roles('admin')
   async addUser(
     @Param('id', ParseIntPipe) id: number,
-    @Body() channelAddUserDto: userIdDto,
+    @Body() channelAddUserDto: UserIdDto,
+    @User() user: UserEntity,
   ) {
-    await this.chatService.addUser(id, channelAddUserDto.id);
+    await this.chatService.addUser(id, channelAddUserDto.id, user);
   }
 
   @Patch(':id/password')
@@ -239,7 +243,7 @@ export class ChatController {
   @Roles('owner')
   async transferOwnership(
     @Param('id', ParseIntPipe) channelId: number,
-    @Body() user: userIdDto,
+    @Body() user: UserIdDto,
     @User() owner: UserEntity,
   ) {
     await this.chatService.transferOwnership(channelId, owner, user.id);
@@ -250,6 +254,6 @@ export class ChatController {
   @ApiNoContentResponse()
   @Roles('owner')
   remove(@Param('id', ParseIntPipe) id: number) {
-    this.chatService.remove(id);
+    this.chatService.delete(id);
   }
 }
