@@ -113,6 +113,7 @@ export class ChatService {
       },
     });
     if (!channel) throw new HttpException('Channel doesn\'t exist', HttpStatus.NOT_FOUND);
+    if (!channel.isGroup) throw new HttpException('Channel isn\'t a group', HttpStatus.FORBIDDEN);
     if (!channel.isPublic) throw new HttpException('Channel is private', HttpStatus.FORBIDDEN);
     if (channel.password) {
       const passwordIsValid = await compare(joinChannelDto.password, channel.password);
@@ -324,6 +325,8 @@ export class ChatService {
   }
 
   async addUser(channelId: number, toAddId: number, user: UserEntity) {
+    const channel = await this.prisma.channel.findUnique({ where: { id: channelId }});
+    if (!channel.isGroup) throw new HttpException('Channel is a DM', HttpStatus.FORBIDDEN);
     const newUser = await this.prisma.user.findUnique({
       where: { id: toAddId },
       include: { blocked: true },
