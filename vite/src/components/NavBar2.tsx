@@ -33,7 +33,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
 function Navbar2() {
 
     return (
-        <header className="z-40 py-4  bg-gray-800  ">
             <div className="flex items-center justify-between h-8 px-6 mx-auto">
                 {/* <!-- Mobile hamburger --> */}
                 <button className="p-1 mr-5 -ml-1 rounded-md md:hidden focus:outline-none focus:shadow-outline-purple">
@@ -90,7 +89,6 @@ function Navbar2() {
                 </ul>
 
             </div>
-        </header>
 
     );
 }
