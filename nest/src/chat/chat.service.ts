@@ -453,7 +453,7 @@ export class ChatService {
     if (member.role !== 'REGULAR') {
       throw new HttpException('User isn\'t a regular member', HttpStatus.BAD_REQUEST);
     }
-    this.prisma.member.update({
+    await this.prisma.member.update({
       where: {
         id: member.id,
       },
@@ -476,7 +476,7 @@ export class ChatService {
     if (member.role !== 'ADMIN') {
       throw new HttpException('User isn\'t an admin member', HttpStatus.BAD_REQUEST);
     }
-    this.prisma.member.update({
+    await this.prisma.member.update({
       where: {
         id: member.id,
       },
