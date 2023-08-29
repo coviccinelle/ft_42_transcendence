@@ -588,6 +588,7 @@ export class ChatService {
   }
 
   async delete(id: number) {
+    await this.gateway.broadcastDeleteChannel(id);
     await this.prisma.channel.delete({
       where: {
         id: id,
@@ -597,6 +598,5 @@ export class ChatService {
         messages: true,
       },
     });
-    await this.gateway.broadcastDeleteChannel(id);
   }
 }
