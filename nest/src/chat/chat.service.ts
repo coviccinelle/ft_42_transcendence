@@ -411,7 +411,7 @@ export class ChatService {
     if (member.role === 'OWNER') {
       throw new HttpException('Can\'t ban owner', HttpStatus.FORBIDDEN);
     }
-    this.prisma.member.update({
+    await this.prisma.member.update({
       where: {
         id: member.id,
       },
@@ -430,7 +430,7 @@ export class ChatService {
       },
     });
     if (!member || member.role !== 'BANNED') return;
-    this.prisma.member.update({
+    await this.prisma.member.update({
       where: {
         id: member.id,
       },
