@@ -44,23 +44,25 @@ export class ChatController {
 
   @Post()
   @ApiCreatedResponse({ type: ChannelEntity })
-  create(
+  async create(
     @Body() createChannelDto: CreateChannelDto,
     @User() user: UserEntity,
   ) {
-    return this.chatService.create(createChannelDto, user.id);
+    return new ChannelEntity(await this.chatService.create(createChannelDto, user.id));
   }
 
   @Get()
   @ApiOkResponse({ type: ChannelEntity, isArray: true })
-  findPublic(@User() user: UserEntity) {
-    return this.chatService.findPublic(user.id);
+  async findPublic(@User() user: UserEntity) {
+    const channels = await this.chatService.findPublic(user.id);
+    return channels.map((channel) => new ChannelEntity(channel));
   }
 
   @Get('mychannels')
   @ApiOkResponse({ type: ChannelEntity, isArray: true })
-  getMyChannels(@User() user: UserEntity) {
-    return this.chatService.getMyChannels(user);
+  async getMyChannels(@User() user: UserEntity) {
+    const channels = await this.chatService.getMyChannels(user);
+    return channels.map((channel) => new ChannelEntity(channel));
   }
 
   @Post('join')
@@ -69,7 +71,7 @@ export class ChatController {
     @User() user: UserEntity,
     @Body() joinChannelDto: JoinChannelDto,
   ) {
-    return await this.chatService.joinChannel(joinChannelDto, user);
+    return new ChannelEntity (await this.chatService.joinChannel(joinChannelDto, user));
   }
 
   @Get(':id/leave')
@@ -86,8 +88,8 @@ export class ChatController {
   @Get(':id')
   @ApiOkResponse({ type: ChannelEntity })
   @Roles('regular')
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.chatService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    return new ChannelEntity(await this.chatService.findOne(id));
   }
 
   @Post('newDM')
@@ -96,14 +98,15 @@ export class ChatController {
     @Body() other: UserIdDto,
     @User() user: UserEntity,
   ) {
-    return await this.chatService.openDM(user, other.id);
+    return new ChannelEntity(await this.chatService.openDM(user, other.id));
   }
 
   @Get(':id/users')
-  @ApiOkResponse({ type: UserMemberEntity })
+  @ApiOkResponse({ type: UserMemberEntity, isArray: true })
   @Roles('regular')
-  getUsers(@Param('id', ParseIntPipe) id: number) {
-    return this.chatService.getUsers(id);
+  async getUsers(@Param('id', ParseIntPipe) id: number) {
+    const users = await this.chatService.getUsers(id);
+    return users.map((user) => new UserMemberEntity(user));
   }
 
   @Get(':id/messages')
@@ -134,7 +137,7 @@ export class ChatController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateChannelNameDto: UpdateChannelNameDto,
   ) {
-    return await this.chatService.updateName(id, updateChannelNameDto);
+    return new ChannelEntity(await this.chatService.updateName(id, updateChannelNameDto));
   }
 
   @Post(':id/kick')
@@ -227,14 +230,13 @@ export class ChatController {
   }
 
   @Patch(':id/password')
-  @HttpCode(204)
-  @ApiNoContentResponse()
+  @ApiOkResponse({ type: ChannelEntity})
   @Roles('owner')
-  updatePassword(
+  async updatePassword(
     @Param('id', ParseIntPipe) channelId: number,
     @Body() updateChannelPasswordDto: UpdateChannelPasswordDto,
   ) {
-    this.chatService.updatePassword(channelId, updateChannelPasswordDto.password);
+    return new ChannelEntity(await this.chatService.updatePassword(channelId, updateChannelPasswordDto.password));
   }
 
   @Patch(':id/owner')

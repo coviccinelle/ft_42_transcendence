@@ -52,7 +52,7 @@ export class UsersController {
   async findMe(@User() user: UserEntity) {
     if (user) {
       console.log('REQUESTING user data for: ' + user.email);
-      return user;
+      return new UserEntity(user);
     } else {
       console.log('User not logged');
       return null;

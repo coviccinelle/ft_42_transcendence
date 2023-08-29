@@ -4,7 +4,7 @@ import { Exclude } from 'class-transformer';
 import { MemberEntity } from './member.entity';
 
 export class UserMemberEntity implements User {
-  constructor(partial: Partial<User>) {
+  constructor(partial: Partial<UserMemberEntity>) {
     Object.assign(this, partial);
   }
 
@@ -22,10 +22,10 @@ export class UserMemberEntity implements User {
 
   @ApiProperty({ required: false, nullable: true })
   picture: string;
+  
+  @ApiProperty()
+  member: MemberEntity;
 
   @Exclude()
   password: string;
-
-  @ApiProperty()
-  member: MemberEntity;
 }

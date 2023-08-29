@@ -61,7 +61,6 @@ export class ChatService {
         },
       },
     });
-    channel.password = null;
     return channel;
   }
 
@@ -76,9 +75,6 @@ export class ChatService {
         },
       },
     });
-    channels.forEach((channel) => {
-      channel.password = null;
-    });
     return channels.filter((channel) => {
       return (channel.members.length == 0) || (channel.members[0].role === 'LEFT');
     });
@@ -88,7 +84,6 @@ export class ChatService {
     const channel = await this.prisma.channel.findUnique({
       where: { id: id },
     });
-    if (channel) channel.password = null;
     return channel;
   }
 
@@ -104,9 +99,6 @@ export class ChatService {
           },
         },
       },
-    });
-    channels.forEach((channel) => {
-      channel.password = null;
     });
     return channels;
   }
@@ -153,7 +145,6 @@ export class ChatService {
         },
       },
     });
-    channel.password = null;
     return channel;
   }
 
@@ -245,8 +236,8 @@ export class ChatService {
     return newChannel;
   }
 
-  getUsers(id: number) {
-    return this.prisma.user.findMany({
+  async getUsers(id: number) {
+    const users = await this.prisma.user.findMany({
       where: {
         members: {
           some: { 
@@ -263,6 +254,7 @@ export class ChatService {
         },
       },
     });
+    return users;
   }
 
   async getMessages(channelId: number, userId: number) {
@@ -328,7 +320,6 @@ export class ChatService {
       },
     });
     if (!channel) throw new HttpException('Channel doesn\'t exist', HttpStatus.NOT_FOUND);
-    channel.password = null;
     return channel;
   }
 
@@ -542,7 +533,7 @@ export class ChatService {
   async updatePassword(channelId: number, password: string) {
     if (password) {
       const hashedPassword = await hash(password, roundsOfHashing);
-      await this.prisma.channel.update({
+      return await this.prisma.channel.update({
         where: { id: channelId },
         data: {
           isPasswordProtected: true,
@@ -550,7 +541,7 @@ export class ChatService {
         },
       });
     } else {
-      await this.prisma.channel.update({
+      return await this.prisma.channel.update({
         where: { id: channelId },
         data: {
           isPasswordProtected: false,
