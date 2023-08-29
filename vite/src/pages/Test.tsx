@@ -2,6 +2,7 @@ import { client } from '../main';
 import { useEffect, useState } from 'react';
 import { getUser, handleLogout } from '../App';
 import Navbar from '../components/Navbar';
+import Navbar2 from '../components/NavBar2';
 
 
 function Test(props: { darkMode: boolean; toggleDarkMode: any }) {
@@ -84,7 +85,8 @@ function Test(props: { darkMode: boolean; toggleDarkMode: any }) {
                     </aside>
 
                     <div className="flex flex-col flex-1 w-full overflow-y-auto">
-                        <Navbar darkMode={props.darkMode} toggleDarkMode={props.toggleDarkMode} />
+                        <Navbar2 />
+                        {/* <Navbar darkMode={props.darkMode} toggleDarkMode={props.toggleDarkMode} /> */}
                     </div>
                 </div>
             </body >
