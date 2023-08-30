@@ -11,6 +11,7 @@ export default {
         'flowery': "url('./src/assets/flower_field.jpg')",
         'white_flower': "url('./src/assets/white_flower.jpg')",
         'night_sky': "url('./src/assets/night_sky.jpg')",
+        'pattern': "url('https://www.transparenttextures.com/patterns/inspiration-geometry.png')",
       },
       animation: {
         text: 'text 5s ease infinite',
