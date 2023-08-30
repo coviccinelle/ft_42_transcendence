@@ -243,7 +243,7 @@ export class ChatService {
         members: {
           some: { 
             channelId: id,
-            role: { notIn: ['LEFT'] },
+            role: { notIn: ['LEFT', 'BANNED'] },
           },
         },
       },
