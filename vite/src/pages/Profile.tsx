@@ -55,9 +55,8 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
                             <div className="text-white">
                                 <div className="flex p-2 bg-gray-800">
                                     <div className="flex py-3 px-2 items-center">
-                                        <p className="text-2xl text-yellow-500 font-semibold">42</p>
-                                         Pooong
-                                        <p></p>
+                                        <a className="text-3xl text-yellow-500 font-bold" href="/">42 </a>
+                                        <a className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-2xl font-black" href="/">Duckie Pooong</a>
                                     </div>
                                 </div>
                             </div>
