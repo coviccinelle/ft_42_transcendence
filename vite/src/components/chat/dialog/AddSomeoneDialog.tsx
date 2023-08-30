@@ -1,7 +1,7 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
 import User from './User';
-import apiUser from '../../../api/chat/user';
+import apiUser from '../../../api/user';
 
 function AddSomeoneDialog(props: {
   channelId: number;

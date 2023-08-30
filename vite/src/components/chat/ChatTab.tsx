@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import apiMessage from '../../api/chat/message';
-import apiUser from '../../api/chat/user';
+import apiUser from '../../api/user';
 
 function ChatTab(props: {
   messages: any;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Message from './Message';
 import apiMessage from '../../api/chat/message';
-import apiUser from '../../api/chat/user';
+import apiUser from '../../api/user';
 import apiChannel from '../../api/chat/channel';
 import MyMenu from './Menu';
 import ChangeNameDialog from './dialog/ChangeNameDialog';

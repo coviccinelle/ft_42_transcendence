@@ -1,6 +1,6 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
-import apiUser from '../../../api/chat/user';
+import apiUser from '../../../api/user';
 import User from './User';
 
 function ListOfUsersDialog(props: {

@@ -1,4 +1,4 @@
-import apiUser from '../../../api/chat/user';
+import apiUser from '../../../api/user';
 
 function User(props: {
   user: any;

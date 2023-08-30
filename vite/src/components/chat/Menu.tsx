@@ -119,7 +119,6 @@ function MyMenu(props: {
                         <Menu.Item>
                           {({ active }) => (
                             <a
-                              href="#list_user"
                               className={`${
                                 active
                                   ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
@@ -140,7 +139,6 @@ function MyMenu(props: {
                         <Menu.Item>
                           {({ active }) => (
                             <a
-                              href="#leave_channel"
                               className={`${
                                 active
                                   ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
@@ -161,7 +159,6 @@ function MyMenu(props: {
                         <Menu.Item>
                           {({ active }) => (
                             <a
-                              href="#admin_panel"
                               className={`${
                                 active
                                   ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
@@ -184,7 +181,6 @@ function MyMenu(props: {
                           <Menu.Item>
                             {({ active }) => (
                               <a
-                                href="#change_password"
                                 className={`${
                                   active
                                     ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
@@ -205,7 +201,6 @@ function MyMenu(props: {
                         <Menu.Item>
                           {({ active }) => (
                             <a
-                              href="#delete_channel"
                               className={`${
                                 active
                                   ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'

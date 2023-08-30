@@ -3,10 +3,12 @@ import SearchChat from '../components/chat/SearchChat';
 import ChatTab from '../components/chat/ChatTab';
 import { useEffect, useState } from 'react';
 import apiChannel from '../api/chat/channel';
-import { Socket, io } from 'socket.io-client';
+import { io } from 'socket.io-client';
 import ChatTabAdd from '../components/chat/ChatTabAdd';
 import Navbar from '../components/Navbar';
 import LeaveChannelDialog from '../components/chat/dialog/LeaveChannelDialog';
+import { useNavigate } from 'react-router-dom';
+import apiUser from '../api/user';
 
 function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
   const [channels, setChannels] = useState<any>([]);
@@ -15,31 +17,60 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
   const [channelName, setChannelName] = useState('');
   const [socket, setSocket] = useState(io('/chat', { autoConnect: false }));
   const [leaveChannelDialog, setLeaveChannelDialog] = useState(false);
+  const [userExist, setUserExist] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = await apiUser.getMe();
+
+        if (user) {
+          setUserExist(true);
+        } else {
+          navigate('/login');
+        }
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération de l'utilisateur :",
+          error,
+        );
+      }
+    };
+
+    fetchUser();
+  }, [navigate]);
+
+  useEffect(() => {
+    if (userExist === false) return;
+    console.log('fetching channels');
     const fetchChannels = async () => {
       const channels = await apiChannel.getChannels();
       console.log(channels);
       setChannels(channels);
     };
     fetchChannels();
-  }, []);
+  }, [userExist]);
 
   useEffect(() => {
+    if (userExist === false) return;
     const channelName = channels.find(
       (channel: any) => channel.id === currentChannel,
     )?.name;
     setChannelName(channelName || '');
-  }, [currentChannel]);
+  }, [currentChannel, userExist]);
 
   useEffect(() => {
+    if (userExist === false) return;
     socket.connect();
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [userExist]);
 
   useEffect(() => {
+    if (userExist === false) return;
     function handleIncomingMessage(message: any) {
       console.log(`New message : ${message.content}`);
       if (message.channelId === currentChannel) {
@@ -72,7 +103,7 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
       socket.off('connect', handleConnection);
       socket.off('disconnect', handleDisconnect);
     };
-  }, [currentChannel, messages]);
+  }, [currentChannel, messages, userExist]);
 
   const [search, setSearch] = useState('');
   const filteredTabs = channels.filter((tab: any) => {
@@ -83,7 +114,7 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
   sortedTabs.sort((a: any, b: any) => {
     return a.name.localeCompare(b.name);
   });
-
+  if (userExist === false) return <div></div>;
   return (
     <div className="flex h-screen flex-col min-h-0 w-full">
       <Navbar darkMode={props.darkMode} toggleDarkMode={props.toggleDarkMode} />
