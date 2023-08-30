@@ -178,6 +178,9 @@ export class ChatService {
   }
 
   async openDM(user: UserEntity, otherId: number) {
+    if (user.id === otherId) {
+      throw new HttpException('Can\'t start DM with yourself', HttpStatus.FORBIDDEN);
+    }
     //Check if there is already a DM channel open
     const channel = await this.prisma.channel.findFirst({
       where: {

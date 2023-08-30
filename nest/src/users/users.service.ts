@@ -55,6 +55,9 @@ export class UsersService {
   }
 
   async block(user: UserEntity, blockId: number) {
+    if (user.id === blockId) {
+      throw new HttpException('Can\'t block yourself', HttpStatus.FORBIDDEN);
+    }
     const toBlock = await this.prisma.user.findUnique({
       where: { id: blockId },
     });
@@ -86,6 +89,9 @@ export class UsersService {
   }
 
   async unblock(user: UserEntity, blockId: number) {
+    if (user.id === blockId) {
+      throw new HttpException('Can\'t unblock yourself', HttpStatus.FORBIDDEN);
+    }
     const toUnblock = await this.prisma.user.findUnique({
       where: { id: blockId },
       include: { blockedBy: true },
@@ -93,7 +99,9 @@ export class UsersService {
     if (!toUnblock) {
       throw new HttpException('User doesn\'t exist', HttpStatus.NOT_FOUND);
     }
-    const userIsBlocked = toUnblock.blockedBy.includes(user);
+    const userIsBlocked = toUnblock.blockedBy.find((blockedByUser) => {
+      return (blockedByUser.id === user.id);
+    });
     if (userIsBlocked){
       return await this.prisma.user.update({
         where: { id: user.id },
