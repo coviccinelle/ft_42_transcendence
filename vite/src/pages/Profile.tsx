@@ -66,7 +66,7 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
                         <div className="flex justify-center">
                             <div>
                               <div className="flex justify-center relative">
-                                <img className="hidden h-24 w-24 rounded-full sm:block object-cover mr-2 border-4 border-green-200" src={img} alt="Your avatar"/>
+                                <img className="hidden h-24 w-24 rounded-full sm:block object-cover mr-2 border-4 border-yellow-300" src={img} alt="Your avatar"/>
                                 {isOnline ? (
                                   <span className="absolute top-0 right-0 flex w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
                                 ) : (
@@ -124,16 +124,16 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
 
                         {/* Main content */}
                         <main className="">
-                <div className="grid mb-4 pb-10 px-8 mx-4 rounded-3xl bg-gray-100 border-4 border-green-400">
+                <div className="grid mb-4 pb-10 px-8 mx-4 rounded-3xl bg-gray-200 border-8 border-yellow-300">
 
                     <div className="grid grid-cols-12 gap-6">
                         <div className="grid grid-cols-12 col-span-12 gap-6 xxl:col-span-9">
                             <div className="col-span-12 mt-8">
                                 <div className="flex items-center h-10 intro-y">
-                                    <h2 className="mr-5 text-lg font-medium truncate">Dashboard</h2>
+                                    <h2 className="mr-5 text-lg text-gray-700 font-bold leading-8 truncate">Dashboard</h2>
                                 </div>
                                 <div className="grid grid-cols-12 gap-6 mt-5">
-                                    <a className="transform  hover:scale-105 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-white"
+                                    <a className="transform bg-gray-100 hover:scale-105 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y"
                                         href="#">
                                         <div className="p-5">
                                             <div className="flex justify-between">
@@ -150,14 +150,14 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
                                             </div>
                                             <div className="ml-2 w-full flex-1">
                                                 <div>
-                                                    <div className="mt-3 text-3xl font-bold leading-8">4.510</div>
+                                                    <div className="mt-3 text-3xl text-black font-bold leading-8">4.510</div>
 
                                                     <div className="mt-1 text-base text-gray-600">Score</div>
                                                 </div>
                                             </div>
                                         </div>
                                     </a>
-                                    <a className="transform  hover:scale-105 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-white"
+                                    <a className="transform  hover:scale-105 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-gray-100"
                                         href="#">
                                         <div className="p-5">
                                             <div className="flex justify-between">
@@ -174,14 +174,14 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
                                             </div>
                                             <div className="ml-2 w-full flex-1">
                                                 <div>
-                                                    <div className="mt-3 text-3xl font-bold leading-8">4.510</div>
+                                                    <div className="mt-3 text-3xl text-black font-bold leading-8">4.510</div>
 
                                                     <div className="mt-1 text-base text-gray-600">Rank</div>
                                                 </div>
                                             </div>
                                         </div>
                                     </a>
-                                    <a className="transform  hover:scale-105 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-white"
+                                    <a className="transform  hover:scale-105 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-gray-100"
                                         href="#">
                                         <div className="p-5">
                                             <div className="flex justify-between">
@@ -201,14 +201,14 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
                                             </div>
                                             <div className="ml-2 w-full flex-1">
                                                 <div>
-                                                    <div className="mt-3 text-3xl font-bold leading-8">4.510</div>
+                                                    <div className="mt-3 text-3xl text-black font-bold leading-8">4.510</div>
 
                                                     <div className="mt-1 text-base text-gray-600">Matches played</div>
                                                 </div>
                                             </div>
                                         </div>
                                     </a>
-                                    <a className="transform  hover:scale-105 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-white"
+                                    <a className="transform  hover:scale-105 transition duration-300 shadow-xl rounded-lg col-span-12 sm:col-span-6 xl:col-span-3 intro-y bg-gray-100"
                                         href="#">
                                         <div className="p-5">
                                             <div className="flex justify-between">
@@ -225,7 +225,7 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
                                             </div>
                                             <div className="ml-2 w-full flex-1">
                                                 <div>
-                                                    <div className="mt-3 text-3xl font-bold leading-8">4.510</div>
+                                                    <div className="mt-3 text-3xl text-black font-bold leading-8">4.510</div>
 
                                                     <div className="mt-1 text-base text-gray-600">Winning Ratio</div>
                                                 </div>
