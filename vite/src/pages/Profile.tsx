@@ -77,7 +77,7 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
                         </div>
                         <div>
                         <div className="w-full px-4 lg:order-3 lg:self-center">
-                    <div className="py-6 px-3">
+                    <div className="py-6 px-3 justify-center flex items-center">
                       <button className="bg-yellow-100 active:bg-green-300 uppercase text-black font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded-2xl hover:text-blue-400 hover:animate-pulse sm:mr-2 mb-1 ease-linear transition-all duration-150" type="button">
                         Add Friend
                       </button>
@@ -123,7 +123,7 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
 
                         {/* Main content */}
                         <main className="">
-                <div className="grid mb-4 pb-10 px-8 mx-4 rounded-3xl bg-gray-200 border-8 border-yellow-300">
+                <div className="grid mb-4 pb-10 px-8 mx-4 rounded-3xl bg-gray-200 border-8 border-yellow-300 object-center text-center">
 
                     <div className="grid grid-cols-12 gap-6">
                         <div className="grid grid-cols-12 col-span-12 gap-6 xxl:col-span-9">
