@@ -198,10 +198,10 @@ export class ChatService {
     });
     if (!otherUser) throw new HttpException('User doesn\'t exist', HttpStatus.NOT_FOUND);
     if (channel) return channel;
-    if (otherUser.blockedBy.includes(user)) {
+    if (otherUser.blockedBy.find((blockedUser) => blockedUser.id === user.id)) {
       throw new HttpException('You have blocked this user', HttpStatus.FORBIDDEN);
     }
-    if (otherUser.blocked.includes(user)) {
+    if (otherUser.blocked.find((blockedUser) => blockedUser.id === user.id)) {
       throw new HttpException('You have been blocked by this user', HttpStatus.FORBIDDEN);
     }
     const newChannel = await this.prisma.channel.create({
@@ -332,7 +332,7 @@ export class ChatService {
       include: { blocked: true },
     });
     if (!newUser) throw new HttpException('User doesn\'t exist', HttpStatus.NOT_FOUND);
-    if (newUser.blocked.includes(user)) {
+    if (newUser.blocked.find((blockedUser) => blockedUser.id === user.id)) {
       throw new HttpException('User has blocked you', HttpStatus.FORBIDDEN);
     }
     const member = await this.prisma.member.findFirst({
