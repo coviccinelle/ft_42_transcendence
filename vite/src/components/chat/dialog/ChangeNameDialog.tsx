@@ -24,7 +24,6 @@ function ChangeNameDialog(props: {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    // console.log(props.nameOfChannel + " submitted");
     if (nameOfChannel === '') {
       setNameOfChannel(props.nameOfChannel);
       return;

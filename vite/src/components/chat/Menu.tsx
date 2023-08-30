@@ -1,5 +1,8 @@
 import { Menu } from '@headlessui/react';
 import { Transition } from '@headlessui/react';
+import PasswordDialog from './dialog/PasswordDialog';
+import { useState } from 'react';
+import apiChannel from '../../api/chat/channel';
 
 function MyMenu(props: {
   channelName: string;
@@ -11,11 +14,30 @@ function MyMenu(props: {
   setListOfUsersDialog: any;
   leaveChannelDialog: any;
   setLeaveChannelDialog: any;
+  setAdminDialog: any;
+  role: string;
+  channel: any;
+  type: string;
 }) {
   {
+    const [password, setPassword] = useState('');
+    const [passwordDialog, setPasswordDialog] = useState(false);
+    console.log(props.type);
     return (
       <div className="flex">
         <div className="relative inline-block">
+          <PasswordDialog
+            passwordDialog={passwordDialog}
+            setPasswordDialog={setPasswordDialog}
+            channelId={props.channel.id}
+            handleSubmit={async (e: any) => {
+              e.preventDefault();
+              await apiChannel.changePassword(props.channel.id, password);
+              setPasswordDialog(false);
+            }}
+            password={password}
+            setPassword={setPassword}
+          />
           <Menu>
             {({ open }) => (
               <>
@@ -51,73 +73,153 @@ function MyMenu(props: {
                     </div>
 
                     <div className="py-1">
-                      <Menu.Item>
-                        {({ active }) => (
-                          <button
-                            className={`${
-                              active
-                                ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
-                                : 'dark:text-gray-400 text-gray-900'
-                            } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
-                            onClick={() => {
-                              props.setChangeNameDialog(true);
-                            }}
-                          >
-                            Change the name of {props.channelName}
-                          </button>
+                      {props.role === 'ADMIN' ||
+                        (props.role === 'OWNER' && props.type != 'DM' && (
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                className={`${
+                                  active
+                                    ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
+                                    : 'dark:text-gray-400 text-gray-900'
+                                } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                                onClick={() => {
+                                  props.setChangeNameDialog(true);
+                                }}
+                              >
+                                <p className="overflow-hidden overflow-ellipsis">
+                                  Change the name of {props.channelName}
+                                </p>
+                              </button>
+                            )}
+                          </Menu.Item>
+                        ))}
+                      {props.role === 'ADMIN' ||
+                        (props.role === 'OWNER' && props.type != 'DM' && (
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                className={`${
+                                  active
+                                    ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
+                                    : 'dark:text-gray-400 text-gray-900'
+                                } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                                onClick={() => {
+                                  props.setAddSomeoneDialog(true);
+                                }}
+                              >
+                                <p className="overflow-hidden overflow-ellipsis">
+                                  Add someone to {props.channelName}
+                                </p>
+                              </button>
+                            )}
+                          </Menu.Item>
+                        ))}
+                      {props.type !== 'DM' && (
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              className={`${
+                                active
+                                  ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
+                                  : 'dark:text-gray-400 text-gray-900'
+                              } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                              onClick={() => {
+                                props.setListOfUsersDialog(true);
+                              }}
+                            >
+                              <p className="overflow-hidden overflow-ellipsis">
+                                List of users in {props.channelName}
+                              </p>
+                            </a>
+                          )}
+                        </Menu.Item>
+                      )}
+                      {props.role !== 'OWNER' && props.type !== 'DM' && (
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              className={`${
+                                active
+                                  ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
+                                  : 'dark:text-gray-400 text-gray-900'
+                              } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                              onClick={() => {
+                                props.setLeaveChannelDialog(true);
+                              }}
+                            >
+                              <p className="overflow-hidden overflow-ellipsis">
+                                Leave {props.channelName}
+                              </p>
+                            </a>
+                          )}
+                        </Menu.Item>
+                      )}
+                      {props.role === 'OWNER' && props.type !== 'DM' && (
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              className={`${
+                                active
+                                  ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
+                                  : 'dark:text-gray-400 text-gray-900'
+                              } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                              onClick={() => {
+                                props.setAdminDialog(true);
+                              }}
+                            >
+                              <p className="overflow-hidden overflow-ellipsis">
+                                Manage admins of {props.channelName}
+                              </p>
+                            </a>
+                          )}
+                        </Menu.Item>
+                      )}
+                      {props.role === 'OWNER' &&
+                        props.channel.isPasswordProtected &&
+                        props.type !== 'DM' && (
+                          <Menu.Item>
+                            {({ active }) => (
+                              <a
+                                className={`${
+                                  active
+                                    ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
+                                    : 'dark:text-gray-400 text-gray-900'
+                                } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                                onClick={() => {
+                                  setPasswordDialog(true);
+                                }}
+                              >
+                                <p className="overflow-hidden overflow-ellipsis">
+                                  Change password of {props.channelName}
+                                </p>
+                              </a>
+                            )}
+                          </Menu.Item>
                         )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#add_user"
-                            className={`${
-                              active
-                                ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
-                                : 'dark:text-gray-400 text-gray-900'
-                            } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
-                            onClick={() => {
-                              props.setAddSomeoneDialog(true);
-                            }}
-                          >
-                            Add someone to {props.channelName}
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#list_user"
-                            className={`${
-                              active
-                                ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
-                                : 'dark:text-gray-400 text-gray-900'
-                            } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
-                            onClick={() => {
-                              props.setListOfUsersDialog(true);
-                            }}
-                          >
-                            List of users in {props.channelName}
-                          </a>
-                        )}
-                      </Menu.Item>
-                      <Menu.Item>
-                        {({ active }) => (
-                          <a
-                            href="#leave_channel"
-                            className={`${
-                              active
-                                ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
-                                : 'dark:text-gray-400 text-gray-900'
-                            } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
-                            onClick={() => {
-                              props.setLeaveChannelDialog(true);
-                            }}
-                          >
-                            Leave {props.channelName}
-                          </a>
-                        )}
-                      </Menu.Item>
+                      {props.role === 'OWNER' && (
+                        <Menu.Item>
+                          {({ active }) => (
+                            <a
+                              className={`${
+                                active
+                                  ? 'dark:bg-gray-700 bg-rose-200 dark:text-gray-200 text-gray-900'
+                                  : 'dark:text-gray-400 text-gray-900'
+                              } flex justify-between w-full px-4 py-2 text-sm leading-5 text-left`}
+                              onClick={async () => {
+                                await apiChannel.deleteChannel(
+                                  props.channel.id,
+                                );
+                                window.location.reload();
+                              }}
+                            >
+                              <p className="overflow-hidden overflow-ellipsis">
+                                Delete {props.channelName}
+                              </p>
+                            </a>
+                          )}
+                        </Menu.Item>
+                      )}
                     </div>
                   </Menu.Items>
                 </Transition>
