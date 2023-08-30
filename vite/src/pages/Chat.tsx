@@ -3,53 +3,89 @@ import SearchChat from '../components/chat/SearchChat';
 import ChatTab from '../components/chat/ChatTab';
 import { useEffect, useState } from 'react';
 import apiChannel from '../api/chat/channel';
-import apiMessage from '../api/chat/message';
-import { Socket, io } from 'socket.io-client';
+import { io } from 'socket.io-client';
 import ChatTabAdd from '../components/chat/ChatTabAdd';
 import Navbar from '../components/Navbar';
+import LeaveChannelDialog from '../components/chat/dialog/LeaveChannelDialog';
+import { useNavigate } from 'react-router-dom';
+import apiUser from '../api/user';
 
 function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
-  const [channels, setChannels] = useState([]); // need to map channels from server
+  const [channels, setChannels] = useState<any>([]);
   const [currentChannel, setCurrentChannel] = useState(0);
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<any>([]);
   const [channelName, setChannelName] = useState('');
   const [socket, setSocket] = useState(io('/chat', { autoConnect: false }));
+  const [leaveChannelDialog, setLeaveChannelDialog] = useState(false);
+  const [userExist, setUserExist] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const user = await apiUser.getMe();
+
+        if (user) {
+          setUserExist(true);
+        } else {
+          navigate('/login');
+        }
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération de l'utilisateur :",
+          error,
+        );
+      }
+    };
+
+    fetchUser();
+  }, [navigate]);
+
+  useEffect(() => {
+    if (userExist === false) return;
+    console.log('fetching channels');
     const fetchChannels = async () => {
       const channels = await apiChannel.getChannels();
       console.log(channels);
-      console.log('JJHG@EGHH@NJK@HDKJ');
       setChannels(channels);
     };
     fetchChannels();
-  }, []);
+  }, [userExist]);
 
   useEffect(() => {
+    if (userExist === false) return;
     const channelName = channels.find(
-      (channel) => channel.id === currentChannel,
+      (channel: any) => channel.id === currentChannel,
     )?.name;
     setChannelName(channelName || '');
-  }, [currentChannel]);
+  }, [currentChannel, userExist]);
 
   useEffect(() => {
+    if (userExist === false) return;
     socket.connect();
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [userExist]);
 
   useEffect(() => {
+    if (userExist === false) return;
     function handleIncomingMessage(message: any) {
       console.log(`New message : ${message.content}`);
       if (message.channelId === currentChannel) {
         setMessages([...messages, message]);
       }
     }
-    function handleUpdate(channelId: number) {
-      console.log(`Received update for channel ${channelId}`);
-      //TODO trigger update for that channel
-      //Maybe transmit new channel through websocket
+    function handleLeaveChannel(channelId: number) {
+      console.log(`Leaving channel ${channelId}`);
+      const fetchChannels = async () => {
+        const channels = await apiChannel.getChannels();
+        console.log(channels);
+        setChannels(channels);
+      };
+      setCurrentChannel(0);
+      fetchChannels();
     }
     function handleConnection() {
       console.log('Socket connected');
@@ -58,22 +94,27 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
       console.log('Socket disconnected');
     }
     socket.on('message', handleIncomingMessage);
-    socket.on('update', handleUpdate);
+    socket.on('Leave channel', handleLeaveChannel);
     socket.on('connect', handleConnection);
     socket.on('disconnect', handleDisconnect);
     return () => {
       socket.off('message', handleIncomingMessage);
-      socket.off('update', handleUpdate);
+      socket.off('Leave channel', handleLeaveChannel);
       socket.off('connect', handleConnection);
       socket.off('disconnect', handleDisconnect);
     };
-  }, [currentChannel, messages]);
+  }, [currentChannel, messages, userExist]);
 
   const [search, setSearch] = useState('');
-  const filteredTabs = channels.filter((tab) => {
+  const filteredTabs = channels.filter((tab: any) => {
     return tab.name.toLowerCase().includes(search.toLowerCase());
   });
 
+  const sortedTabs = [...filteredTabs];
+  sortedTabs.sort((a: any, b: any) => {
+    return a.name.localeCompare(b.name);
+  });
+  if (userExist === false) return <div></div>;
   return (
     <div className="flex h-screen flex-col min-h-0 w-full">
       <Navbar darkMode={props.darkMode} toggleDarkMode={props.toggleDarkMode} />
@@ -83,7 +124,7 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
             <SearchChat search={search} setSearch={setSearch} />
             <div className="flex-col flex overflow-y-scroll overflow-y-auto no-scrollbar">
               <ChatTabAdd setChannels={setChannels} channels={channels} />
-              {filteredTabs.map((tab: any) => {
+              {sortedTabs.map((tab: any) => {
                 return (
                   <ChatTab
                     messages={messages}
@@ -95,10 +136,12 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
                       setCurrentChannel(tab.id);
                     }}
                     type={
-                      tab.isPublic
+                      tab.isPublic && !tab.isPasswordProtected
                         ? 'Public'
                         : tab.isPasswordProtected
                         ? 'Protected'
+                        : !tab.isGroup
+                        ? 'DM'
                         : 'Private'
                     }
                     createChannel={false}
@@ -107,16 +150,23 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
               })}
             </div>
           </div>
-
+          <LeaveChannelDialog
+            channelId={currentChannel}
+            leaveChannelDialog={leaveChannelDialog}
+            setLeaveChannelDialog={setLeaveChannelDialog}
+          />
           {currentChannel ? (
             <Channel
               channelId={currentChannel}
               messages={messages}
               setMessages={setMessages}
-              channelName={channelName}
+              channelName={channelName || 'DM'}
               setChannelName={setChannelName}
               socket={socket}
+              channels={channels}
               setChannels={setChannels}
+              leaveChannelDialog={leaveChannelDialog}
+              setLeaveChannelDialog={setLeaveChannelDialog}
             />
           ) : (
             <div className="flex flex-col border-t-2 border-gray-950 items-center justify-center flex-auto">

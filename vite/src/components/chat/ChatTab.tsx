@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import apiMessage from '../../api/chat/message';
+import apiUser from '../../api/user';
 
 function ChatTab(props: {
   messages: any;
@@ -10,7 +11,18 @@ function ChatTab(props: {
   type: string;
   createChannel: boolean;
 }) {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<any>([]);
+  const [name, setName] = useState(props.name);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const userMe = await apiUser.getMe();
+      const users = await apiUser.getUsersInChannel(props.id);
+      const name = users.find((user: any) => user.id !== userMe.id)?.firstName;
+      setName(name);
+    };
+    fetchUser();
+  }, []);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -44,15 +56,12 @@ function ChatTab(props: {
       onClick={props.onClick}
     >
       <div className="sm:w-1/4">
-        <img
-          src={props.avatar} // image from group chat or other user
-          className="h-12 w-12 rounded-full"
-        />
+        <img src={props.avatar} className="h-12 w-12 rounded-full" />
       </div>
       <div className="sm:w-32">
         <div className="text-lg font-semibold hidden sm:flex">
           <p className="overflow-hidden overflow-ellipsis hover:underline">
-            {props.name}
+            {props.name ? props.name : name}
           </p>
         </div>
         <div className="dark:text-gray-300 text-gray-800 hidden sm:flex">

@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react';
-// import MessageOther from "./MessageOther";
 import Message from './Message';
 import apiMessage from '../../api/chat/message';
-import apiUser from '../../api/chat/user';
+import apiUser from '../../api/user';
+import apiChannel from '../../api/chat/channel';
 import MyMenu from './Menu';
 import ChangeNameDialog from './dialog/ChangeNameDialog';
 import AddSomeoneDialog from './dialog/AddSomeoneDialog';
 import ListOfUsersDialog from './dialog/ListOfUsersDialog';
-import LeaveChannelDialog from './dialog/LeaveChannelDialog';
 import { Socket } from 'socket.io-client';
+import AdminDialog from './dialog/AdminDialog';
 
 function Channel(props: {
   channelId: number;
@@ -17,30 +17,57 @@ function Channel(props: {
   channelName: string;
   setChannelName: any;
   socket: Socket;
+  channels: any;
   setChannels: any;
+  leaveChannelDialog: any;
+  setLeaveChannelDialog: any;
 }) {
   const [message, setMessage] = useState('');
   const [addSomeoneDialog, setAddSomeoneDialog] = useState(false);
   const [changeNameDialog, setChangeNameDialog] = useState(false);
-  const [leaveChannelDialog, setLeaveChannelDialog] = useState(false);
   const [listOfUsersDialog, setListOfUsersDialog] = useState(false);
-  const [userMe, setUserMe] = useState();
+  const [adminDialog, setAdminDialog] = useState(false);
+  const [userMe, setUserMe] = useState<any>();
   const [role, setRole] = useState('');
+  const [type, setType] = useState('');
+
+  useEffect(() => {
+    const fetchChannel = async () => {
+      const channel = await apiChannel.getChannel(props.channelId);
+      if (channel.isPublic && !channel.passwordProtected) {
+        setType('public');
+      } else if (channel.isPublic && channel.passwordProtected) {
+        setType('protected');
+      } else if (
+        !channel.isPublic &&
+        !channel.passwordProtected &&
+        channel.isGroup
+      ) {
+        setType('private');
+      } else {
+        setType('DM');
+      }
+    };
+    fetchChannel();
+  }, [props.channelId]);
 
   useEffect(() => {
     const fetchUser = async () => {
       const user = await apiUser.getMe();
       setUserMe(user);
     };
+    fetchUser();
+  }, [props.channelId]);
+
+  useEffect(() => {
     const fetchUsersInChannel = async () => {
       const users = await apiUser.getUsersInChannel(props.channelId);
       const role = users.find((user: any) => user.id === userMe?.id)?.members[0]
         .role;
       setRole(role);
     };
-    fetchUser();
     fetchUsersInChannel();
-  }, [props.channelId]);
+  }, [props.channelId, userMe]);
 
   useEffect(() => {
     const fetchMessages = async () => {
@@ -59,7 +86,6 @@ function Channel(props: {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     apiMessage.sendMessage(message, props.channelId, props.socket);
-    // console.log(messages);
     setMessage('');
   };
 
@@ -85,8 +111,14 @@ function Channel(props: {
           setAddSomeoneDialog={setAddSomeoneDialog}
           listOfUsersDialog={listOfUsersDialog}
           setListOfUsersDialog={setListOfUsersDialog}
-          leaveChannelDialog={leaveChannelDialog}
-          setLeaveChannelDialog={setLeaveChannelDialog}
+          leaveChannelDialog={props.leaveChannelDialog}
+          setLeaveChannelDialog={props.setLeaveChannelDialog}
+          setAdminDialog={setAdminDialog}
+          role={role}
+          channel={props.channels.find(
+            (channel: any) => channel.id === props.channelId,
+          )}
+          type={type}
         />
         <ChangeNameDialog
           changeNameDialog={changeNameDialog}
@@ -97,6 +129,7 @@ function Channel(props: {
           setChannels={props.setChannels}
         ></ChangeNameDialog>
         <AddSomeoneDialog
+          channelId={props.channelId}
           addSomeoneDialog={addSomeoneDialog}
           setAddSomeoneDialog={setAddSomeoneDialog}
         ></AddSomeoneDialog>
@@ -104,11 +137,16 @@ function Channel(props: {
           listOfUsersDialog={listOfUsersDialog}
           setListOfUsersDialog={setListOfUsersDialog}
           channelId={props.channelId}
+          userMe={userMe}
+          role={role}
         ></ListOfUsersDialog>
-        <LeaveChannelDialog
-          leaveChannelDialog={leaveChannelDialog}
-          setLeaveChannelDialog={setLeaveChannelDialog}
-        ></LeaveChannelDialog>
+        <AdminDialog
+          adminDialog={adminDialog}
+          setAdminDialog={setAdminDialog}
+          channelId={props.channelId}
+          userMe={userMe}
+          role={role}
+        ></AdminDialog>
       </div>
       <div
         id="messages"
@@ -117,11 +155,13 @@ function Channel(props: {
         {props.messages.map((message: any) => {
           return (
             <Message
+              key={message.id}
               role={role}
               message={message.content}
               author={message.author.user.firstName}
               avatar={message.author.user.picture}
               id={message.author.user.id}
+              user={userMe}
             />
           );
         })}

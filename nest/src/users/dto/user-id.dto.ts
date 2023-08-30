@@ -1,9 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsInt } from 'class-validator';
+import { IsNotEmpty, IsInt, IsPositive } from 'class-validator';
 
-export class ChannelAddUserDto {
+export class UserIdDto {
   @ApiProperty()
   @IsInt()
+  @IsPositive()
   @IsNotEmpty()
   id: number;
 }

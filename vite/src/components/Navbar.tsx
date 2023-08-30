@@ -1,16 +1,13 @@
+import { Link } from 'react-router-dom';
+
 function Navbar(props: { darkMode: boolean; toggleDarkMode: any }) {
   return (
     <div className="flex flex-row h-12 w-full bg-gray-950 text-gray-200 justify-between">
-      <div
-        className="flex flex-row cursor-pointer"
-        onClick={() => {
-          window.location.href = '/';
-        }}
-      >
-        <div className="flex px-4 py-3 text-sm">
+      <div className="flex flex-row cursor-pointer">
+        <Link to="/" className="flex px-4 py-3 text-sm items-center">
           <span role="img">🐱</span>
-        </div>
-        <p className="text-xl font-bold py-2">Pong Game</p>
+          <p className="text-xl font-bold py-2">Pong Game</p>
+        </Link>
       </div>
       <div className="flex flex-row">
         <div className="flex px-2 py-3 text-sm">
@@ -30,11 +27,12 @@ function Navbar(props: { darkMode: boolean; toggleDarkMode: any }) {
             onChange={props.toggleDarkMode}
           />
         </div>
-        <div className="flex px-2 py-3 text-sm">
-          <span role="img" aria-label="avatar" className="cursor-pointer">
-            {/* TODO: Add avatar img */}
-            👤
-          </span>
+        <div className="flex px-2 py-3 text-sm cursor-pointer">
+          <Link to="/profile">
+            <span role="img" aria-label="profile">
+              👤
+            </span>
+          </Link>
         </div>
       </div>
     </div>
