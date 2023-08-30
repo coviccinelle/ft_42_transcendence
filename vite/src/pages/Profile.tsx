@@ -2,11 +2,13 @@ import { useEffect, useState } from 'react';
 import { getUser, handleLogout } from '../App';
 import Navbar2 from '../components/NavBar2';
 
-
 function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
     const [firstName, setFirstName] = useState(String);
     const [lastName, setLastName] = useState(String);
     const [img, setImg] = useState(String);
+
+    const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+
 
     useEffect(() => {
         getUser().then((data) => {
@@ -18,7 +20,29 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
                 setImg(data.picture);
             }
         });
+
+        //check if the user is online
+        const handleOnline = () => {
+            setIsOnline(true);
+        }
+
+        const handleOffline = () => {
+            setIsOnline(false);
+        }
+
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+
+        return () => {
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline);
+        }
+
+
     }, []);
+
+     //if the user is not logged in, redirect to login page
+
 
     return (
         <>
@@ -43,11 +67,12 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
                             <div>
                               <div className="flex justify-center relative">
                                 <img className="hidden h-24 w-24 rounded-full sm:block object-cover mr-2 border-4 border-green-200" src={img} alt="Your avatar"/>
-                                {/* if IsOnline */}
-                                <span className="absolute top-0 right-0 flex w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
-                                {/* // if IsOffline */}
-                                {/* <span className="absolute top-0 right-0 flex w-3.5 h-3.5 bg-gray-400 border-2 border-white dark:border-gray-800 rounded-full"></span> */}
-                              </div>
+                                {isOnline ? (
+                                  <span className="absolute top-0 right-0 flex w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
+                                ) : (
+                                  <span className="absolute top-0 right-0 flex w-3.5 h-3.5 bg-gray-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
+                                )}
+                                </div>
                               <p className="font-bold text-base text-gray-400 pt-2 text-center w-24"> {firstName} </p>
                             </div>
                         </div>
