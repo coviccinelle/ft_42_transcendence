@@ -236,8 +236,8 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
                             </div>
                             <div className="col-span-12 mt-5">
                                 <div className="grid gap-2 grid-cols-1 lg:grid-cols-2">
-                                    <div className="bg-white shadow-lg p-4" id="chartline"></div>
-                                    <div className="bg-white shadow-lg" id="chartpie"></div>
+                                    <div className="bg-gray-200 text-black shadow-lg p-4" id="chartline"> Match history here</div>
+                                    <div className="bg-gray-200 text-black shadow-lg p-4" id="chartpie"> Top 5 best player here</div>
                                 </div>
                             </div>
                             <div className="col-span-12 mt-5">
