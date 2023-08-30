@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
-import LeaderBoard from './pages/LeaderBoard';
 import Game from './pages/Game';
 import Chat from './pages/Chat';
 import SignUp from './pages/SignUp';
@@ -58,7 +57,6 @@ function App() {
           <Route path="/" element={ <Home />}/>
           <Route path="/login" element={<Login />} />
           <Route path="/profile" element={<Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}/>
-          <Route path="/leaderboard" element={<LeaderBoard darkMode={darkMode} toggleDarkMode={toggleDarkMode}/>}/>
           <Route path="/chat" element={ <Chat darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}/>
           <Route path="/game" element={<Game />} />
           <Route path="/signup" element={<SignUp />} />
