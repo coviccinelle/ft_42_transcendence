@@ -41,8 +41,14 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
 
                         <div className="flex justify-center">
                             <div>
-                                <img className="hidden h-24 w-24 rounded-full sm:block object-cover mr-2 border-4 border-green-200" src={img} alt="Your avatar" />
-                                <p className="font-bold text-base text-gray-400 pt-2 text-center w-24"> {firstName} </p>
+                              <div className="flex justify-center relative">
+                                <img className="hidden h-24 w-24 rounded-full sm:block object-cover mr-2 border-4 border-green-200" src={img} alt="Your avatar"/>
+                                {/* if IsOnline */}
+                                <span className="absolute top-0 right-0 flex w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
+                                {/* // if IsOffline */}
+                                {/* <span className="absolute top-0 right-0 flex w-3.5 h-3.5 bg-gray-400 border-2 border-white dark:border-gray-800 rounded-full"></span> */}
+                              </div>
+                              <p className="font-bold text-base text-gray-400 pt-2 text-center w-24"> {firstName} </p>
                             </div>
                         </div>
                         <div>
