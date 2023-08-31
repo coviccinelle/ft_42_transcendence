@@ -54,13 +54,33 @@ function App() {
     <div className="flex h-screen flex-col">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={ <Home />}/>
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}/>
-          <Route path="/chat" element={ <Chat darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}/>
-          <Route path="/game" element={<Game />} />
+          <Route
+            path="/profile"
+            element={
+              <Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <Chat darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
+          <Route
+            path="/game"
+            element={
+              <Game darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/test" element={<Test darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}/>
+          <Route
+            path="/test"
+            element={
+              <Test darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
           <Route path="*" element={<P404 />} />
         </Routes>
       </BrowserRouter>

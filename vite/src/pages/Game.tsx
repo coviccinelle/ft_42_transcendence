@@ -1,58 +1,62 @@
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/game.css';
-import { getUser } from '../App';
 import { useEffect, useState } from 'react';
 import LoadingScreen from '../components/LoadingScreen';
-import { UserEntity } from '../main';
 import { GameZone } from '../components/GameZone';
+import Navbar from '../components/Navbar';
+import apiUser from '../api/user';
 
-
-function Pong(): JSX.Element {
+function Pong() {
+  const [score, setScore] = useState<number[]>([0, 0]);
   return (
-    <div className="pong">
-      <div className="topbar">
-        <Link className={"link-style"} to="/">Home</Link>
-        <Link className={"link-style"} to="/profile">Profile</Link>
-      </div>
-
-      {/* change to score */}
-      <h1>0 - 0</h1>
-      {/* --------------- */}
-
-      <GameZone />
-
+    <div className="flex flex-col items-center">
+      <h1 className="flex text-center dark:text-white text-gray-900">
+        {score[0]} - {score[1]}
+      </h1>
+      <GameZone score={score} setScore={setScore} />
     </div>
   );
 }
 
-function Game(): JSX.Element {
-	const [isLoading, setIsLoading] = useState(true);
-  const [user, setUser] = useState<UserEntity | null>();
+function Game(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (isLoading)
-    {
-      getUser().then((res) => {
-        setUser(res)
-        setTimeout(() => {
-          setIsLoading(false);
-        }, 500);
-      });
+    if (isLoading) {
+      const fetchUser = async () => {
+        try {
+          const user = await apiUser.getMe();
+          if (user) {
+            setTimeout(() => {
+              setIsLoading(false);
+            }, 500);
+          } else {
+            navigate('/login');
+          }
+        } catch (error) {
+          console.error(
+            "Erreur lors de la récupération de l'utilisateur :",
+            error,
+          );
+        }
+      };
+      fetchUser();
     }
-  }, [isLoading, user]);
-
-  // ? Pop-up login qui dit "you need to login to play..." ?
-  // console.log(user);
-  if (user === null)
-    navigate('/login');
+  }, [isLoading]);
 
   return (
     <>
       <LoadingScreen isLoading={isLoading} />
-      <Pong />
+      <div className="flex flex-col w-screen h-screen items-center">
+        <Navbar
+          darkMode={props.darkMode}
+          toggleDarkMode={props.toggleDarkMode}
+        />
+        <Pong />
+      </div>
     </>
-  )
+  );
 }
 
 export default Game;
