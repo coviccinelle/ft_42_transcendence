@@ -7,7 +7,7 @@ import Game from './pages/Game';
 import Chat from './pages/Chat';
 import SignUp from './pages/SignUp';
 import P404 from './pages/P404';
-import Test from './pages/Test';
+import Registration from './pages/Registration';
 import './styles/App.css';
 import { UserEntity, client } from './main';
 
@@ -75,12 +75,7 @@ function App() {
             }
           />
           <Route path="/signup" element={<SignUp />} />
-          <Route
-            path="/test"
-            element={
-              <Test darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-            }
-          />
+          <Route path="/registration" element={ <Registration/> }/>
           <Route path="*" element={<P404 />} />
         </Routes>
       </BrowserRouter>
