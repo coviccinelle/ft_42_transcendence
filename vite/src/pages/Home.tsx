@@ -19,8 +19,7 @@ interface StickerProps {
 
 function LoginTile({ user }: { user: any }): JSX.Element {
   const loginTileId = { '--i': 0 } as React.CSSProperties;
-
-  if (user === null)
+  if (user === null || user === undefined)
     return (
       <li className="login" style={loginTileId}>
         <Link to="/login">Login</Link>
@@ -143,7 +142,9 @@ function Home(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
   useEffect(() => {
     const fetchUser = async () => {
       const res = await apiUser.getMe();
-      if (res) setUser(user);
+      if (res) {
+        setUser(res);
+      }
       if (isLoading) {
         setTimeout(() => {
           setIsLoading(false);
@@ -151,7 +152,7 @@ function Home(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
       }
     };
     fetchUser();
-  }, []);
+  }, [isLoading]);
 
   return (
     <>
