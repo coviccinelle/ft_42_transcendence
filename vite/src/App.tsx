@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
-import LeaderBoard from './pages/LeaderBoard';
 import Game from './pages/Game';
 import Chat from './pages/Chat';
 import SignUp from './pages/SignUp';
 import P404 from './pages/P404';
+import Test from './pages/Test';
 import './styles/App.css';
 import { UserEntity, client } from './main';
 
@@ -54,36 +54,13 @@ function App() {
     <div className="flex h-screen flex-col">
       <BrowserRouter>
         <Routes>
-          <Route
-            path="/"
-            element={
-              <Home darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-            }
-          />
+          <Route path="/" element={ <Home />}/>
           <Route path="/login" element={<Login />} />
-          <Route
-            path="/profile"
-            element={
-              <Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-            }
-          />
-          <Route
-            path="/leaderboard"
-            element={
-              <LeaderBoard
-                darkMode={darkMode}
-                toggleDarkMode={toggleDarkMode}
-              />
-            }
-          />
-          <Route
-            path="/chat"
-            element={
-              <Chat darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-            }
-          />
+          <Route path="/profile" element={<Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}/>
+          <Route path="/chat" element={ <Chat darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}/>
           <Route path="/game" element={<Game />} />
           <Route path="/signup" element={<SignUp />} />
+          <Route path="/test" element={<Test darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}/>
           <Route path="*" element={<P404 />} />
         </Routes>
       </BrowserRouter>

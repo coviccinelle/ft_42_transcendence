@@ -8,6 +8,8 @@ import {
   Delete,
   ParseIntPipe,
   UseGuards,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -22,6 +24,7 @@ import { UserEntity } from './entities/user.entity';
 import { User } from './users.decorator';
 import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
 import { ChannelEntity } from '../chat/entities/channel.entity';
+import { UserIdDto } from './dto/user-id.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -50,8 +53,8 @@ export class UsersController {
   @ApiOkResponse({ type: UserEntity })
   async findMe(@User() user: UserEntity) {
     if (user) {
-      console.log("REQUESTING user data for: " + user.email);
-      return user;
+      console.log('REQUESTING user data for: ' + user.email);
+      return new UserEntity(user);
     } else {
       console.log('User not logged')
       return null;
@@ -100,7 +103,11 @@ export class UsersController {
   async update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateUserDto: UpdateUserDto,
+    @User() user: UserEntity,
   ) {
+    if (user.id !== id) {
+      throw new HttpException('Can\'t modify another user', HttpStatus.FORBIDDEN);
+    }
     return new UserEntity(await this.usersService.update(id, updateUserDto));
   }
 
@@ -108,7 +115,35 @@ export class UsersController {
   @UseGuards(AuthenticatedGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
-  async remove(@Param('id', ParseIntPipe) id: number) {
+  async remove(
+    @Param('id', ParseIntPipe) id: number,
+    @User() user: UserEntity
+  ) {
+    if (user.id !== id) {
+      throw new HttpException('Can\'t delete another user', HttpStatus.FORBIDDEN);
+    }
     return new UserEntity(await this.usersService.remove(id));
+  }
+
+  @Post('block')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiCreatedResponse({ type: UserEntity })
+  async block(
+    @Body() userIdDto: UserIdDto,
+    @User() user: UserEntity,
+  ) {
+    return await this.usersService.block(user, userIdDto.id);
+  }
+
+  @Post('unblock')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiCreatedResponse({ type: UserEntity })
+  async unblock(
+    @Body() userIdDto: UserIdDto,
+    @User() user: UserEntity,
+  ) {
+    return await this.usersService.unblock(user, userIdDto.id);
   }
 }

@@ -1,12 +1,12 @@
+import React, { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import { Fragment, useEffect, useState } from 'react';
-import apiUser from '../../../api/user';
 import User from './User';
+import apiUser from '../../../api/user';
 
-function ListOfUsersDialog(props: {
-  listOfUsersDialog: any;
-  setListOfUsersDialog: any;
+function AdminDialog(props: {
   channelId: number;
+  adminDialog: any;
+  setAdminDialog: any;
   userMe: any;
   role: string;
 }) {
@@ -17,16 +17,16 @@ function ListOfUsersDialog(props: {
       const response = await apiUser.getUsersInChannel(props.channelId);
       setListOfUsers(response);
     };
-    if (props.channelId) fetchUsers();
-  }, [props.channelId, props.listOfUsersDialog]);
+    fetchUsers();
+  }, [props.adminDialog]);
 
   function closeDialog() {
-    props.setListOfUsersDialog(false);
+    props.setAdminDialog(false);
   }
 
   return (
     <>
-      <Transition appear show={props.listOfUsersDialog} as={Fragment}>
+      <Transition appear show={props.adminDialog} as={Fragment}>
         <Dialog
           as="div"
           className="fixed inset-0 z-10 overflow-y-auto"
@@ -65,23 +65,20 @@ function ListOfUsersDialog(props: {
                   as="h3"
                   className="text-lg font-medium leading-6 dark:text-gray-200 text-gray-900"
                 >
-                  List of users in this channel
+                  Manage admins
                 </Dialog.Title>
-                <div className="mt-2 no-scrollbar h-full overflow-y-scroll">
+                <div className="mt-2 no-scrollbar h-64 overflow-y-scroll ">
                   {listOfUsers.map((user: any) => (
                     <User
                       key={user.id}
                       user={user}
-                      onClick={() => {
-                        console.log('go to profile');
-                        props.setListOfUsersDialog(false);
-                      }}
-                      listOfUsersDialog={true}
+                      onClick={() => {}}
+                      adminDialog={true}
+                      listOfUsersDialog={false}
                       channelId={props.channelId}
                       userMe={props.userMe}
-                      adminDialog={false}
                       role={props.role}
-                      dialog={props.setListOfUsersDialog}
+                      dialog={props.setAdminDialog}
                     />
                   ))}
                 </div>
@@ -94,4 +91,4 @@ function ListOfUsersDialog(props: {
   );
 }
 
-export default ListOfUsersDialog;
+export default AdminDialog;

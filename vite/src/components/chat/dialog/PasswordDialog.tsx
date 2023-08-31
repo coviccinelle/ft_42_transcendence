@@ -1,19 +1,25 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
-import apiChannel from '../../../api/chat/channel';
 
-function LeaveChannelDialog(props: {
-  leaveChannelDialog: any;
-  setLeaveChannelDialog: any;
+function PasswordDialog(props: {
+  passwordDialog: any;
+  setPasswordDialog: any;
   channelId: number;
+  handleSubmit: any;
+  password: any;
+  setPassword: any;
 }) {
   function closeDialog() {
-    props.setLeaveChannelDialog(false);
+    props.setPasswordDialog(false);
+  }
+
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    props.setPassword(e.target.value);
   }
 
   return (
     <>
-      <Transition appear show={props.leaveChannelDialog} as={Fragment}>
+      <Transition appear show={props.passwordDialog} as={Fragment}>
         <Dialog
           as="div"
           className="fixed inset-0 z-10 overflow-y-auto"
@@ -50,23 +56,20 @@ function LeaveChannelDialog(props: {
               <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform dark:bg-gray-800 bg-rose-100 shadow-xl rounded-2xl">
                 <Dialog.Title
                   as="h3"
-                  className="text-lg font-medium leading-6 dark:text-gray-300 text-gray-900"
+                  className="text-lg font-medium leading-6 dark:text-gray-200 text-gray-900"
                 >
-                  Leaving the channel
+                  Password protected
                 </Dialog.Title>
                 <div className="mt-2">
-                  <div className="flex flex-col dark:text-white text-gray-900">
-                    Are you sure you want to leave the channel?
-                  </div>
-                  <button
-                    className="mt-4 bg-red-500 hover:bg-red-600 text-red-950 font-bold py-2 px-4 rounded"
-                    onClick={async () => {
-                      await apiChannel.leaveChannel(props.channelId);
-                      closeDialog();
-                    }}
-                  >
-                    Leave
-                  </button>
+                  <form action="submit" onSubmit={(e) => props.handleSubmit(e)}>
+                    <input
+                      type="text"
+                      className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none dark:bg-blue-100 bg-white"
+                      placeholder="password"
+                      value={props.password}
+                      onChange={handleChange}
+                    />
+                  </form>
                 </div>
               </div>
             </Transition.Child>
@@ -77,4 +80,4 @@ function LeaveChannelDialog(props: {
   );
 }
 
-export default LeaveChannelDialog;
+export default PasswordDialog;

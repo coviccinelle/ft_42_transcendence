@@ -1,9 +1,10 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
 import User from './User';
-import apiUser from '../../../api/chat/user';
+import apiUser from '../../../api/user';
 
 function AddSomeoneDialog(props: {
+  channelId: number;
   addSomeoneDialog: any;
   setAddSomeoneDialog: any;
 }) {
@@ -18,16 +19,11 @@ function AddSomeoneDialog(props: {
     fetchUsers();
   }, [props.addSomeoneDialog]);
 
-  const filteredUsers = listOfUsers.filter((tab) => {
+  const filteredUsers = listOfUsers.filter((tab: any) => {
     return tab.firstName.toLowerCase().includes(search.toLowerCase());
   });
 
   function closeDialog() {
-    props.setAddSomeoneDialog(false);
-  }
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    console.log('someone added');
     props.setAddSomeoneDialog(false);
   }
 
@@ -75,27 +71,35 @@ function AddSomeoneDialog(props: {
                   Add someone to this channel
                 </Dialog.Title>
                 <div className="mt-2">
-                  <form action="submit" onSubmit={handleSubmit}>
-                    <input
-                      type="text"
-                      className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none dark:bg-blue-100 bg-white placeholder-gray-400 dark:placeholder-gray-600 dark:text-gray-600"
-                      placeholder="Name"
-                      value={search}
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        setSearch(e.target.value);
-                      }}
-                    />
-                  </form>
+                  <input
+                    type="text"
+                    className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none dark:bg-blue-100 bg-white placeholder-gray-400 dark:placeholder-gray-600 dark:text-gray-600"
+                    placeholder="Name"
+                    value={search}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                      setSearch(e.target.value);
+                    }}
+                  />
                 </div>
                 <div className="mt-2 no-scrollbar h-64 overflow-y-scroll ">
-                  {filteredUsers.map((user) => (
+                  {filteredUsers.map((user: any) => (
                     <User
                       key={user.id}
                       user={user}
-                      onClick={() => {
+                      onClick={async () => {
+                        await apiUser.addSomeoneToChannel(
+                          props.channelId,
+                          user.id,
+                        );
                         console.log('someone added');
                         props.setAddSomeoneDialog(false);
                       }}
+                      listOfUsersDialog={false}
+                      adminDialog={false}
+                      channelId={0}
+                      userMe={0}
+                      role={''}
+                      dialog={props.setAddSomeoneDialog}
                     />
                   ))}
                 </div>

@@ -2,6 +2,7 @@ import { Dialog, Tab, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
 import ChatTab from '../ChatTab';
 import apiChannel from '../../../api/chat/channel';
+import PasswordDialog from './PasswordDialog';
 
 function CreateChannelDialog(props: {
   createChannelDialog: any;
@@ -11,8 +12,9 @@ function CreateChannelDialog(props: {
 }) {
   const [allChannels, setAllChannels] = useState([]);
   const [selected, setSelected] = useState('public');
-  const [password, setPassword] = useState('');
+  const [passwordCreate, setPasswordCreate] = useState('');
   const [nameOfChannel, setNameOfChannel] = useState('');
+  const [passwordDialog, setPasswordDialog] = useState(false);
 
   useEffect(() => {
     const fetchAllChannels = async () => {
@@ -25,15 +27,16 @@ function CreateChannelDialog(props: {
     };
     fetchChannels();
     fetchAllChannels();
-  }, [props.createChannelDialog]);
+    setSelected('public');
+    setPasswordCreate('');
+  }, [props.createChannelDialog, passwordDialog]);
 
   function closeDialog() {
     props.setCreateChannelDialog(false);
-    setSelected('public');
   }
 
-  function handleChangePassword(e: React.ChangeEvent<HTMLInputElement>) {
-    setPassword(e.target.value);
+  function handleChangePasswordCreate(e: React.ChangeEvent<HTMLInputElement>) {
+    setPasswordCreate(e.target.value);
   }
   function handleChangeName(e: React.ChangeEvent<HTMLInputElement>) {
     setNameOfChannel(e.target.value);
@@ -44,13 +47,33 @@ function CreateChannelDialog(props: {
     await apiChannel.createChannel(
       nameOfChannel,
       selected !== 'private',
-      password,
+      passwordCreate,
     );
     props.setCreateChannelDialog(false);
   }
-
+  const [channelId, setChannelId] = useState(0);
+  const [passwordGuess, setPasswordGuess] = useState('');
   return (
     <>
+      <PasswordDialog
+        passwordDialog={passwordDialog}
+        setPasswordDialog={setPasswordDialog}
+        channelId={channelId}
+        handleSubmit={async (e: any) => {
+          e.preventDefault();
+          const res = await apiChannel.joinChannel(channelId, passwordGuess);
+          if (res === 'wrong password') {
+            setPasswordGuess('');
+            alert('wrong password');
+            return;
+          }
+          console.log(res);
+          setPasswordGuess('');
+          setPasswordDialog(false);
+        }}
+        password={passwordGuess}
+        setPassword={setPasswordGuess}
+      />
       <Transition appear show={props.createChannelDialog} as={Fragment}>
         <Dialog
           as="div"
@@ -85,8 +108,8 @@ function CreateChannelDialog(props: {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <div className="inline-block w-full max-h-96 max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform dark:bg-gray-800 bg-rose-100 shadow-xl rounded-2xl">
-                <Tab.Group>
+              <div className="inline-block w-full max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform dark:bg-gray-800 bg-rose-100 shadow-xl rounded-2xl">
+                <Tab.Group as="div" className="flex flex-col h-full">
                   <Tab.List className="flex p-1 space-x-1 bg-blue-900/20 rounded-xl">
                     <Tab
                       className={({ selected }) =>
@@ -123,6 +146,20 @@ function CreateChannelDialog(props: {
                             onChange={handleChangeName}
                           />
                         </form>
+
+                        {selected === 'protected' ? (
+                          <div className="mt-2">
+                            <form action="submit" onSubmit={handleSubmit}>
+                              <input
+                                type="password"
+                                className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none dark:bg-blue-100 bg-white"
+                                placeholder="PasswordCreate"
+                                value={passwordCreate}
+                                onChange={handleChangePasswordCreate}
+                              />
+                            </form>
+                          </div>
+                        ) : null}
                         <div className="mt-2">
                           <label className="flex cursor-pointer">
                             <select
@@ -135,19 +172,6 @@ function CreateChannelDialog(props: {
                             </select>
                           </label>
                         </div>
-                        {selected === 'protected' ? (
-                          <div className="mt-2">
-                            <label className="flex items-center cursor-pointer">
-                              <input
-                                type="password"
-                                className="w-full px-3 py-2 text-gray-700 border rounded-md focus:outline-none bg-blue-100"
-                                placeholder="Password"
-                                value={password}
-                                onChange={handleChangePassword}
-                              />
-                            </label>
-                          </div>
-                        ) : null}
                       </div>
                     </Tab.Panel>
                     <Tab.Panel
@@ -156,14 +180,15 @@ function CreateChannelDialog(props: {
                     >
                       {allChannels.map((channel: any) => {
                         let type = 'Public';
+                        console.log(channel);
                         if (!channel.isPublic) {
                           type = 'Private';
-                        }
-                        if (channel.isPasswordProtected) {
+                        } else if (channel.isPasswordProtected) {
                           type = 'Protected';
                         }
                         return (
                           <ChatTab
+                            messages={[]}
                             key={channel.id}
                             name={channel.name}
                             id={channel.id}
@@ -171,21 +196,13 @@ function CreateChannelDialog(props: {
                             createChannel={true}
                             avatar="https://img-02.stickers.cloud/packs/1da1c0da-9330-4d89-9700-8d75b9c62635/webp/65bb0543-f220-456a-ad64-2ae40431ec03.webp"
                             onClick={async () => {
-                              if (channel.isPublic && channel.password) {
-                                const password = prompt(
-                                  'Enter the password to join the channel',
-                                );
-                                if (password === channel.password) {
-                                  await apiChannel.joinChannel(
-                                    channel.id,
-                                    password ?? '',
-                                  );
-                                } else {
-                                  alert('Wrong password');
-                                }
-                              } else {
-                                await apiChannel.joinChannel(channel.id, '');
+                              if (channel.isPasswordProtected) {
+                                closeDialog();
+                                setChannelId(channel.id);
+                                setPasswordDialog(true);
+                                return;
                               }
+                              await apiChannel.joinChannel(channel.id, '');
                               closeDialog();
                             }}
                           />

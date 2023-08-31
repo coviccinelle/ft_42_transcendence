@@ -12,23 +12,27 @@ datasource db {
 }
 
 model User {
-  id        Int     @id @default(autoincrement())
-  email     String  @unique
-  password  String?
+  id          Int     @id @default(autoincrement())
+  nickname    String  @unique @default(uuid())
+  email       String  @unique
+  password    String?
 
-  firstName String?
-  lastName  String?
-  picture   String?
+  firstName   String?
+  lastName    String?
+  picture     String?
 
-  members   Member[]
+  members     Member[]
+
+  blocked     User[]  @relation("block")
+  blockedBy   User[]  @relation("block")
 }
 
 model Member {
   id          Int       @id @default(autoincrement())
   role        Role
-  user        User      @relation(fields: [userId], references: [id])
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
-  channel     Channel   @relation(fields: [channelId], references: [id])
+  channel     Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
   channelId   Int
   messages    Message[]
   mutedUntil  DateTime  @default("1970-01-01T00:00:00+00:00")
@@ -48,10 +52,10 @@ model Channel {
 model Message {
   id        Int       @id @default(autoincrement())
   content   String
-  author    Member    @relation(fields: [authorId], references: [id])
+  author    Member    @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId  Int
   createdAt DateTime  @default(now())
-  channel   Channel   @relation(fields: [channelId], references: [id])
+  channel   Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
   channelId Int
 }
 

@@ -1,5 +1,4 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { Socket } from 'socket.io-client';
 
 const API = '/api';
 
@@ -21,11 +20,40 @@ const getAllChannels = async () => {
   }
 };
 
+const getChannel = async (channelId: number) => {
+  try {
+    const response = await axios.get(`${API}/chat/${channelId}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 const putChannelName = async (channelId: number, name: string) => {
   try {
     const response = await axios.patch(`${API}/chat/${channelId}/name`, {
       name: name,
     });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const leaveChannel = async (channelId: number) => {
+  try {
+    const response = await axios.get(`${API}/chat/${channelId}/leave`);
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const deleteChannel = async (channelId: number) => {
+  try {
+    const response = await axios.delete(`${API}/chat/${channelId}`);
     console.log(response.data);
     return response.data;
   } catch (error) {
@@ -57,6 +85,19 @@ const joinChannel = async (channelId: number, password: string) => {
       id: channelId,
       password: password,
     });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const changePassword = async (channelId: number, newPassword: string) => {
+  try {
+    const response = await axios.patch(`${API}/chat/${channelId}/password`, {
+      password: newPassword,
+    });
+    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -65,8 +106,12 @@ const joinChannel = async (channelId: number, password: string) => {
 
 export default {
   getChannels,
+  deleteChannel,
+  getChannel,
   putChannelName,
   createChannel,
   getAllChannels,
   joinChannel,
+  leaveChannel,
+  changePassword,
 };

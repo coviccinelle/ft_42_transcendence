@@ -5,7 +5,7 @@ import { UpdateChannelNameDto } from './dto/update-channel-name.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ChatGateway } from './chat.gateway';
 import { UserEntity } from 'src/users/entities/user.entity';
-import { hash } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { roundsOfHashing } from 'src/users/users.service';
 import { ChannelEntity } from './entities/channel.entity';
 import { JoinChannelDto } from './dto/join-channel.dto';
@@ -61,7 +61,6 @@ export class ChatService {
         },
       },
     });
-    channel.password = null;
     return channel;
   }
 
@@ -76,9 +75,6 @@ export class ChatService {
         },
       },
     });
-    channels.forEach((channel) => {
-      channel.password = null;
-    });
     return channels.filter((channel) => {
       return (channel.members.length == 0) || (channel.members[0].role === 'LEFT');
     });
@@ -88,7 +84,6 @@ export class ChatService {
     const channel = await this.prisma.channel.findUnique({
       where: { id: id },
     });
-    if (channel) channel.password = null;
     return channel;
   }
 
@@ -105,9 +100,6 @@ export class ChatService {
         },
       },
     });
-    channels.forEach((channel) => {
-      channel.password = null;
-    });
     return channels;
   }
 
@@ -121,12 +113,11 @@ export class ChatService {
       },
     });
     if (!channel) throw new HttpException('Channel doesn\'t exist', HttpStatus.NOT_FOUND);
+    if (!channel.isGroup) throw new HttpException('Channel isn\'t a group', HttpStatus.FORBIDDEN);
     if (!channel.isPublic) throw new HttpException('Channel is private', HttpStatus.FORBIDDEN);
     if (channel.password) {
-      if (
-        !joinChannelDto.password
-        || await hash(joinChannelDto.password, roundsOfHashing) !== channel.password
-      ) {
+      const passwordIsValid = await compare(joinChannelDto.password, channel.password);
+      if (!joinChannelDto.password || !passwordIsValid) {
         throw new HttpException('Incorrect password', HttpStatus.FORBIDDEN);
       }
     }
@@ -155,7 +146,6 @@ export class ChatService {
         },
       },
     });
-    channel.password = null;
     return channel;
   }
 
@@ -165,8 +155,9 @@ export class ChatService {
         id: channelId,
       },
     });
+    if (!channel) throw new HttpException('Channel not found', HttpStatus.NOT_FOUND);
     if (!channel.isGroup) {
-      this.remove(channelId);
+      this.delete(channelId);
       return;
     }
     const member = await this.prisma.member.findFirst({
@@ -179,10 +170,17 @@ export class ChatService {
     if (member.role === 'OWNER') {
       throw new HttpException('Owner can\'t leave channel', HttpStatus.FORBIDDEN);
     }
-    member.role = 'LEFT';
+    await this.prisma.member.update({
+      where: { id: member.id },
+      data: { role: 'LEFT' },
+    });
+    this.gateway.broadcastLeaveChannel(user.id, channelId);
   }
 
   async openDM(user: UserEntity, otherId: number) {
+    if (user.id === otherId) {
+      throw new HttpException('Can\'t start DM with yourself', HttpStatus.FORBIDDEN);
+    }
     //Check if there is already a DM channel open
     const channel = await this.prisma.channel.findFirst({
       where: {
@@ -196,9 +194,19 @@ export class ChatService {
     });
     const otherUser = await this.prisma.user.findUnique({
       where: { id: otherId },
+      include: {
+        blocked: true,
+        blockedBy: true,
+      },
     });
     if (!otherUser) throw new HttpException('User doesn\'t exist', HttpStatus.NOT_FOUND);
     if (channel) return channel;
+    if (otherUser.blockedBy.find((blockedUser) => blockedUser.id === user.id)) {
+      throw new HttpException('You have blocked this user', HttpStatus.FORBIDDEN);
+    }
+    if (otherUser.blocked.find((blockedUser) => blockedUser.id === user.id)) {
+      throw new HttpException('You have been blocked by this user', HttpStatus.FORBIDDEN);
+    }
     const newChannel = await this.prisma.channel.create({
       data: {
         isGroup: false,
@@ -232,13 +240,13 @@ export class ChatService {
     return newChannel;
   }
 
-  getUsers(id: number) {
-    return this.prisma.user.findMany({
+  async getUsers(id: number) {
+    const users = await this.prisma.user.findMany({
       where: {
         members: {
           some: { 
             channelId: id,
-            role: { notIn: ['LEFT'] },
+            role: { notIn: ['LEFT', 'BANNED'] },
           },
         },
       },
@@ -250,11 +258,12 @@ export class ChatService {
         },
       },
     });
+    return users;
   }
 
-  getMessages(id: number) {
-    return this.prisma.message.findMany({
-      where: { channelId: id },
+  async getMessages(channelId: number, userId: number) {
+    const messages = await this.prisma.message.findMany({
+      where: { channelId: channelId },
       include: {
         author: {
           select: {
@@ -270,6 +279,13 @@ export class ChatService {
           },
         },
       },
+    });
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { blocked: true },
+    })
+    return messages.filter((message) => {
+      return !user.blocked.find((blockedUser) => blockedUser.id === message.author.user.id)
     });
   }
 
@@ -308,19 +324,23 @@ export class ChatService {
       },
     });
     if (!channel) throw new HttpException('Channel doesn\'t exist', HttpStatus.NOT_FOUND);
-    this.gateway.broadcastUpdateChannel(id);
-    channel.password = null;
     return channel;
   }
 
-  async addUser(channelId: number, userId: number) {
+  async addUser(channelId: number, toAddId: number, user: UserEntity) {
+    const channel = await this.prisma.channel.findUnique({ where: { id: channelId }});
+    if (!channel.isGroup) throw new HttpException('Channel is a DM', HttpStatus.FORBIDDEN);
     const newUser = await this.prisma.user.findUnique({
-      where: { id: userId },
+      where: { id: toAddId },
+      include: { blocked: true },
     });
     if (!newUser) throw new HttpException('User doesn\'t exist', HttpStatus.NOT_FOUND);
+    if (newUser.blocked.find((blockedUser) => blockedUser.id === user.id)) {
+      throw new HttpException('User has blocked you', HttpStatus.FORBIDDEN);
+    }
     const member = await this.prisma.member.findFirst({
       where: {
-        userId: userId,
+        userId: toAddId,
         channelId: channelId,
       },
     });
@@ -339,7 +359,7 @@ export class ChatService {
         data: {
           role: 'REGULAR',
           user: {
-            connect: { id: userId },
+            connect: { id: toAddId },
           },
           channel: {
             connect: { id: channelId },
@@ -347,7 +367,6 @@ export class ChatService {
         },
       });
     }
-    this.gateway.broadcastUpdateUser(userId, channelId);
   }
 
   async kickUser(channelId: number, userId: number) {
@@ -358,7 +377,7 @@ export class ChatService {
       },
     });
     if (!member || member.role === 'BANNED' || member.role === 'LEFT') return;
-    this.prisma.member.update({
+    await this.prisma.member.update({
       where: {
         id: member.id,
       },
@@ -366,7 +385,7 @@ export class ChatService {
         role: 'LEFT',
       },
     });
-    this.gateway.broadcastUpdateUser(userId, channelId);
+    this.gateway.broadcastLeaveChannel(userId, channelId);
   }
 
   async banUser(channelId: number, userId: number) {
@@ -398,7 +417,7 @@ export class ChatService {
     if (member.role === 'OWNER') {
       throw new HttpException('Can\'t ban owner', HttpStatus.FORBIDDEN);
     }
-    this.prisma.member.update({
+    await this.prisma.member.update({
       where: {
         id: member.id,
       },
@@ -406,7 +425,7 @@ export class ChatService {
         role: 'BANNED',
       },
     });
-    this.gateway.broadcastUpdateUser(userId, channelId);
+    this.gateway.broadcastLeaveChannel(userId, channelId);
   }
 
   async unbanUser(channelId: number, userId: number) {
@@ -417,7 +436,7 @@ export class ChatService {
       },
     });
     if (!member || member.role !== 'BANNED') return;
-    this.prisma.member.update({
+    await this.prisma.member.update({
       where: {
         id: member.id,
       },
@@ -440,7 +459,7 @@ export class ChatService {
     if (member.role !== 'REGULAR') {
       throw new HttpException('User isn\'t a regular member', HttpStatus.BAD_REQUEST);
     }
-    this.prisma.member.update({
+    await this.prisma.member.update({
       where: {
         id: member.id,
       },
@@ -463,7 +482,7 @@ export class ChatService {
     if (member.role !== 'ADMIN') {
       throw new HttpException('User isn\'t an admin member', HttpStatus.BAD_REQUEST);
     }
-    this.prisma.member.update({
+    await this.prisma.member.update({
       where: {
         id: member.id,
       },
@@ -517,6 +536,27 @@ export class ChatService {
     });
   }
 
+  async updatePassword(channelId: number, password: string) {
+    if (password) {
+      const hashedPassword = await hash(password, roundsOfHashing);
+      return await this.prisma.channel.update({
+        where: { id: channelId },
+        data: {
+          isPasswordProtected: true,
+          password: hashedPassword,
+        },
+      });
+    } else {
+      return await this.prisma.channel.update({
+        where: { id: channelId },
+        data: {
+          isPasswordProtected: false,
+          password: null,
+        },
+      });
+    }
+  }
+
   async transferOwnership(channelId: number, owner: UserEntity, newOwnerId: number) {
     const user = await this.prisma.user.findUnique({
       where: { id: newOwnerId },
@@ -553,7 +593,8 @@ export class ChatService {
     });
   }
 
-  async remove(id: number) {
+  async delete(id: number) {
+    await this.gateway.broadcastDeleteChannel(id);
     await this.prisma.channel.delete({
       where: {
         id: id,
@@ -563,6 +604,5 @@ export class ChatService {
         messages: true,
       },
     });
-    this.gateway.broadcastUpdateChannel(id);
   }
 }
