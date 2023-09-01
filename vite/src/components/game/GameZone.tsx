@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
-import '../styles/game.css';
-import paddle from '../utils/game/paddle';
-import ball from '../utils/game/ball';
+import paddle from '../../utils/game/paddle';
+import ball from '../../utils/game/ball';
+import GameFinishedDialog from './GameFinishedDialog';
 
 interface Size {
   width: number;
@@ -47,8 +47,13 @@ export const GameZone = (props: {
       width: window.innerWidth / 100,
       height: window.innerHeight / 10,
     });
+    setMyPaddlePos([10, windowSize.height / 2 - paddleSize.height / 2]);
+    setPlayerTwoPaddlePos([
+      windowSize.width - 10 - paddleSize.width,
+      windowSize.height / 2 - paddleSize.height / 2,
+    ]);
     setBallWidth(window.innerWidth / 100);
-    requestAnimationFrame(updateGameSize);
+    setBallPos([windowSize.width / 2, windowSize.height / 2]);
   }
 
   function draw(ctx?: CanvasRenderingContext2D | null) {
@@ -71,6 +76,27 @@ export const GameZone = (props: {
       ball(ctx, ballPos[0], ballPos[1], ballWidth);
     }
   }
+
+  const [gameFinishedDialog, setGameFinishedDialog] = useState<boolean>(false);
+
+  function stopGame() {
+    clearTimeout(game);
+    setBallSpeedX(0);
+    setBallSpeedY(0);
+
+    setGame(0);
+  }
+
+  function gameFinished() {
+    if (props.score[0] === 1 || props.score[1] === 1) {
+      stopGame();
+      setGameFinishedDialog(true);
+    }
+  }
+
+  useEffect(() => {
+    gameFinished();
+  }, [props.score]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -123,24 +149,19 @@ export const GameZone = (props: {
       }
       setBallPos([newBallPosX, newBallPosY]);
       if (newBallPosX <= 0) {
-        props.setScore([props.score[0] + 1, props.score[1]]);
-        setBallPos([windowSize.width / 2, windowSize.height / 2]);
-        setBallSpeedX(ballSpeedX * -1);
-      }
-      if (newBallPosX >= windowSize.width - ballWidth) {
         props.setScore([props.score[0], props.score[1] + 1]);
         setBallPos([windowSize.width / 2, windowSize.height / 2]);
         setBallSpeedX(ballSpeedX * -1);
       }
-      if (!game) return;
-
-      requestAnimationFrame(updateBallPosition);
+      if (newBallPosX >= windowSize.width - ballWidth) {
+        props.setScore([props.score[0] + 1, props.score[1]]);
+        setBallPos([windowSize.width / 2, windowSize.height / 2]);
+        setBallSpeedX(ballSpeedX * -1);
+      }
     };
-
-    setGame(requestAnimationFrame(updateBallPosition));
-
+    setGame(setTimeout(updateBallPosition, 1000 / 120));
     return () => {
-      cancelAnimationFrame(game);
+      clearTimeout(game);
     };
   }, [ballPos, ballSpeedX, ballSpeedY, windowSize]);
 
@@ -158,13 +179,18 @@ export const GameZone = (props: {
   }, [windowSize, myPaddlePos, playerTwoPaddlePos, ballPos]);
   return (
     <>
-      <div className="w-[75%] h-[85%]">
+      <div className="flex max-w-[95%] max-h-[75%] justify-center items-center">
         <canvas
           id="gamezone"
-          className="bg-gray-500"
+          className="flex bg-gray-500 w-full h-full aspect-[16/9]"
           ref={canvas}
           width={windowSize.width}
           height={windowSize.height}
+        />
+        <GameFinishedDialog
+          gameFinishedDialog={gameFinishedDialog}
+          setGameFinishedDialog={setGameFinishedDialog}
+          score={props.score}
         />
       </div>
     </>
