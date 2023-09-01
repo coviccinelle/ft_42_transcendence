@@ -176,4 +176,12 @@ export class UsersController {
   ) {
     return await this.usersService.removeFriend(user.id, userIdDto.id);
   }
+
+  @Get(':id/matchHistory')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse()
+  async getMatchHistory(@Param('id', ParseIntPipe) id: number) {
+    return await this.usersService.getMatchHistory(id);
+  }
 }

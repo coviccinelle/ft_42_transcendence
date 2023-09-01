@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -157,4 +157,12 @@ export class UsersService {
     });
   }
 
+  async getMatchHistory(userId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { matchHistory: true },
+    });
+    if(!user) throw new NotFoundException('User doesn\'t exist');
+    return user.matchHistory;
+  }
 }
