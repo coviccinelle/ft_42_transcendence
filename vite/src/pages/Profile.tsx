@@ -53,7 +53,7 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
       {/* //all screen */}
       <div className="flex h-screen bg-gray-800 text-center">
         {/* //left side bar */}
-        <aside className="z-20 flex-shrink-0 hidden w-64 pl-2 overflow-y-auto bg-white dark:bg-gray-800 md:block">
+        <aside className="z-20 flex-shrink-0 hidden w-64 pl-2 overflow-y-auto bg-gray-800 md:block">
           <div>
             <div className="text-white">
               <div className="flex p-2 bg-gray-800">
