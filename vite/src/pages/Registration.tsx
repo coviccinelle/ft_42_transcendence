@@ -32,11 +32,10 @@ function Registration() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-amber-100 bg-opacity-30">
-            <div className="flex flex-col px-3 py-3 items-center justify-center w-4/5 h-4/5 bg-transparent rounded-lg shadow-lg">
-                <p className="flex flex-col py-16 font-bold animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl">Registration</p>
-
-                <div className="grid grid-cols-3 gap-4 text-center justify-center">
+        <div className="flex flex-col items-center justify-center h-screen">
+            <div className="flex flex-col px-3 py-3 items-center justify-center w-4/5 h-4/5 bg-slate-100 bg-opacity-10 rounded-lg shadow-lg">
+                <p className="flex flex-col pb-8 font-bold animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl">Registration</p>
+                <form className="grid grid-cols-3 gap-4 text-center items-center justify-center">
 
                     <div className="cols-span-1 flex flex-col w-32 justify-center items-center px-1 py-1 relative">
                         <img src={img} alt="Profile Image" className="w-32 h-32 rounded-full" />
@@ -47,15 +46,17 @@ function Registration() {
                     </div>
 
 
-                    <div className="col-span-2 px-4 py-4 relative ">
-                        <p className="text-center text-orange-200 font-bold py-2" >Your unique nickname*</p>
+                    <div className="col-span-2 px-4 py-12 relative ">
+                        <p className="text-center text-white font-bold py-2" >Your unique nickname*</p>
                         <input type="nickname"
                             value={nickname}
                             onChange={(e) => setNickname(e.target.value)}
-                            className="w-full px-4 py-2 border rounded-lg"
+                            className="w-full px-4 py-2 border text-amber-300 font-black bg-black bg-opacity-30 rounded-lg"
                         />
                     </div>
-                </div>
+                    <div className="col-span-1"></div>
+                    <button className="col-span-1 bg-gray-300 hover:bg-amber-400 text-amber-600 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-3xl" type="submit">Register</button>
+                </form>
             </div>
         </div>
     )
