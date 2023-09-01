@@ -67,16 +67,7 @@ export class ChatGateway implements OnGatewayConnection {
       include: {
         author: {
           select: {
-            user: {
-              select: {
-                id: true,
-                email: true,
-                firstName: true,
-                lastName: true,
-                picture: true,
-                password: true,
-              },
-            },
+            user: true,
           },
         },
       },

@@ -21,6 +21,9 @@ model User {
   lastName    String?
   picture     String?
 
+  isTwoFAEnabled  Boolean @default(false)
+  twoFASecret     String? @unique
+
   members     Member[]
 
   blocked     User[]  @relation("block")
