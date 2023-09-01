@@ -33,7 +33,13 @@ function Registration() {
 
     return (
         <div className="flex flex-col items-center justify-center h-screen">
-            <div className="flex flex-col px-3 py-3 items-center justify-center w-4/5 h-4/5 bg-slate-100 bg-opacity-10 rounded-lg shadow-lg">
+            <div className="flex flex-col relative px-3 py-3 items-center justify-center w-4/5 h-4/5 bg-slate-100 bg-opacity-10 rounded-lg shadow-lg">
+
+                {/* //an exist X button to close the registration page and go back to the profile page */}
+                <button className="absolute top-0 right-0 mt-4 mr-4 m-5 w-8 h-8 bg-yellow-300 bg-opacity-40 rounded-xl hover:rounded-3xl hover:bg-yellow-600 transition-all duration-300 text-white"
+                    onClick={() => navigate('/profile')}>X
+                </button>
+
                 <p className="flex flex-col pb-8 font-bold animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl">Registration</p>
                 <form className="grid grid-cols-3 gap-4 text-center items-center justify-center">
 
