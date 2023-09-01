@@ -28,6 +28,7 @@ export class UserEntity implements User {
   @ApiProperty()
   isTwoFAEnabled: boolean;
 
+  @Exclude()
   @ApiProperty({ required: false, nullable: true })
   twoFASecret: string;
 

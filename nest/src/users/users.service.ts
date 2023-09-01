@@ -6,6 +6,7 @@ import { hash } from 'bcrypt';
 import { connect } from 'http2';
 import { UserEntity } from './entities/user.entity';
 import { ChatService } from 'src/chat/chat.service';
+import { authenticator } from 'otplib';
 
 export const roundsOfHashing = 10;
 
@@ -24,6 +25,7 @@ export class UsersService {
       );
       createUserDto.password = hashedPassword;
     }
+
     const newUser = await this.prisma.user.create({ data: createUserDto });
     return newUser;
   }
@@ -113,5 +115,32 @@ export class UsersService {
       });
     }
     return user;
+  }
+
+  async setTwoFASecret(userId: number, secret: string) {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        twoFASecret: secret,
+      },
+    });
+  }
+
+  async enableTwoFA(userId: number) {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        isTwoFAEnabled: true,
+      },
+    });
+  }
+
+  async disableTwoFA(userId: number) {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        isTwoFAEnabled: false,
+      },
+    });
   }
 }
