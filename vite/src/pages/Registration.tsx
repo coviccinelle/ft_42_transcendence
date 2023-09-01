@@ -48,8 +48,12 @@ function Registration() {
 
 
                     <div className="col-span-2 px-4 py-4 relative ">
-                       <p className="text-center text-orange-200 font-bold py-2" >Your unique nickname*</p>
-                        <input type="text" className="w-full px-4 py-2 border rounded-lg" />
+                        <p className="text-center text-orange-200 font-bold py-2" >Your unique nickname*</p>
+                        <input type="nickname"
+                            value={nickname}
+                            onChange={(e) => setNickname(e.target.value)}
+                            className="w-full px-4 py-2 border rounded-lg"
+                        />
                     </div>
                 </div>
             </div>
