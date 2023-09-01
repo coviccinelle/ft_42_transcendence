@@ -7,7 +7,7 @@ import Game from './pages/Game';
 import Chat from './pages/Chat';
 import SignUp from './pages/SignUp';
 import P404 from './pages/P404';
-import Test from './pages/Test';
+import Registration from './pages/Registration';
 import './styles/App.css';
 import { UserEntity, client } from './main';
 
@@ -54,13 +54,28 @@ function App() {
     <div className="flex h-screen flex-col">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={ <Home />}/>
+          <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}/>
-          <Route path="/chat" element={ <Chat darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}/>
-          <Route path="/game" element={<Game />} />
+          <Route
+            path="/profile"
+            element={
+              <Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
+          <Route
+            path="/chat"
+            element={
+              <Chat darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
+          <Route
+            path="/game"
+            element={
+              <Game darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/test" element={<Test darkMode={darkMode} toggleDarkMode={toggleDarkMode} />}/>
+          <Route path="/registration" element={ <Registration/> }/>
           <Route path="*" element={<P404 />} />
         </Routes>
       </BrowserRouter>

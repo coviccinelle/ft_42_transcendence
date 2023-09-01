@@ -1,74 +1,172 @@
-import { useEffect, useRef, useState } from "react"
-import "../styles/game.css"
-import paddle, { PADDLE_HEIGHT, PADDLE_WIDTH } from "./Paddle";
+import { useEffect, useRef, useState } from 'react';
+import '../styles/game.css';
+import paddle from '../utils/game/paddle';
+import ball from '../utils/game/ball';
 
 interface Size {
   width: number;
   height: number;
 }
 
-export const GameZone = () => {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+export const GameZone = (props: {
+  score: number[];
+  setScore: React.Dispatch<React.SetStateAction<number[]>>;
+}): JSX.Element => {
   const [windowSize, setWindowSize] = useState<Size>({
-    width: window.innerWidth - 200,
-    height: window.innerHeight - 200
+    width: window.innerWidth,
+    height: window.innerHeight,
   });
-  const [rightPaddlePos, setRightPaddlePos] = useState<number>(windowSize.width - PADDLE_WIDTH - 10);
-    const middleY = windowSize.height / 2 - PADDLE_HEIGHT / 2;
-
-  // TODO 1: les paddle disparaissent quand resize
-  // * utiliser scale ? https://stackoverflow.com/questions/74345446/html-canvas-resize / https://stackoverflow.com/questions/53549401/scale-html-canvas-html-reactjs?rq=3
-  // TODO 2: paddle movement
-
-  // TODO 3: connection a un autre joueur (back)
-  // TODO 4: paddle adverse recup info
+  const [paddleSize, setPaddleSize] = useState<Size>({
+    width: window.innerWidth / 100,
+    height: window.innerHeight / 10,
+  });
+  const [ballWidth, setBallWidth] = useState<number>(window.innerWidth / 100);
+  const [myPaddlePos, setMyPaddlePos] = useState<number[]>([
+    10,
+    windowSize.height / 2 - paddleSize.height / 2,
+  ]);
+  const [playerTwoPaddlePos, setPlayerTwoPaddlePos] = useState<number[]>([
+    windowSize.width - 10 - paddleSize.width,
+    windowSize.height / 2 - paddleSize.height / 2,
+  ]);
+  const [ballPos, setBallPos] = useState<number[]>([
+    windowSize.width / 2,
+    windowSize.height / 2,
+  ]);
+  const [ballSpeedX, setBallSpeedX] = useState<number>(-4);
+  const [ballSpeedY, setBallSpeedY] = useState<number>(4);
+  const canvas = useRef<HTMLCanvasElement | null>(null);
+  const [game, setGame] = useState<any>(null);
 
   function updateGameSize() {
     setWindowSize({
-      width: window.innerWidth - 200,
-      height: window.innerHeight - 200,
+      width: window.innerWidth,
+      height: window.innerHeight,
     });
-    setRightPaddlePos(windowSize.width - PADDLE_WIDTH - 10);
-    requestAnimationFrame(render);
+    setPaddleSize({
+      width: window.innerWidth / 100,
+      height: window.innerHeight / 10,
+    });
+    setBallWidth(window.innerWidth / 100);
+    requestAnimationFrame(updateGameSize);
+  }
+
+  function draw(ctx?: CanvasRenderingContext2D | null) {
+    if (ctx) {
+      ctx.clearRect(0, 0, windowSize.width, windowSize.height);
+      paddle(
+        ctx,
+        myPaddlePos[0],
+        myPaddlePos[1],
+        paddleSize.width,
+        paddleSize.height,
+      );
+      paddle(
+        ctx,
+        playerTwoPaddlePos[0],
+        playerTwoPaddlePos[1],
+        paddleSize.width,
+        paddleSize.height,
+      );
+      ball(ctx, ballPos[0], ballPos[1], ballWidth);
+    }
   }
 
   useEffect(() => {
-    if (canvasRef.current) {
-      const ctx = canvasRef.current.getContext("2d");
-      if (ctx)
-      {
-        window.addEventListener('resize', updateGameSize);
-        requestAnimationFrame(render);
+    const handleKeyDown = (e: KeyboardEvent) => {
+      let newMyPaddlePos = [...myPaddlePos];
+      if (e.key === 'ArrowUp' && myPaddlePos[1] > 0 + 10) {
+        newMyPaddlePos[1] -= 10;
       }
-    }
-    return (() => {
-      window.removeEventListener('resize', updateGameSize);
-    });
-  }, []);
+      if (
+        e.key === 'ArrowDown' &&
+        myPaddlePos[1] < windowSize.height - paddleSize.height - 10
+      ) {
+        newMyPaddlePos[1] += 10;
+      }
+      setMyPaddlePos(newMyPaddlePos);
+      let newPlayerTwoPaddlePos = [...playerTwoPaddlePos];
+      if (e.key === 'w' && playerTwoPaddlePos[1] > 0 + 10) {
+        newPlayerTwoPaddlePos[1] -= 10;
+      }
+      if (
+        e.key === 's' &&
+        playerTwoPaddlePos[1] < windowSize.height - paddleSize.height - 10
+      ) {
+        newPlayerTwoPaddlePos[1] += 10;
+      }
+      setPlayerTwoPaddlePos(newPlayerTwoPaddlePos);
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [myPaddlePos, windowSize, playerTwoPaddlePos]);
 
+  useEffect(() => {
+    const updateBallPosition = () => {
+      const newBallPosX = ballPos[0] + ballSpeedX;
+      const newBallPosY = ballPos[1] + ballSpeedY;
 
-  function render() {
-    if (canvasRef.current) {
-      const ctx = canvasRef.current.getContext("2d");
+      if (newBallPosY <= 0 || newBallPosY >= windowSize.height - ballWidth) {
+        setBallSpeedY(ballSpeedY * -1);
+      }
+      if (
+        (newBallPosX <= myPaddlePos[0] + paddleSize.width + 10 &&
+          newBallPosY >= myPaddlePos[1] &&
+          newBallPosY <= myPaddlePos[1] + paddleSize.height) ||
+        (newBallPosX >= playerTwoPaddlePos[0] - paddleSize.width &&
+          newBallPosY >= playerTwoPaddlePos[1] &&
+          newBallPosY <= playerTwoPaddlePos[1] + paddleSize.height)
+      ) {
+        setBallSpeedX(ballSpeedX * -1);
+      }
+      setBallPos([newBallPosX, newBallPosY]);
+      if (newBallPosX <= 0) {
+        props.setScore([props.score[0] + 1, props.score[1]]);
+        setBallPos([windowSize.width / 2, windowSize.height / 2]);
+        setBallSpeedX(ballSpeedX * -1);
+      }
+      if (newBallPosX >= windowSize.width - ballWidth) {
+        props.setScore([props.score[0], props.score[1] + 1]);
+        setBallPos([windowSize.width / 2, windowSize.height / 2]);
+        setBallSpeedX(ballSpeedX * -1);
+      }
+      if (!game) return;
+
+      requestAnimationFrame(updateBallPosition);
+    };
+
+    setGame(requestAnimationFrame(updateBallPosition));
+
+    return () => {
+      cancelAnimationFrame(game);
+    };
+  }, [ballPos, ballSpeedX, ballSpeedY, windowSize]);
+
+  useEffect(() => {
+    if (canvas.current) {
+      const ctx = canvas.current.getContext('2d');
       if (ctx) {
-        ctx.clearRect(0, 0, windowSize.width, windowSize.height);
-
-        paddle(ctx, 10, middleY);
-        paddle(ctx, rightPaddlePos, middleY);
-
-        // paddle(ctx, 10, middleY);
-        // paddle(ctx, windowSize.width - PADDLE_WIDTH - 10, middleY);
-
-        requestAnimationFrame(render);
+        draw(ctx);
+        window.addEventListener('resize', updateGameSize);
       }
     }
-  }
-
+    return () => {
+      window.removeEventListener('resize', updateGameSize);
+    };
+  }, [windowSize, myPaddlePos, playerTwoPaddlePos, ballPos]);
   return (
     <>
-      <canvas id="gamezone" ref={canvasRef}
-        width={windowSize.width} height={windowSize.height}
-      />
+      <div className="w-[75%] h-[85%]">
+        <canvas
+          id="gamezone"
+          className="bg-gray-500"
+          ref={canvas}
+          width={windowSize.width}
+          height={windowSize.height}
+        />
+      </div>
     </>
-  )
-}
+  );
+};

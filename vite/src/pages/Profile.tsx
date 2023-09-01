@@ -194,9 +194,6 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
                                 d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
                               />
                             </svg>
-                            <div className="bg-green-500 rounded-full h-6 px-2 flex justify-items-center text-white font-semibold text-sm">
-                              <span className="flex items-center">30%</span>
-                            </div>
                           </div>
                           <div className="ml-2 w-full flex-1">
                             <div>
@@ -231,14 +228,11 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
                                 d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                               />
                             </svg>
-                            <div className="bg-red-500 rounded-full h-6 px-2 flex justify-items-center text-white font-semibold text-sm">
-                              <span className="flex items-center">30%</span>
-                            </div>
                           </div>
                           <div className="ml-2 w-full flex-1">
                             <div>
                               <div className="mt-3 text-3xl text-black font-bold leading-8">
-                                4.510
+                                #12
                               </div>
 
                               <div className="mt-1 text-base text-gray-600">
@@ -274,14 +268,11 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
                                 d="M20.488 9H15V3.512A9.025 9.025 0 0120.488 9z"
                               />
                             </svg>
-                            <div className="bg-yellow-500 rounded-full h-6 px-2 flex justify-items-center text-white font-semibold text-sm">
-                              <span className="flex items-center">30%</span>
-                            </div>
                           </div>
                           <div className="ml-2 w-full flex-1">
                             <div>
                               <div className="mt-3 text-3xl text-black font-bold leading-8">
-                                4.510
+                                25
                               </div>
 
                               <div className="mt-1 text-base text-gray-600">
@@ -318,7 +309,7 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
                           <div className="ml-2 w-full flex-1">
                             <div>
                               <div className="mt-3 text-3xl text-black font-bold leading-8">
-                                4.510
+                                average
                               </div>
 
                               <div className="mt-1 text-base text-gray-600">

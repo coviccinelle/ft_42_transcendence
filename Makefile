@@ -1,4 +1,6 @@
 dev:
+	cd ./vite && npm install
+	cd ./nest && npm install
 	docker compose up --build
 
 down:
