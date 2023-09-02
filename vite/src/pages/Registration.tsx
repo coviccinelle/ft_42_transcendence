@@ -31,6 +31,17 @@ function Registration() {
         setImage(imageUrl);
     };
 
+    // Handle form submit
+    const handleFormSubmit = (event) => {
+        event.preventDefault();
+        const formData = {
+            nickname: nickname,
+            picture: img,
+        };
+        // apiUser.updateMe(formData); //Changeeee HEREE
+        navigate('/profile');
+    };
+
     return (
         <div className="flex flex-col items-center justify-center h-screen">
             <div className="flex flex-col relative px-3 py-3 items-center justify-center w-4/5 h-4/5 bg-slate-100 bg-opacity-10 rounded-lg shadow-lg">
@@ -61,7 +72,9 @@ function Registration() {
                         />
                     </div>
                     <div className="col-span-1"></div>
-                    <button className="col-span-1 bg-gray-300 hover:bg-amber-400 text-amber-600 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-3xl" type="submit">Register</button>
+                    <button className="col-span-1 bg-gray-300 hover:bg-amber-400 text-amber-600 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-3xl"
+                        type="submit" onClick={handleFormSubmit}>
+                        Register</button>
                 </form>
             </div>
         </div>
