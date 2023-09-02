@@ -2,23 +2,12 @@ import { Link, useNavigate } from 'react-router-dom';
 import '../styles/game.css';
 import { useEffect, useState } from 'react';
 import LoadingScreen from '../components/LoadingScreen';
-import { GameZone } from '../components/GameZone';
+import { GameZone } from '../components/game/GameZone';
 import Navbar from '../components/Navbar';
 import apiUser from '../api/user';
 
-function Pong() {
-  const [score, setScore] = useState<number[]>([0, 0]);
-  return (
-    <div className="flex flex-col items-center">
-      <h1 className="flex text-center dark:text-white text-gray-900">
-        {score[0]} - {score[1]}
-      </h1>
-      <GameZone score={score} setScore={setScore} />
-    </div>
-  );
-}
-
 function Game(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
+  const [score, setScore] = useState<number[]>([0, 0]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
@@ -53,7 +42,10 @@ function Game(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
           darkMode={props.darkMode}
           toggleDarkMode={props.toggleDarkMode}
         />
-        <Pong />
+        <h1 className="flex text-center dark:text-white text-gray-900">
+          {score[0]} - {score[1]}
+        </h1>
+        <GameZone score={score} setScore={setScore} />
       </div>
     </>
   );
