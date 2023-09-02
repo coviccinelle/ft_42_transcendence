@@ -5,6 +5,7 @@ import {
   ForbiddenException,
   Get,
   Post,
+  Req,
   Request,
   Res,
   UnauthorizedException,
@@ -49,7 +50,7 @@ export class AuthController {
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
   redirectGoogle(@Res() response: Response) {
-    response.redirect(`http://${domainName}/`);
+    response.redirect('/');
   }
 
   @Get('ft/login')
@@ -58,8 +59,13 @@ export class AuthController {
 
   @Get('ft/callback')
   @UseGuards(FtAuthGuard)
-  redirectFt(@Res() response: Response) {
-    response.redirect(`http://${domainName}/`);
+  redirectFt(@Req() req, @Res() response: Response) {
+    const user = req.user;
+
+    if (user.isTwoFAEnabled) {
+      return response.redirect('/login/verify-2fa');
+    }
+    return response.redirect('/');
   }
 
   /**
@@ -127,7 +133,7 @@ export class AuthController {
   logout(@Request() req, @Res() response: Response): any {
     req.session.destroy();
     console.log('Successful logout');
-    response.redirect(`http://${domainName}/`);
+    response.redirect('/');
     // return { msg: 'The user session ended'};
   }
 

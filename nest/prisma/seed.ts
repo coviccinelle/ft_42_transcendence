@@ -19,7 +19,9 @@ async function main() {
       firstName: "Test1",
       lastName: "TestNom",
       picture: "",
-      password: passwordUser1
+      password: passwordUser1,
+      isTwoFAEnabled: false,
+      twoFASecret: "oisjeoigjseoijgoijigoesoi",
     }
   });
 
