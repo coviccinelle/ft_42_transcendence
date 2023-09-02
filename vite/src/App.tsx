@@ -8,6 +8,7 @@ import Chat from './pages/Chat';
 import SignUp from './pages/SignUp';
 import P404 from './pages/P404';
 import Registration from './pages/Registration';
+import Settings from './pages/Settings';
 import './styles/App.css';
 import { UserEntity, client } from './main';
 
@@ -76,6 +77,7 @@ function App() {
           />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/registration" element={ <Registration/> }/>
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<P404 />} />
         </Routes>
       </BrowserRouter>

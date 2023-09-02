@@ -161,7 +161,7 @@ function Home(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
         id="center"
         className="fixed top-0 left-0 w-full h-full flex flex-col items-center text-center justify-center"
       >
-        <h1 className="mb-16 pb-2 animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl font-black font-serif">
+        <h1 className="mb-16 pb-2 animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl font-black font-">
           Pooong?
         </h1>
         <SelectMenu user={user} />
