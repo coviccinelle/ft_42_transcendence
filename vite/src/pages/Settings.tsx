@@ -56,9 +56,9 @@ function Settings() {
                     Settings
                 </p>
                 <form className="items-center justify-center text-center">
-                    <div className="grid grid-cols-2 gap-4 text-center items-center justify-center">
+                    <div className="flex flex-col text-center items-center justify-center">
 
-                        <div className="cols-span-1 flex flex-col w-32 justify-center items-center px-1 py-1 relative">
+                        <div className="flex flex-col w-32 justify-center items-center px-1 py-1 relative">
                             <img src={img} alt="Profile Image" className="w-32 h-32 rounded-full" />
                             <label htmlFor="fileInput" className="bg-amber-100 p-2 bg-opacity-80 rounded-full absolute bottom-0 right-0 cursor-pointer">
                                 📸
@@ -67,7 +67,7 @@ function Settings() {
                         </div>
 
                         {/* //show the current nickname of the user */}
-                        <div className="col-span-1 py-12 relative ">
+                        <div className=" relative ">
                             <p className="text-center text-3xl text-white font-bold py-2" > {nickname}</p>
                         </div>
 
