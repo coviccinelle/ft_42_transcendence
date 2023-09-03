@@ -146,4 +146,34 @@ export class UsersController {
   ) {
     return await this.usersService.unblock(user, userIdDto.id);
   }
+
+  @Get('friends')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserEntity, isArray: true })
+  async getFriends(@User() user: UserEntity) {
+    return await this.usersService.getFriends(user.id);
+  }
+
+  @Post('friends')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserEntity })
+  async addFriend(
+    @Body() userIdDto: UserIdDto,
+    @User() user: UserEntity,
+  ) {
+    return await this.usersService.addFriend(user.id, userIdDto.id);
+  }
+
+  @Delete('friends')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserEntity })
+  async removeFriend(
+    @Body() userIdDto: UserIdDto,
+    @User() user: UserEntity,
+  ) {
+    return await this.usersService.removeFriend(user.id, userIdDto.id);
+  }
 }

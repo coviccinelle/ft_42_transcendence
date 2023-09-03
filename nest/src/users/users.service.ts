@@ -114,4 +114,47 @@ export class UsersService {
     }
     return user;
   }
+
+  async getFriends(userId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { friends: true },
+    });
+    return user.friends;
+  }
+
+  async addFriend(userId: number, friendId: number) {
+    const friend = await this.prisma.user.findUnique({
+      where: { id: friendId },
+      include: { friendOf: true },
+    });
+    if (!friend) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    if (friend.friendOf.find((user) => user.id === userId)) return friend;
+    return await this.prisma.user.update({
+      where: { id: friendId },
+      data: {
+        friendOf: {
+          connect: { id: userId },
+        },
+      },
+    });
+  }
+
+  async removeFriend(userId: number, friendId: number) {
+    const friend = await this.prisma.user.findUnique({
+      where: { id: friendId },
+      include: { friendOf: true },
+    });
+    if (!friend) throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    if (!friend.friendOf.find((user) => user.id === userId)) return friend;
+    return await this.prisma.user.update({
+      where: { id: friendId },
+      data: {
+        friendOf: {
+          disconnect: { id: userId },
+        },
+      },
+    });
+  }
+
 }

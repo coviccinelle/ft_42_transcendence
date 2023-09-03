@@ -24,6 +24,9 @@ model User {
 
   blocked     User[]  @relation("block")
   blockedBy   User[]  @relation("block")
+
+  friends     User[]  @relation("friend")
+  friendOf    User[]  @relation("friend")
 }
 
 model Member {
