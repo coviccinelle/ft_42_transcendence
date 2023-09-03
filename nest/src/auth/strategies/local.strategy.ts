@@ -14,17 +14,19 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(username: string, password: string): Promise<UserEntity> {
-    if (!username || !password) {
-      throw new NotAcceptableException("No username or password provided.");
+  async validate(email: string, password: string, done: any): Promise<UserEntity> {
+    if (!email || !password) {
+      return done(null, false);
+      // throw new NotAcceptableException("No email or password provided.");
     }
     
-    const user = await this.authService.login(username, password);
+    const user = await this.authService.login(email, password);
 
     if (!user) {
-      throw new UnauthorizedException();
+      return done(null, false);
+      // throw new UnauthorizedException();
     }
 
-    return user;
+    return done(null, user);
   }
 }

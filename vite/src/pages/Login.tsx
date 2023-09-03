@@ -19,8 +19,9 @@ function Login() {
     axios
       .post(`http://${domainName}/api/auth/local/login`, formData)
       .then((res) => {
-        console.log('GOGOGOGOGOGOGO TO PROFILE');
-        return navigate('/profile');
+        console.log("POST OK");
+        console.log(res.data.redirect);
+        return navigate(res.data.redirect);
       })
       .catch((e) => {
         console.log(e);

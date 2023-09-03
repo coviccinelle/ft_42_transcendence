@@ -49,8 +49,13 @@ export class AuthController {
 
   @Get('google/redirect')
   @UseGuards(GoogleAuthGuard)
-  redirectGoogle(@Res() response: Response) {
-    response.redirect('/');
+  redirectGoogle(@Req() req, @Res() response: Response) {
+    const user = req.user;
+
+    if (user.isTwoFAEnabled) {
+      return response.redirect('/login/verify-2fa');
+    }
+    return response.redirect('/');
   }
 
   @Get('ft/login')
@@ -128,6 +133,8 @@ export class AuthController {
 
     await this.usersService.disableTwoFA(user.id);
   }
+
+  
 
   @Get('logout')
   logout(@Request() req, @Res() response: Response): any {

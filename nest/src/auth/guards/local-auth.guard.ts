@@ -7,7 +7,9 @@ export class LocalAuthGuard extends AuthGuard('local') {
     const activate = (await super.canActivate(context)) as boolean;
     const request = await context.switchToHttp().getRequest();
 
-    await super.logIn(request);
+    if (!request.user.isTwoFAEnabled) {
+      await super.logIn(request);
+    }
     return activate;
   }
 }
