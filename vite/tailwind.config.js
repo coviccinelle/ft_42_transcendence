@@ -5,9 +5,9 @@ export default {
   theme: {
     extend: {
       backgroundImage: {
-        flowery: "url('./src/assets/flower_field.jpg')",
-        white_flower: "url('./src/assets/white_flower.jpg')",
-        night_sky: "url('./src/assets/night_sky.jpg')",
+        flowery: "url('/assets/flower_field.jpg')",
+        white_flower: "url('/assets/white_flower.jpg')",
+        night_sky: "url('/assets/night_sky.jpg')",
         pattern:
           "url('https://www.transparenttextures.com/patterns/inspiration-geometry.png')",
       },

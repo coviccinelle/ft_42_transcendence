@@ -48,7 +48,7 @@ function Sticker(props: StickerProps): JSX.Element {
       id="sticker"
       className="unselectable absolute w-10 h-10 lg:w-24 lg:h-24 object-cover transform transition-transform hover:scale-150"
       style={{ left: xPos, top: yPos }}
-      src={`./src/assets/duckie_bg_rm/sticker${props.id}.png`}
+      src={`/assets/duckie_bg_rm/sticker${props.id}.png`}
     />
   );
 }

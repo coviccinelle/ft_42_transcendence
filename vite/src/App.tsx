@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
+import UserProfile from './components/profile/UserProfile';
 import Game from './pages/Game';
 import Chat from './pages/Chat';
 import SignUp from './pages/SignUp';
@@ -57,12 +58,14 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/profile/:id" element={<UserProfile />} />
           <Route
             path="/profile"
             element={
               <Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
             }
           />
+          
           <Route
             path="/chat"
             element={
@@ -78,6 +81,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/registration" element={ <Registration/> }/>
           <Route path="/settings" element={<Settings />} />
+          
           <Route path="*" element={<P404 />} />
         </Routes>
       </BrowserRouter>

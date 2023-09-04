@@ -4,8 +4,8 @@ import { useNavigate } from 'react-router-dom';
 
 // if it's your profile, you can't see the add friend + send message button
 function SideProfile() {
-    const [firstName, setFirstName] = useState(String);
-  const [img, setImg] = useState(String);
+  const [firstName, setFirstName] = useState('');
+  const [img, setImg] = useState('/assets/duckie_bg_rm/sticker1.png');
 
   const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
 
@@ -16,9 +16,7 @@ function SideProfile() {
       const user = await apiUser.getMe();
       if (user) {
         setFirstName(user.firstName);
-        if (user.picture === null) {
-          setImg('../assets/duckie_bg_rm/sticker1.png');
-        } else {
+        if (user.picture && user.picture !== '') {
           setImg(user.picture);
         }
       } else {
@@ -96,9 +94,8 @@ function SideProfile() {
           </div>
           <ul className="mt-5 leading-10">
             <li className="relative px-2 py-1">
-              <a
+              <div
                 className="inline-flex items-center w-full text-sm font-semibold text-white transition-colors duration-150 cursor-pointer hover:text-green-500"
-                href=" #"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -108,16 +105,16 @@ function SideProfile() {
                   stroke="currentColor"
                 >
                   <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
                     d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                   />
                 </svg>
                 <a className="ml-4" href="/">
                   Home
                 </a>
-              </a>
+              </div>
             </li>
             <li className="relative px-2 py-1" x-data="{ Open : false  }">
               <div
@@ -133,9 +130,9 @@ function SideProfile() {
                     stroke="currentColor"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20"
                     />
                   </svg>
