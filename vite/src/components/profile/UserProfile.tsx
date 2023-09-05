@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import apiUser from '../../api/user';
+import User from '../../api/user';
+import UserList from '../UserList';
+
 
 function UserProfile() {
     const { id } = useParams();
@@ -18,8 +21,9 @@ function UserProfile() {
 
     return (
         <div>
+          <UserList />
       {/* Display user data in the profile */}
-      <h1>User Profile for {userData?.name}</h1>
+      <h1>User Profile for [{userData?.name}] hihi</h1>
       {/* Add conditional rendering for buttons */}
       {id !== 'yourUserId' && (
         <div>
@@ -28,6 +32,7 @@ function UserProfile() {
           {/* Send Message button */}
           <button>Send Message</button>
         </div>
+        // a list
       )}
     </div>
     );
