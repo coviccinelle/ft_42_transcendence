@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Navbar2 from '../components/NavBar2';
-import Dashboard from '../components/DashBoard';
-import SideProfile from '../components/SideProfile';
+import Dashboard from '../components/profile/DashBoard';
+import SideProfile from '../components/profile/SideProfile';
 import apiUser from '../api/user';
 import { useNavigate } from 'react-router-dom';
 

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import apiUser from '../../api/user';
-import UserList from '../UserList';
+import UserList from './UserList';
 
 
 function UserProfile() {

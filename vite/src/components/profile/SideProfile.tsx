@@ -1,4 +1,4 @@
-import apiUser from '../api/user';
+import apiUser from '../../api/user';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
