@@ -20,7 +20,7 @@ async function main() {
       lastName: "TestNom",
       picture: "",
       password: passwordUser1,
-      isTwoFAEnabled: false,
+      isTwoFAEnabled: true,
       twoFASecret: "oisjeoigjseoijgoijigoesoi",
     }
   });

@@ -23,6 +23,7 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { AuthenticatedGuard } from './guards/authenticated.guard';
 import { User } from 'src/users/users.decorator';
 import { UsersService } from 'src/users/users.service';
+import { TotpAuthGuard } from './guards/totp-auth.guard';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -33,6 +34,7 @@ export class AuthController {
   @Post('local/login')
   @UseGuards(LocalAuthGuard)
   login(@Request() req) {
+    // TODO: add delay to prevent brute force (https://docs.nestjs.com/security/rate-limiting)
     return req.user;
   }
 
@@ -53,6 +55,7 @@ export class AuthController {
     const user = req.user;
 
     if (user.isTwoFAEnabled) {
+      response.append('user email', user.email);
       return response.redirect('/login/verify-2fa');
     }
     return response.redirect('/');
@@ -68,9 +71,17 @@ export class AuthController {
     const user = req.user;
 
     if (user.isTwoFAEnabled) {
+      response.append('user', user);
       return response.redirect('/login/verify-2fa');
     }
     return response.redirect('/');
+  }
+
+  @Post('2fa/login')
+  @UseGuards(TotpAuthGuard)
+  loginTotp(@Req() req) {
+    console.log("LOGIN TOTP DONE?");
+    console.log(req);
   }
 
   /**
@@ -97,7 +108,7 @@ export class AuthController {
   async turnOnTwoFA(@User() user, @Body() body) {
     if (user.isTwoFAEnabled)
       throw new ConflictException("2FA is already enabled.");
-    if (!user.twoFASecret) // TODO: test if possible to get ?
+    if (!user.twoFASecret)
       throw new ConflictException("No secret generated.");
 
     // * Validation with user
@@ -133,8 +144,6 @@ export class AuthController {
 
     await this.usersService.disableTwoFA(user.id);
   }
-
-  
 
   @Get('logout')
   logout(@Request() req, @Res() response: Response): any {

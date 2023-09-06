@@ -16,12 +16,15 @@ function Login() {
       password: password,
     };
 
-    axios
-      .post(`http://${domainName}/api/auth/local/login`, formData)
+    axios.post(`http://${domainName}/api/auth/local/login`, formData)
       .then((res) => {
         console.log("POST OK");
-        console.log(res.data.redirect);
-        return navigate(res.data.redirect);
+        if (res.data.isTwoFAEnabled) {
+          localStorage.removeItem('userEmail');
+          localStorage.setItem('userEmail', res.data);
+          return navigate('/login/verify-2fa');
+        }
+        return navigate('/profile');
       })
       .catch((e) => {
         console.log(e);
@@ -29,11 +32,36 @@ function Login() {
   };
 
   const handleLoginGoogle = () => {
-    location.href = `http://${domainName}/api/auth/google/login`;
+    axios.get('/api/auth/google/login')
+      .then((res) => {
+        console.log("RES GOOGLE:");
+        console.log(res);
+        if (res.data.user.isTwoFAEnabled) {
+          localStorage.removeItem('userEmail');
+          localStorage.setItem('userEmail', res.data.user.email);
+        }
+          
+      })
+      .catch((res) => {
+        console.log(res)
+      });
+    // location.href = `http://${domainName}/api/auth/google/login`;
   };
 
   const handleLoginFt = () => {
-    location.href = `http://${domainName}/api/auth/ft/login`;
+    axios.get('/api/auth/ft/login')
+      .then((res) => {
+        console.log("RES FT:");
+        console.log(res);
+        if (res.data.user.isTwoFAEnabled) {
+          localStorage.removeItem('userEmail');
+          localStorage.setItem('userEmail', res.data.user.email);
+        }
+      })
+      .catch((res) => {
+        console.log(res)
+      });
+    // location.href = `http://${domainName}/api/auth/ft/login`;
   };
 
   return (

@@ -10,6 +10,7 @@ import P404 from './pages/P404';
 import Registration from './pages/Registration';
 import './styles/App.css';
 import { UserEntity, client } from './main';
+import VerifyTwoFA from './pages/Verify-2fa';
 
 export const getUser = async (): Promise<UserEntity | null> => {
   const { data } = await client.get('/users/me');
@@ -56,6 +57,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/login/verify-2fa" element={<VerifyTwoFA />} />
           <Route
             path="/profile"
             element={
