@@ -1,10 +1,16 @@
 import MatchHistoryCard from "./MatchHisrotyCard";
 
 function Dashboard() {
-    const img = '/assets/duckie_bg_rm/sticker1.png';
+  //a random number generator from 1 to 35
+    const randomNum = Math.floor(Math.random() * 35) + 1;
+    const img = `../assets/duckie_bg_rm/sticker${randomNum}.png`;
+    const img2 = `../assets/duckie_bg_rm/sticker${randomNum + 1}.png`;
+    const img3 = `../assets/duckie_bg_rm/sticker${randomNum + 2}.png`;
+    const img4 = `../assets/duckie_bg_rm/sticker${randomNum + 3}.png`;
+    const img5 = `../assets/duckie_bg_rm/sticker${randomNum + 4}.png`;
   return (
     <main className="">
-            <div className="grid mb-4 pb-10 px-8 mx-4 rounded-3xl bg-gray-200 border-8 border-yellow-300">
+            <div className="grid mb-4 pb-10 px-8 mx-4 rounded-3xl bg-gray-400 border-8 border-yellow-300">
               <div className="grid grid-cols-12 gap-6">
                 <div className="grid grid-cols-12 col-span-12 gap-6 xxl:col-span-9">
                   <div className="col-span-12 mt-8">
@@ -162,17 +168,18 @@ function Dashboard() {
                     </div>
                   </div>
                   <div className="col-span-12 mt-5">
-                    <div className="grid gap-2 grid-cols-1 lg:grid-cols-2">
-                      <div
-                        className="bg-gray-200 text-black shadow-lg p-4"
-                        id="chartline"
-                      >
+                    <div className="grid gap-2 grid-cols-1 lg:grid-cols-2 ">
+                      <div className="bg-slate-700 text-black shadow-lg p-4">
                         {' '}
-                        Match history here
+                        <p> Match history here </p>
                         < MatchHistoryCard nickname='Bibou' score='2 : 1' avatar={img} />
+                        < MatchHistoryCard nickname='Bibaa' score='2 : 5' avatar={img2} />
+                        < MatchHistoryCard nickname='Bibii' score='2 : 3' avatar={img3} />
+                        < MatchHistoryCard nickname='Biboo' score='2 : 2' avatar={img4} />
+                        < MatchHistoryCard nickname='Bibuu' score='2 : 1' avatar={img5} />
                       </div>
                       <div
-                        className="bg-gray-200 text-black shadow-lg p-4"
+                        className="bg-pink-300 text-black shadow-lg p-4"
                         id="chartpie"
                       >
                         {' '}
