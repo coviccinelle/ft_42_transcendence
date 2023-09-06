@@ -56,7 +56,7 @@ function App() {
     <div className="flex h-screen flex-col">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Home darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
           <Route path="/login" element={<Login />} />
           <Route path="/profile/:id" element={<UserProfile />} />
           <Route

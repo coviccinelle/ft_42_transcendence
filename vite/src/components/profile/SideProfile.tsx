@@ -42,7 +42,7 @@ function SideProfile() {
     };
   }, []);
     return (
-        <aside className="z-20 flex-shrink-0 hidden w-64 pl-2 overflow-y-auto bg-gray-800 md:block">
+        <aside className="z-20 flex-shrink-0 hidden w-64 pl-2 overflow-y-auto bg-gray-800 md:block no-scrollbar">
         <div>
           <div className="text-white">
             <div className="flex p-2 bg-gray-800">
