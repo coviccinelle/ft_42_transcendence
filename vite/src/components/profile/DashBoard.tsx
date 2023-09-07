@@ -10,7 +10,7 @@ function Dashboard() {
     const img5 = `../assets/duckie_bg_rm/sticker${randomNum + 4}.png`;
   return (
     <main className="">
-            <div className="grid mb-4 pb-10 px-8 mx-4 rounded-3xl bg-gray-400 border-8 border-yellow-300">
+            <div className="grid mb-4 pb-10 px-8 mx-4 rounded-3xl bg-gray-600 border-8 border-yellow-300">
               <div className="grid grid-cols-12 gap-6">
                 <div className="grid grid-cols-12 col-span-12 gap-6 xxl:col-span-9">
                   <div className="col-span-12 mt-8">
@@ -169,9 +169,9 @@ function Dashboard() {
                   </div>
                   <div className="col-span-12 mt-5">
                     <div className="grid gap-2 grid-cols-1 lg:grid-cols-2 ">
-                      <div className="bg-slate-700 text-black shadow-lg p-4">
+                      <div className="bg-slate-700 text-black shadow-lg p-4 px-8 rounded-3xl">
                         {' '}
-                        <p> Match history here </p>
+                        <p className="text-white"> Match history here </p>
                         < MatchHistoryCard nickname='Bibou' score='2 : 1' avatar={img} />
                         < MatchHistoryCard nickname='Bibaa' score='2 : 5' avatar={img2} />
                         < MatchHistoryCard nickname='Bibii' score='2 : 3' avatar={img3} />
@@ -179,7 +179,7 @@ function Dashboard() {
                         < MatchHistoryCard nickname='Bibuu' score='2 : 1' avatar={img5} />
                       </div>
                       <div
-                        className="bg-pink-300 text-black shadow-lg p-4"
+                        className="bg-slate-500 text-black shadow-lg p-4 rounded-3xl"
                         id="chartpie"
                       >
                         {' '}
