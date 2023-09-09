@@ -5,11 +5,12 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { PassportModule } from '@nestjs/passport';
 import { ChatModule } from 'src/chat/chat.module';
 import { UsersGateway } from './users.gateway';
+import { GameModule } from 'src/game/game.module';
 
 @Module({
   controllers: [UsersController],
   providers: [UsersService, UsersGateway],
-  imports: [PrismaModule, ChatModule],
+  imports: [PrismaModule, ChatModule, GameModule],
   exports: [UsersService],
 })
 export class UsersModule {}

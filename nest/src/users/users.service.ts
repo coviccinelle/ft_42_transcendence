@@ -9,6 +9,7 @@ import { ChatService } from 'src/chat/chat.service';
 import { UserStatsDto } from './dto/user-stats.dto';
 import { UsersGateway } from './users.gateway';
 import { ConnectionState } from './dto/user-connection-status.dto';
+import { GameGateway } from 'src/game/game.gateway';
 
 export const roundsOfHashing = 10;
 
@@ -18,6 +19,7 @@ export class UsersService {
     private prisma: PrismaService,
     private chatService: ChatService,
     private usersGateway: UsersGateway,
+    private gameGateway: GameGateway,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -194,7 +196,9 @@ export class UsersService {
   }
 
   async getStatus(userId: number) {
-    //TODO: check if user is in game
+    if (await this.gameGateway.isUserPlaying(userId)) {
+      return { status: ConnectionState.PLAYING };
+    }
     if (await this.usersGateway.isUserConnected(userId)) {
       return { status: ConnectionState.CONNECTED };
     }
