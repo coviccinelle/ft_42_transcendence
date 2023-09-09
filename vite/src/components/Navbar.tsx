@@ -10,11 +10,6 @@ function Navbar(props: { darkMode: boolean; toggleDarkMode: any }) {
         </Link>
       </div>
       <div className="flex flex-row">
-        <div className="flex px-2 py-3 text-sm">
-          <span role="img" aria-label="notification" className="cursor-pointer">
-            🔔
-          </span>
-        </div>
         <div className="flex px-2 py-3 text-sm" onClick={props.toggleDarkMode}>
           <span role="img" aria-label="dark" className="cursor-pointer">
             {props.darkMode ? '🌻' : '🌙'}
