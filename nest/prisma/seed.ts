@@ -21,7 +21,7 @@ async function main() {
       picture: "",
       password: passwordUser1,
       isTwoFAEnabled: true,
-      twoFASecret: "oisjeoigjseoijgoijigoesoi",,
+      twoFASecret: "oisjeoigjseoijgoijigoesoi",
       matchHistory: {
         create: {
           result: 'WIN',
