@@ -26,6 +26,9 @@ export class UserEntity implements User {
   picture: string;
 
   @ApiProperty()
+  elo: number;
+
+  @ApiProperty()
   isTwoFAEnabled: boolean;
 
   @Exclude()

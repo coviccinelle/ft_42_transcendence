@@ -87,7 +87,7 @@ function Login() {
           />
           <label>Password</label>
         </div>
-        <a type="submit" onClick={handleLogin}>
+        <a style={{ cursor: 'pointer' }} type="submit" onClick={handleLogin}>
           <span></span>
           <span></span>
           <span></span>

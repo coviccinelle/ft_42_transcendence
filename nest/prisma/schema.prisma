@@ -12,22 +12,28 @@ datasource db {
 }
 
 model User {
-  id          Int     @id @default(autoincrement())
-  nickname    String  @unique @default(uuid())
-  email       String  @unique
-  password    String?
+  id            Int     @id @default(autoincrement())
+  nickname      String  @unique @default(uuid())
+  email         String  @unique
+  password      String?
 
-  firstName   String?
-  lastName    String?
-  picture     String?
+  firstName     String?
+  lastName      String?
+  picture       String?
 
   isTwoFAEnabled  Boolean @default(false)
   twoFASecret     String? @unique
 
-  members     Member[]
+  members       Member[]
 
-  blocked     User[]  @relation("block")
-  blockedBy   User[]  @relation("block")
+  blocked       User[]  @relation("block")
+  blockedBy     User[]  @relation("block")
+
+  friends       User[]  @relation("friend")
+  friendOf      User[]  @relation("friend")
+
+  matchHistory  MatchResult[]
+  elo           Int     @default(1000)
 }
 
 model Member {
@@ -53,13 +59,24 @@ model Channel {
 }
 
 model Message {
-  id        Int       @id @default(autoincrement())
-  content   String
-  author    Member    @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  authorId  Int
-  createdAt DateTime  @default(now())
-  channel   Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
-  channelId Int
+  id          Int       @id @default(autoincrement())
+  content     String
+  author      Member    @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId    Int
+  createdAt   DateTime  @default(now())
+  channel     Channel   @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  channelId   Int
+}
+
+model MatchResult {
+  id              Int       @id @default(autoincrement())
+  player          User      @relation(fields: [playerId], references: [id], onDelete: Cascade)
+  playerId        Int
+  result          MatchStatus
+  otherPlayerId   Int
+  otherPlayerName String
+  myScore         Int
+  otherScore      Int
 }
 
 enum Role {
@@ -68,4 +85,10 @@ enum Role {
   REGULAR
   LEFT
   BANNED
+}
+
+enum MatchStatus {
+  WIN
+  LOSS
+  DRAW
 }

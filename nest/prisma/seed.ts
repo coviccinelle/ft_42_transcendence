@@ -21,7 +21,16 @@ async function main() {
       picture: "",
       password: passwordUser1,
       isTwoFAEnabled: true,
-      twoFASecret: "oisjeoigjseoijgoijigoesoi",
+      twoFASecret: "oisjeoigjseoijgoijigoesoi",,
+      matchHistory: {
+        create: {
+          result: 'WIN',
+          otherPlayerId: 0,
+          otherPlayerName: 'Bob',
+          myScore: 5,
+          otherScore: 3,
+        }
+      }
     }
   });
 

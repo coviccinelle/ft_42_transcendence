@@ -30,6 +30,9 @@ export class UserMemberEntity implements User {
   member: MemberEntity;
 
   @ApiProperty()
+  elo: number;
+
+  @ApiProperty()
   isTwoFAEnabled: boolean;
 
   @ApiProperty({ required: false, nullable: true })

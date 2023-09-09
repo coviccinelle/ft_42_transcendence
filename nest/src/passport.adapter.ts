@@ -16,9 +16,15 @@ export default class PassportIoAdapter extends IoAdapter {
     const wrap = (middleware) => (socket, next) =>
       middleware(socket.request, {}, next);
     const server: Server = super.createIOServer(port, options);
+    server.use(wrap(this.sessionMiddleware));
+    server.use(wrap(passport.initialize()));
+    server.use(wrap(passport.session()));
     server.of('chat').use(wrap(this.sessionMiddleware));
     server.of('chat').use(wrap(passport.initialize()));
     server.of('chat').use(wrap(passport.session()));
+    server.of('game').use(wrap(this.sessionMiddleware));
+    server.of('game').use(wrap(passport.initialize()));
+    server.of('game').use(wrap(passport.session()));
     return server;
   }
 }
