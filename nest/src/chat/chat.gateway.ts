@@ -109,4 +109,13 @@ export class ChatGateway implements OnGatewayConnection {
       }
     }
   }
+
+  async addToRoom(userId: number, channelId: number) {
+    const sockets = await this.wss.fetchSockets();
+    for (const socket of sockets) {
+      if (socket.data.user.id === userId) {
+        socket.join(channelId.toString());
+      }
+    }
+  }
 }

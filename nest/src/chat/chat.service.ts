@@ -61,6 +61,7 @@ export class ChatService {
         },
       },
     });
+    await this.gateway.addToRoom(userId, channel.id);
     return channel;
   }
 
@@ -129,23 +130,28 @@ export class ChatService {
       },
     });
     //Rejoin channel
-    if (member && member.role == 'LEFT') {
-      return await this.prisma.member.update({
-        where: { id: member.id },
-        data: { role: 'REGULAR' },
+    if (member) {
+      if (member.role == 'LEFT') {
+        await this.prisma.member.update({
+          where: { id: member.id },
+          data: { role: 'REGULAR' },
+        });
+      }
+    } else {
+      if (member) return channel;
+      member = await this.prisma.member.create({
+        data: {
+          role: 'REGULAR',
+          user: {
+            connect: { id: user.id },
+          },
+          channel: {
+            connect: { id: channel.id },
+          },
+        },
       });
     }
-    member = await this.prisma.member.create({
-      data: {
-        role: 'REGULAR',
-        user: {
-          connect: { id: user.id },
-        },
-        channel: {
-          connect: { id: channel.id },
-        },
-      },
-    });
+    await this.gateway.addToRoom(user.id, channel.id);
     return channel;
   }
 
