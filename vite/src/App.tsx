@@ -12,6 +12,7 @@ import Registration from './pages/Registration';
 import Settings from './pages/Settings';
 import './styles/App.css';
 import { UserEntity, client } from './main';
+import TwoFa from './pages/2fa';
 
 export const getUser = async (): Promise<UserEntity | null> => {
   const { data } = await client.get('/users/me');
@@ -56,7 +57,12 @@ function App() {
     <div className="flex h-screen flex-col">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          <Route
+            path="/"
+            element={
+              <Home darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
           <Route path="/login" element={<Login />} />
           <Route path="/profile/:id" element={<UserProfile />} />
           <Route
@@ -65,7 +71,7 @@ function App() {
               <Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
             }
           />
-          
+
           <Route
             path="/chat"
             element={
@@ -79,9 +85,9 @@ function App() {
             }
           />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/registration" element={ <Registration/> }/>
+          <Route path="/registration" element={<Registration />} />
           <Route path="/settings" element={<Settings />} />
-          
+          <Route path="/2fa" element={<TwoFa />} />
           <Route path="*" element={<P404 />} />
         </Routes>
       </BrowserRouter>
