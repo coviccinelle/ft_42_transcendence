@@ -22,6 +22,9 @@ export class UserEntity implements User {
   @ApiProperty({ required: false, nullable: true })
   picture: string;
 
+  @ApiProperty()
+  elo: number;
+
   @Exclude()
   password: string;
 }

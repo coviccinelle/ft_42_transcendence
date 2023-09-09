@@ -25,6 +25,8 @@ import { User } from './users.decorator';
 import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
 import { ChannelEntity } from '../chat/entities/channel.entity';
 import { UserIdDto } from './dto/user-id.dto';
+import { MatchResultEntity } from './entities/match-result.entity';
+import { UserStatsDto } from './dto/user-stats.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -180,8 +182,16 @@ export class UsersController {
   @Get(':id/matchHistory')
   @UseGuards(AuthenticatedGuard)
   @ApiBearerAuth()
-  @ApiOkResponse()
+  @ApiOkResponse({ type: MatchResultEntity, isArray: true })
   async getMatchHistory(@Param('id', ParseIntPipe) id: number) {
     return await this.usersService.getMatchHistory(id);
+  }
+
+  @Get(':id/stats')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserStatsDto })
+  async getStats(@Param('id', ParseIntPipe) userId: number) {
+    return await this.usersService.getStats(userId);
   }
 }

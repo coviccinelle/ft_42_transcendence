@@ -29,6 +29,7 @@ model User {
   friendOf      User[]  @relation("friend")
 
   matchHistory  MatchResult[]
+  elo           Int     @default(1000)
 }
 
 model Member {

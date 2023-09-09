@@ -6,6 +6,7 @@ import { hash } from 'bcrypt';
 import { connect } from 'http2';
 import { UserEntity } from './entities/user.entity';
 import { ChatService } from 'src/chat/chat.service';
+import { UserStatsDto } from './dto/user-stats.dto';
 
 export const roundsOfHashing = 10;
 
@@ -164,5 +165,28 @@ export class UsersService {
     });
     if(!user) throw new NotFoundException('User doesn\'t exist');
     return user.matchHistory;
+  }
+
+  async getRank(elo: number) {
+    const users = await this.prisma.user.findMany({
+      where: {
+        elo: { gt: elo },
+      },
+    });
+    return (1 + users.length);
+  }
+
+  async getStats(userId: number) {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+    });
+    if (!user) throw new NotFoundException('User doesn\'t exist');
+    const rank = await this.getRank(user.elo);
+    const stats: UserStatsDto = {
+      id: user.id,
+      elo: user.elo,
+      rank: rank,
+    };
+    return stats;
   }
 }

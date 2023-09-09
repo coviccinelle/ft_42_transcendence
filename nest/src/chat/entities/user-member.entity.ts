@@ -26,6 +26,9 @@ export class UserMemberEntity implements User {
   @ApiProperty()
   member: MemberEntity;
 
+  @ApiProperty()
+  elo: number;
+
   @Exclude()
   password: string;
 }
