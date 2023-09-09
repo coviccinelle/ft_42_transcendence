@@ -7,7 +7,7 @@ import { io } from 'socket.io-client';
 import ChatTabAdd from '../components/chat/ChatTabAdd';
 import Navbar from '../components/Navbar';
 import LeaveChannelDialog from '../components/chat/dialog/LeaveChannelDialog';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import apiUser from '../api/user';
 
 function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {

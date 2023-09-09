@@ -104,6 +104,18 @@ const changePassword = async (channelId: number, newPassword: string) => {
   }
 };
 
+const createDm = async (userId: number) => {
+  try {
+    const response = await axios.post(`${API}/chat/newDM`, {
+      id: userId,
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export default {
   getChannels,
   deleteChannel,
@@ -114,4 +126,5 @@ export default {
   joinChannel,
   leaveChannel,
   changePassword,
+  createDm,
 };

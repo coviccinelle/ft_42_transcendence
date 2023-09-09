@@ -83,16 +83,27 @@ function App() {
             }
           />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile/:id" element={<UserProfile />} />
+          {/* <Route path="/profile/:id" element={<UserProfile />} /> */}
+          <Route
+            path="/profile/:id"
+            element={
+              <Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
           <Route
             path="/profile"
             element={
               <Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
             }
           />
-
           <Route
             path="/chat"
+            element={
+              <Chat darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
+          <Route
+            path="/chat/:id"
             element={
               <Chat darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
             }
