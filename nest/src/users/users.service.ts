@@ -7,6 +7,8 @@ import { connect } from 'http2';
 import { UserEntity } from './entities/user.entity';
 import { ChatService } from 'src/chat/chat.service';
 import { UserStatsDto } from './dto/user-stats.dto';
+import { UsersGateway } from './users.gateway';
+import { ConnectionState } from './dto/user-connection-status.dto';
 
 export const roundsOfHashing = 10;
 
@@ -15,6 +17,7 @@ export class UsersService {
   constructor(
     private prisma: PrismaService,
     private chatService: ChatService,
+    private usersGateway: UsersGateway,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
@@ -188,5 +191,13 @@ export class UsersService {
       rank: rank,
     };
     return stats;
+  }
+
+  async getStatus(userId: number) {
+    //TODO: check if user is in game
+    if (await this.usersGateway.isUserConnected(userId)) {
+      return { status: ConnectionState.CONNECTED };
+    }
+    return { status: ConnectionState.DISCONNECTED };
   }
 }

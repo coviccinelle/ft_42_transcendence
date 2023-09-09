@@ -27,6 +27,7 @@ import { ChannelEntity } from '../chat/entities/channel.entity';
 import { UserIdDto } from './dto/user-id.dto';
 import { MatchResultEntity } from './entities/match-result.entity';
 import { UserStatsDto } from './dto/user-stats.dto';
+import { UserConnectionStatusDto } from './dto/user-connection-status.dto';
 
 @Controller('users')
 @ApiTags('users')
@@ -193,5 +194,13 @@ export class UsersController {
   @ApiOkResponse({ type: UserStatsDto })
   async getStats(@Param('id', ParseIntPipe) userId: number) {
     return await this.usersService.getStats(userId);
+  }
+
+  @Get(':id/connectionStatus')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserConnectionStatusDto })
+  async getStatus(@Param('id', ParseIntPipe) userId: number) {
+    return await this.usersService.getStatus(userId);
   }
 }

@@ -12,6 +12,7 @@ import Registration from './pages/Registration';
 import Settings from './pages/Settings';
 import './styles/App.css';
 import { UserEntity, client } from './main';
+import { io } from 'socket.io-client';
 
 export const getUser = async (): Promise<UserEntity | null> => {
   const { data } = await client.get('/users/me');
@@ -25,6 +26,7 @@ export async function handleLogout() {
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
+  const [socket, setSocket] = useState(io({ autoConnect: false }));
 
   useEffect(() => {
     //load dark mode from local storage if it exists
@@ -36,6 +38,23 @@ function App() {
         htmlElement?.classList.add('dark'); // Apply dark mode class if savedDarkMode is true
       }
     }
+  }, []);
+
+  useEffect(() => {
+    function handleConnection() {
+      console.log('Main socket connected');
+    }
+    function handleDisconnect() {
+      console.log('Main socket disconnected');
+    }
+    socket.connect();
+    socket.on('connect', handleConnection);
+    socket.on('disconnect', handleDisconnect);
+    return () => {
+      socket.off('connect', handleConnection);
+      socket.disconnect();
+      socket.off('disconnect', handleDisconnect);
+    };
   }, []);
 
   const toggleDarkMode = () => {

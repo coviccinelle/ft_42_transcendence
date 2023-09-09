@@ -88,10 +88,10 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
       fetchChannels();
     }
     function handleConnection() {
-      console.log('Socket connected');
+      console.log('Chat socket connected');
     }
     function handleDisconnect() {
-      console.log('Socket disconnected');
+      console.log('Chat socket disconnected');
     }
     socket.on('message', handleIncomingMessage);
     socket.on('Leave channel', handleLeaveChannel);

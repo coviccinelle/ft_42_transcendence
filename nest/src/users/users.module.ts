@@ -4,10 +4,11 @@ import { UsersController } from './users.controller';
 import { PrismaModule } from 'src/prisma/prisma.module';
 import { PassportModule } from '@nestjs/passport';
 import { ChatModule } from 'src/chat/chat.module';
+import { UsersGateway } from './users.gateway';
 
 @Module({
   controllers: [UsersController],
-  providers: [UsersService],
+  providers: [UsersService, UsersGateway],
   imports: [PrismaModule, ChatModule],
   exports: [UsersService],
 })
