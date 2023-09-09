@@ -75,6 +75,7 @@ export class ChatGateway implements OnGatewayConnection {
                 lastName: true,
                 picture: true,
                 password: true,
+                elo: true,
               },
             },
           },
