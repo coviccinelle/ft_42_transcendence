@@ -143,6 +143,39 @@ const getConnectionStatus = async (userId: number) => {
   }
 };
 
+const addFriend = async (userId: number) => {
+  try {
+    const response = await axios.post(`${API}/users/friends`, {
+      id: userId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const removeFriend = async (userId: number) => {
+  try {
+    const response = await axios.delete(`${API}/users/friends`, {
+      data: {
+        id: userId,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const getFriends = async () => {
+  try {
+    const response = await axios.get(`${API}/users/friends`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export default {
   getUsers,
   getUsersInChannel,
@@ -158,4 +191,7 @@ export default {
   getMatchHistory,
   getStats,
   getConnectionStatus,
+  addFriend,
+  removeFriend,
+  getFriends,
 };

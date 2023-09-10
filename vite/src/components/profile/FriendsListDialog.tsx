@@ -1,34 +1,31 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment, useEffect, useState } from 'react';
-import apiUser from '../../../api/user';
+import apiUser from '../../api/user';
 import User from './User';
 import { useNavigate } from 'react-router-dom';
 
-function ListOfUsersDialog(props: {
-  listOfUsersDialog: any;
-  setListOfUsersDialog: any;
-  channelId: number;
-  userMe: any;
-  role: string;
+function FriendsListDialog(props: {
+  friendsListDialog: any;
+  setFriendsListDialog: any;
 }) {
-  const [listOfUsers, setListOfUsers] = useState([]);
+  const [listOfFriends, setListOfFriends] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      const response = await apiUser.getUsersInChannel(props.channelId);
-      setListOfUsers(response);
+    const fetchFriends = async () => {
+      const response = await apiUser.getFriends();
+      setListOfFriends(response);
     };
-    if (props.channelId) fetchUsers();
-  }, [props.channelId, props.listOfUsersDialog]);
+    fetchFriends();
+  }, [props.friendsListDialog]);
 
   function closeDialog() {
-    props.setListOfUsersDialog(false);
+    props.setFriendsListDialog(false);
   }
 
   return (
     <>
-      <Transition appear show={props.listOfUsersDialog} as={Fragment}>
+      <Transition appear show={props.friendsListDialog} as={Fragment}>
         <Dialog
           as="div"
           className="fixed inset-0 z-10 overflow-y-auto"
@@ -67,23 +64,18 @@ function ListOfUsersDialog(props: {
                   as="h3"
                   className="text-lg font-medium leading-6 dark:text-gray-200 text-gray-900"
                 >
-                  List of users in this channel
+                  List of Friends
                 </Dialog.Title>
                 <div className="mt-2 no-scrollbar h-full overflow-y-scroll">
-                  {listOfUsers.map((user: any) => (
+                  {listOfFriends.map((user: any) => (
                     <User
                       key={user.id}
                       user={user}
                       onClick={() => {
-                        props.setListOfUsersDialog(false);
+                        props.setFriendsListDialog(false);
                         return navigate('/profile/' + user.id);
                       }}
-                      listOfUsersDialog={true}
-                      channelId={props.channelId}
-                      userMe={props.userMe}
-                      adminDialog={false}
-                      role={props.role}
-                      dialog={props.setListOfUsersDialog}
+                      setFriendsListDialog={props.setFriendsListDialog}
                     />
                   ))}
                 </div>
@@ -96,4 +88,4 @@ function ListOfUsersDialog(props: {
   );
 }
 
-export default ListOfUsersDialog;
+export default FriendsListDialog;

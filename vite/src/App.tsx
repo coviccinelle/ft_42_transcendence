@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
-import UserProfile from './components/profile/UserProfile';
 import Game from './pages/Game';
 import Chat from './pages/Chat';
 import SignUp from './pages/SignUp';
@@ -42,12 +41,8 @@ function App() {
   }, []);
 
   useEffect(() => {
-    function handleConnection() {
-      console.log('Main socket connected');
-    }
-    function handleDisconnect() {
-      console.log('Main socket disconnected');
-    }
+    function handleConnection() {}
+    function handleDisconnect() {}
     socket.connect();
     socket.on('connect', handleConnection);
     socket.on('disconnect', handleDisconnect);

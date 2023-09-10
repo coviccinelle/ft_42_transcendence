@@ -2,17 +2,34 @@ import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import apiUser from '../../api/user';
 import apiChannel from '../../api/chat/channel';
+import FriendsListDialog from './FriendsListDialog';
 
 // if it's your profile, you can't see the add friend + send message button
 function SideProfile(props: { user: any; userMe: any }) {
-  const [isOnline, setIsOnline] = useState<boolean>(false);
+  const [isOnline, setIsOnline] = useState(0);
   const navigate = useNavigate();
+  const [isFriend, setIsFriend] = useState(false);
+  const [friendsListDialog, setFriendsListDialog] = useState(false);
+
   useEffect(() => {
     //check if the user is online
     const fetchUserOnline = async () => {
       const res = await apiUser.getConnectionStatus(props.user.id);
-      setIsOnline(res);
+      setIsOnline(res.status);
     };
+    const fetchIsFriend = async () => {
+      const res = await apiUser.getFriends();
+      if (res) {
+        res.forEach((friend: any) => {
+          if (friend.id === props.user.id) {
+            setIsFriend(true);
+          } else {
+            setIsFriend(false);
+          }
+        });
+      }
+    };
+    fetchIsFriend();
     fetchUserOnline();
   }, [props.user.id]);
 
@@ -53,10 +70,12 @@ function SideProfile(props: { user: any; userMe: any }) {
               alt="Your avatar"
             />
             {!isMe &&
-              (isOnline ? (
-                <span className="absolute top-0 right-0 flex w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
+              (isOnline === 1 ? (
+                <div className="absolute bottom-0 right-0 w-4 h-4 bg-green-400 rounded-full border-2 border-gray-800"></div>
+              ) : isOnline === 2 ? (
+                <div className="absolute bottom-0 right-0 w-4 h-4 bg-yellow-400 rounded-full border-2 border-gray-800"></div>
               ) : (
-                <span className="absolute top-0 right-0 flex w-3.5 h-3.5 bg-gray-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
+                <div className="absolute bottom-0 right-0 w-4 h-4 bg-red-400 rounded-full border-2 border-gray-800"></div>
               ))}
           </div>
           <p className="font-bold text-base text-gray-400 pt-2 text-center w-24">
@@ -65,14 +84,34 @@ function SideProfile(props: { user: any; userMe: any }) {
         </div>
       </div>
       <div>
-        {!isMe && (
+        {!isMe && !isFriend && (
           <div className="w-full px-4 lg:order-3 lg:self-center">
             <div className="py-6 px-3">
               <button
                 className="bg-yellow-100 active:bg-green-300 uppercase text-black font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded-2xl hover:text-blue-400 hover:animate-pulse sm:mr-2 mb-1 ease-linear transition-all duration-150"
                 type="button"
+                onClick={async () => {
+                  await apiUser.addFriend(props.user.id);
+                  setIsFriend(true);
+                }}
               >
                 Add Friend
+              </button>
+            </div>
+          </div>
+        )}
+        {!isMe && isFriend && (
+          <div className="w-full px-4 lg:order-3 lg:self-center">
+            <div className="py-6 px-3">
+              <button
+                className="bg-yellow-100 active:bg-green-300 uppercase text-black font-bold hover:shadow-md shadow text-xs px-4 py-2 rounded-2xl hover:text-blue-400 hover:animate-pulse sm:mr-2 mb-1 ease-linear transition-all duration-150"
+                type="button"
+                onClick={async () => {
+                  await apiUser.removeFriend(props.user.id);
+                  setIsFriend(false);
+                }}
+              >
+                Remove Friend
               </button>
             </div>
           </div>
@@ -87,7 +126,7 @@ function SideProfile(props: { user: any; userMe: any }) {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6"
+                className="h-6 w-6 mr-2"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -115,7 +154,7 @@ function SideProfile(props: { user: any; userMe: any }) {
                 <span className="inline-flex items-center  text-sm font-semibold text-white hover:text-green-400">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    className="h-6 w-6"
+                    className="h-6 w-6 mr-2"
                     fill="none"
                     viewBox="0 0 24 24"
                     stroke="currentColor"
@@ -127,7 +166,40 @@ function SideProfile(props: { user: any; userMe: any }) {
                       d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20"
                     />
                   </svg>
-                  <span className="ml-4">Send Message</span>
+                  Send Message
+                </span>
+              </div>
+            </li>
+          )}
+          <FriendsListDialog
+            friendsListDialog={friendsListDialog}
+            setFriendsListDialog={setFriendsListDialog}
+          />
+          {isMe && (
+            <li className="relative px-2 py-1" x-data="{ Open : false  }">
+              <div
+                className="inline-flex items-center justify-between w-full text-base font-semibold transition-colors duration-150 text-gray-500  hover:text-yellow-400 cursor-pointer"
+                x-on:click="Open = !Open"
+                onClick={() => {
+                  setFriendsListDialog(true);
+                }}
+              >
+                <span className="inline-flex items-center  text-sm font-semibold text-white hover:text-green-400">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="h-6 w-6 mr-2"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      d="M4 6h16M4 10h16M4 14h16M4 18h16"
+                    />
+                  </svg>
+                  Friends
                 </span>
               </div>
             </li>
