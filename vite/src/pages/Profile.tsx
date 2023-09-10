@@ -28,7 +28,7 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
 
     const fetchUser = async () => {
       const res = await apiUser.getUser(id.id as unknown as number);
-      if (res) {
+      if (res && res.id) {
         setUser(res);
       } else {
         navigate('/404');

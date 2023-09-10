@@ -1,29 +1,20 @@
 import { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import apiUser from '../../api/user';
 import apiChannel from '../../api/chat/channel';
-import { useNavigate } from 'react-router-dom';
 
 // if it's your profile, you can't see the add friend + send message button
 function SideProfile(props: { user: any; userMe: any }) {
-  const [isOnline, setIsOnline] = useState<boolean>(navigator.onLine);
+  const [isOnline, setIsOnline] = useState<boolean>(false);
   const navigate = useNavigate();
   useEffect(() => {
     //check if the user is online
-    const handleOnline = () => {
-      setIsOnline(true);
+    const fetchUserOnline = async () => {
+      const res = await apiUser.getConnectionStatus(props.user.id);
+      setIsOnline(res);
     };
-
-    const handleOffline = () => {
-      setIsOnline(false);
-    };
-
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
-
-    return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
+    fetchUserOnline();
+  }, [props.user.id]);
 
   const isMe = props.userMe.id === props.user.id;
 
@@ -33,15 +24,15 @@ function SideProfile(props: { user: any; userMe: any }) {
         <div className="text-white">
           <div className="flex p-2 bg-gray-800">
             <div className="flex py-3 px-2 items-center">
-              <a className="text-3xl text-yellow-500 font-bold" href="/">
-                42{' '}
-              </a>
-              <a
+              <Link className="text-3xl text-yellow-500 font-bold" to="/">
+                42
+              </Link>
+              <Link
                 className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-2xl font-black"
-                href="/"
+                to="/"
               >
                 Duckie Pooong
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -54,17 +45,19 @@ function SideProfile(props: { user: any; userMe: any }) {
               className="hidden h-24 w-24 rounded-full sm:block object-cover mr-2 border-4 border-yellow-300"
               src={
                 isMe
-                  ? props.userMe.picture
+                  ? props.userMe.picture ||
+                    'https://img-02.stickers.cloud/packs/1da1c0da-9330-4d89-9700-8d75b9c62635/webp/65bb0543-f220-456a-ad64-2ae40431ec03.webp'
                   : props.user.picture ||
                     'https://img-02.stickers.cloud/packs/1da1c0da-9330-4d89-9700-8d75b9c62635/webp/65bb0543-f220-456a-ad64-2ae40431ec03.webp'
               }
               alt="Your avatar"
             />
-            {isOnline ? (
-              <span className="absolute top-0 right-0 flex w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
-            ) : (
-              <span className="absolute top-0 right-0 flex w-3.5 h-3.5 bg-gray-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
-            )}
+            {!isMe &&
+              (isOnline ? (
+                <span className="absolute top-0 right-0 flex w-3.5 h-3.5 bg-green-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
+              ) : (
+                <span className="absolute top-0 right-0 flex w-3.5 h-3.5 bg-gray-400 border-2 border-white dark:border-gray-800 rounded-full"></span>
+              ))}
           </div>
           <p className="font-bold text-base text-gray-400 pt-2 text-center w-24">
             {isMe ? props.userMe.username : props.user.username}
@@ -86,7 +79,12 @@ function SideProfile(props: { user: any; userMe: any }) {
         )}
         <ul className="mt-5 leading-10">
           <li className="relative px-2 py-1">
-            <div className="inline-flex items-center w-full text-sm font-semibold text-white transition-colors duration-150 cursor-pointer hover:text-green-500">
+            <div
+              className="inline-flex items-center w-full text-sm font-semibold text-white transition-colors duration-150 cursor-pointer hover:text-green-500"
+              onClick={() => {
+                return navigate('/');
+              }}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 w-6"
@@ -101,9 +99,7 @@ function SideProfile(props: { user: any; userMe: any }) {
                   d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
                 />
               </svg>
-              <a className="ml-4" href="/">
-                Home
-              </a>
+              Home
             </div>
           </li>
           {!isMe && (
