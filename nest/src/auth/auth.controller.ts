@@ -54,9 +54,8 @@ export class AuthController {
   redirectGoogle(@Req() req, @Res() response: Response) {
     const user = req.user;
 
-    if (user.isTwoFAEnabled) {
-      response.append('user email', user.email);
-      return response.redirect('/login/verify-2fa');
+    if (!user.isTwoFAEnabled) {
+      return response.redirect('/login/verify-2fa?userEmail=' + user.email);
     }
     return response.redirect('/');
   }
@@ -70,9 +69,8 @@ export class AuthController {
   redirectFt(@Req() req, @Res() response: Response) {
     const user = req.user;
 
-    if (user.isTwoFAEnabled) {
-      response.append('user', user);
-      return response.redirect('/login/verify-2fa');
+    if (!user.isTwoFAEnabled) {
+      return response.redirect('/login/verify-2fa?userEmail=' + user.email);
     }
     return response.redirect('/');
   }

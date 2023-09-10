@@ -1,8 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { domainName } from '../main';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
+import apiUser from '../api/user';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -16,12 +17,13 @@ function Login() {
       password: password,
     };
 
-    axios.post(`http://${domainName}/api/auth/local/login`, formData)
+    axios
+      .post(`http://${domainName}/api/auth/local/login`, formData)
       .then((res) => {
         console.log("POST OK");
         if (res.data.isTwoFAEnabled) {
           localStorage.removeItem('userEmail');
-          localStorage.setItem('userEmail', res.data);
+          localStorage.setItem('userEmail', res.data.email);
           return navigate('/login/verify-2fa');
         }
         return navigate('/profile');
@@ -32,36 +34,11 @@ function Login() {
   };
 
   const handleLoginGoogle = () => {
-    axios.get('/api/auth/google/login')
-      .then((res) => {
-        console.log("RES GOOGLE:");
-        console.log(res);
-        if (res.data.user.isTwoFAEnabled) {
-          localStorage.removeItem('userEmail');
-          localStorage.setItem('userEmail', res.data.user.email);
-        }
-          
-      })
-      .catch((res) => {
-        console.log(res)
-      });
-    // location.href = `http://${domainName}/api/auth/google/login`;
+    location.href = `http://${domainName}/api/auth/google/login`;
   };
 
   const handleLoginFt = () => {
-    axios.get('/api/auth/ft/login')
-      .then((res) => {
-        console.log("RES FT:");
-        console.log(res);
-        if (res.data.user.isTwoFAEnabled) {
-          localStorage.removeItem('userEmail');
-          localStorage.setItem('userEmail', res.data.user.email);
-        }
-      })
-      .catch((res) => {
-        console.log(res)
-      });
-    // location.href = `http://${domainName}/api/auth/ft/login`;
+    location.href = `http://${domainName}/api/auth/ft/login`;
   };
 
   return (

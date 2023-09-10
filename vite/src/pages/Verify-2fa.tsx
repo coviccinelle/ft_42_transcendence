@@ -1,11 +1,19 @@
 import { useState } from 'react';
 import '../styles/Login.css';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function VerifyTwoFA() {
   const [code, setCode] = useState<string>();
   const navigate = useNavigate();
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const emailInParams = searchParams.get('userEmail');
+  if (emailInParams)
+    localStorage.setItem('userEmail', emailInParams);
+  if (!localStorage.getItem('userEmail'))
+    return navigate('/login');
+
 
   const handleLoginTotp = (event: any) => {
     event.preventDefault();
