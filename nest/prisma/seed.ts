@@ -19,7 +19,16 @@ async function main() {
       firstName: "Test1",
       lastName: "TestNom",
       picture: "",
-      password: passwordUser1
+      password: passwordUser1,
+      matchHistory: {
+        create: {
+          result: 'WIN',
+          otherPlayerId: 0,
+          otherPlayerName: 'Bob',
+          myScore: 5,
+          otherScore: 3,
+        }
+      }
     }
   });
 

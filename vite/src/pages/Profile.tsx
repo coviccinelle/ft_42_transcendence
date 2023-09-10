@@ -3,39 +3,58 @@ import Navbar2 from '../components/NavBar2';
 import Dashboard from '../components/profile/DashBoard';
 import SideProfile from '../components/profile/SideProfile';
 import apiUser from '../api/user';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import LoadingScreen from '../components/LoadingScreen';
 
 function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
-  const [firstName, setFirstName] = useState(String);
-  const [lastName, setLastName] = useState(String);
-  const [img, setImg] = useState(String);
-
+  const [userMe, setUserMe] = useState<any>(null);
+  const [user, setUser] = useState<any>(null);
+  const [dataLoaded, setDataLoaded] = useState<boolean>(false);
+  let id = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      const user = await apiUser.getMe();
-      if (user) {
-        setFirstName(user.firstName);
-        setLastName(user.lastName);
-        if (user.picture === null) {
-          setImg('../assets/duckie_bg_rm/sticker1.png');
-        } else {
-          setImg(user.picture);
-        }
+    const fetchUserMe = async () => {
+      const res = await apiUser.getMe();
+      if (res) {
+        setUserMe(res);
       } else {
         navigate('/login');
       }
+      if (id.id === undefined) {
+        setUser(res);
+      }
     };
-    fetchUser();
-  }, []);
 
-  //if the user is not logged in, redirect to login page
+    const fetchUser = async () => {
+      const res = await apiUser.getUser(id.id as unknown as number);
+      if (res) {
+        setUser(res);
+      } else {
+        navigate('/404');
+      }
+    };
 
+    const fetchData = async () => {
+      fetchUserMe();
+      if (id.id !== undefined) {
+        fetchUser();
+      }
+      if (!dataLoaded)
+        setTimeout(() => {
+          setDataLoaded(true);
+        }, 500);
+    };
+    fetchData();
+  }, [id.id, navigate]);
+
+  if (!dataLoaded) {
+    return <LoadingScreen isLoading={true} />;
+  }
   return (
     <>
       <div className="flex h-screen bg-gray-800 text-center no-scrollbar">
-        <SideProfile/>
+        <SideProfile user={user} userMe={userMe} />
         <div className="flex flex-col flex-1 w-full overflow-y-auto no-scrollbar">
           <div className="z-40 py-4 bg-gray-800">
             <Navbar2 />
@@ -44,7 +63,7 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
           {/* Main content */}
           {/* //a dashboard that shows the user's:
           score, rank, number of matches played, Winning rate, and match history */}
-          <Dashboard />
+          <Dashboard user={user} />
         </div>
       </div>
     </>

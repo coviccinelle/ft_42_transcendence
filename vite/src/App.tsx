@@ -12,6 +12,8 @@ import Registration from './pages/Registration';
 import Settings from './pages/Settings';
 import './styles/App.css';
 import { UserEntity, client } from './main';
+import TwoFa from './pages/2fa';
+import { io } from 'socket.io-client';
 
 export const getUser = async (): Promise<UserEntity | null> => {
   const { data } = await client.get('/users/me');
@@ -25,6 +27,7 @@ export async function handleLogout() {
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
+  const [socket, setSocket] = useState(io({ autoConnect: false }));
 
   useEffect(() => {
     //load dark mode from local storage if it exists
@@ -36,6 +39,23 @@ function App() {
         htmlElement?.classList.add('dark'); // Apply dark mode class if savedDarkMode is true
       }
     }
+  }, []);
+
+  useEffect(() => {
+    function handleConnection() {
+      console.log('Main socket connected');
+    }
+    function handleDisconnect() {
+      console.log('Main socket disconnected');
+    }
+    socket.connect();
+    socket.on('connect', handleConnection);
+    socket.on('disconnect', handleDisconnect);
+    return () => {
+      socket.off('connect', handleConnection);
+      socket.disconnect();
+      socket.off('disconnect', handleDisconnect);
+    };
   }, []);
 
   const toggleDarkMode = () => {
@@ -56,18 +76,34 @@ function App() {
     <div className="flex h-screen flex-col">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+          <Route
+            path="/"
+            element={
+              <Home darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile/:id" element={<UserProfile />} />
+          {/* <Route path="/profile/:id" element={<UserProfile />} /> */}
+          <Route
+            path="/profile/:id"
+            element={
+              <Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
           <Route
             path="/profile"
             element={
               <Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
             }
           />
-          
           <Route
             path="/chat"
+            element={
+              <Chat darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
+          <Route
+            path="/chat/:id"
             element={
               <Chat darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
             }
@@ -79,9 +115,9 @@ function App() {
             }
           />
           <Route path="/signup" element={<SignUp />} />
-          <Route path="/registration" element={ <Registration/> }/>
+          <Route path="/registration" element={<Registration />} />
           <Route path="/settings" element={<Settings />} />
-          
+          <Route path="/2fa" element={<TwoFa />} />
           <Route path="*" element={<P404 />} />
         </Routes>
       </BrowserRouter>

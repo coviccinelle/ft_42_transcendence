@@ -75,6 +75,7 @@ export class ChatGateway implements OnGatewayConnection {
                 lastName: true,
                 picture: true,
                 password: true,
+                elo: true,
               },
             },
           },
@@ -106,6 +107,15 @@ export class ChatGateway implements OnGatewayConnection {
     for (const socket of sockets) {
       if (socket.data.user.id === userId) {
         socket.emit('Leave channel', channelId);
+      }
+    }
+  }
+
+  async addToRoom(userId: number, channelId: number) {
+    const sockets = await this.wss.fetchSockets();
+    for (const socket of sockets) {
+      if (socket.data.user.id === userId) {
+        socket.join(channelId.toString());
       }
     }
   }
