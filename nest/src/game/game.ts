@@ -48,6 +48,7 @@ export type GameInfo = {
 export class Game {
   private id: string;
   private status: GameStatus;
+  private updateInterval: NodeJS.Timer;
   private courtSize: Vector2d;
   private paddleSpeed: number;
   private ballInitialSpeed: number;
@@ -58,6 +59,7 @@ export class Game {
 
   constructor(
     private gameGateway: GameGateway,
+    private isPublic: boolean,
   ) {
     this.id = uuidv4();
     this.nbPlayers = 0;
@@ -80,12 +82,32 @@ export class Game {
     this.players[1].score = 0;
   }
 
-  public getID(): string {
+  public getId(): string {
     return this.id;
   }
 
-  public playerInput(playerNb: number, direction: Direction) {
-    this.players[playerNb].paddle.movement = direction;
+  public getIsPublic(): boolean {
+    return this.isPublic;
+  }
+
+  public getStatus(): GameStatus {
+    return this.status;
+  }
+
+  public getPlayerIds(): [number, number] {
+    return [this.players[0].id, this.players[1].id];
+  }
+
+  public broadcastState() {
+    this.gameGateway.broadcastInfo(this.id, this.getInfo());
+  }
+
+  public playerInput(userId: number, direction: Direction) {
+    if (this.players[0].id === userId) {
+      this.players[0].paddle.movement = direction;
+    } else {
+      this.players[1].paddle.movement = direction;
+    }
   }
 
   public addPlayer(name: string, id: number) {
@@ -98,11 +120,11 @@ export class Game {
     this.nbPlayers++;
     if (this.nbPlayers === 2) this.start();
   }
-
-  public removePlayer(playerNb: number) {
+  
+  public removePlayer(userId: number) {
     //TODO
   }
-
+  
   private start() {
     const angle = (Math.random() - 0.5) * Math.PI / 12;
     this.ball.velocity.x = Math.floor(Math.cos(angle) * this.ballInitialSpeed);
@@ -111,6 +133,8 @@ export class Game {
       this.ball.velocity.x *= -1;
     }
     this.status = GameStatus.PLAYING;
+    this.broadcastState();
+    this.updateInterval = setInterval(this.update, 10);
   }
 
   private updateBall() {
@@ -133,6 +157,7 @@ export class Game {
         const overTravel = this.ball.size - this.ball.position.x
         this.ball.position.x += 2 * overTravel;
         this.ball.velocity.x *= -1;
+        //Todo: add spin
       } else {
         this.players[1].score += 1;
         //Start new round
@@ -143,6 +168,7 @@ export class Game {
         const overTravel = this.ball.position.x - this.ball.size - this.courtSize.x;
         this.ball.position.x -= 2 * overTravel;
         this.ball.velocity.x *= -1;
+        //Todo: add spin
       } else {
         this.players[0].score += 1;
         //Start new round
@@ -184,8 +210,7 @@ export class Game {
   private update() {
     this.updatePaddles();
     this.updateBall();
-    const info = this.getInfo();
-    //Send game info
+    this.broadcastState();
   }
 
   private ballIsCaught(playerNb: number): boolean {
