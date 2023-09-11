@@ -54,7 +54,7 @@ export class AuthController {
   redirectGoogle(@Req() req, @Res() response: Response) {
     const user = req.user;
 
-    if (!user.isTwoFAEnabled) {
+    if (user.isTwoFAEnabled) {
       return response.redirect('/login/verify-2fa?userEmail=' + user.email);
     }
     return response.redirect('/');
@@ -69,7 +69,7 @@ export class AuthController {
   redirectFt(@Req() req, @Res() response: Response) {
     const user = req.user;
 
-    if (!user.isTwoFAEnabled) {
+    if (user.isTwoFAEnabled) {
       return response.redirect('/login/verify-2fa?userEmail=' + user.email);
     }
     return response.redirect('/');
@@ -91,8 +91,8 @@ export class AuthController {
   @Get('2fa/qrcode')
   @UseGuards(AuthenticatedGuard)
   async getQrcodeTwoFA(@User() user) {
-    const dataURL = await this.authService.generateQrCodeDataURL(user);
-    return (dataURL);
+    const qrcodeImage = await this.authService.generateQrCodeDataURL(user);
+    return (qrcodeImage);
   }
 
   /**

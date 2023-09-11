@@ -64,6 +64,7 @@ export class AuthService {
     await this.usersService.setTwoFASecret(user.id, secret);
 
     const otpAuthUrl = authenticator.keyuri(user.email, "Duckie Pong", secret);
+    // console.log(otpAuthUrl);
 
     return toDataURL(otpAuthUrl);
   }
