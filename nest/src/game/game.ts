@@ -150,6 +150,8 @@ export class Game {
       winnerId = this.players[1].id;
     }
     this.gameGateway.broadcastWinner(this.id, winnerId);
+    this.addMatchToHistory();
+    this.updateElo();
   }
 
   private updateBall() {
@@ -283,6 +285,31 @@ export class Game {
         myScore: this.players[1].score,
         otherScore: this.players[0].score,
       }
+    });
+  }
+
+  async updateElo() {
+    const kFactor = 32;
+    const player1 = await this.prismaService.user.findUnique({
+      where: { id: this.players[0].id },
+    });
+    const player2 = await this.prismaService.user.findUnique({
+      where: { id: this.players[1].id },
+    });
+    const totalPoints = this.players[0].score + this.players[1].score;
+    const player1Score = this.players[0].score / totalPoints;
+    const player2Score = this.players[1].score / totalPoints;
+    const player1Expected = 1 / (1 + Math.pow(10, (player2.elo - player1.elo) / 400));
+    const player2Expected = 1 / (1 + Math.pow(10, (player1.elo - player2.elo) / 400));
+    const player1NewElo = player1.elo + kFactor * (player1Score - player1Expected);
+    const player2NewElo = player2.elo + kFactor * (player2Score - player2Expected);
+    await this.prismaService.user.update({
+      where: { id: this.players[0].id },
+      data: { elo: player1NewElo },
+    });
+    await this.prismaService.user.update({
+      where: { id: this.players[1].id },
+      data: { elo: player2NewElo },
     });
   }
 }
