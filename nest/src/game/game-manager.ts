@@ -1,6 +1,7 @@
 import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { Direction, Game, GameStatus } from "./game";
 import { GameGateway } from "./game.gateway";
+import { PrismaService } from "src/prisma/prisma.service";
 
 @Injectable()
 export class GameManager {
@@ -9,6 +10,7 @@ export class GameManager {
   constructor(
     @Inject(forwardRef(() => GameGateway))
     private gameGateway: GameGateway,
+    private prismaService: PrismaService,
   ) {}
 
   public getStatus(uuid: string): GameStatus {
@@ -24,7 +26,7 @@ export class GameManager {
       openLobby.addPlayer(userName, userId);
       return openLobby.getId();
     }
-    const game = new Game(this.gameGateway, true);
+    const game = new Game(this.gameGateway, this.prismaService, true);
     const id = game.getId();
     game.addPlayer(userName, userId);
     this.games.set(id, game);

@@ -1,5 +1,6 @@
 import { v4 as uuidv4 } from 'uuid';
 import { GameGateway } from './game.gateway';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 const updateDelay = 10;
 
@@ -61,6 +62,7 @@ export class Game {
 
   constructor(
     private gameGateway: GameGateway,
+    private prismaService: PrismaService,
     private isPublic: boolean,
   ) {
     this.id = uuidv4();
@@ -255,5 +257,32 @@ export class Game {
     if ((this.players[0].score + this.players[1].score) % 2) {
       this.ball.velocity.x *= -1;
     }
+  }
+
+  async addMatchToHistory() {
+    await this.prismaService.matchResult.create({
+      data: {
+        player: {
+          connect: { id: this.players[0].id },
+        },
+        result: (this.players[0].score === this.pointsToWin) ? 'WIN' : 'LOSS',
+        otherPlayerId: this.players[1].id,
+        otherPlayerName: this.players[1].name,
+        myScore: this.players[0].score,
+        otherScore: this.players[1].score,
+      }
+    });
+    await this.prismaService.matchResult.create({
+      data: {
+        player: {
+          connect: { id: this.players[1].id },
+        },
+        result: (this.players[1].score === this.pointsToWin) ? 'WIN' : 'LOSS',
+        otherPlayerId: this.players[0].id,
+        otherPlayerName: this.players[0].name,
+        myScore: this.players[1].score,
+        otherScore: this.players[0].score,
+      }
+    });
   }
 }
