@@ -99,6 +99,10 @@ function Game(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
     socket.emit('input', direction);
   }
 
+  function joinGame(uuid: string) {
+    socket.emit('join', uuid);
+  }
+
   return (
     <>
       <LoadingScreen isLoading={isLoading} />

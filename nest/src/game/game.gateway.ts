@@ -59,6 +59,23 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     );
   }
 
+  @SubscribeMessage('join')
+  handleJoin(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() uuid: string,
+  ) {
+    this.gameManager.join(
+      uuid,
+      client.data.user.id,
+      client.data.user.firstName,
+    );
+    client.data.gameId = uuid;
+    client.join(uuid);
+    if (this.gameManager.getStatus(uuid) === GameStatus.WAITING) {
+      client.emit('wait');
+    }
+  }
+
   async isUserPlaying(userId: number): Promise<boolean> {
     const sockets = await this.wss.fetchSockets();
     if (sockets.find((socket) => socket.data.user?.id === userId)) return true;

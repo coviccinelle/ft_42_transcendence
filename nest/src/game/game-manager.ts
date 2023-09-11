@@ -2,6 +2,7 @@ import { Inject, Injectable, forwardRef } from "@nestjs/common";
 import { Direction, Game, GameStatus } from "./game";
 import { GameGateway } from "./game.gateway";
 import { PrismaService } from "src/prisma/prisma.service";
+import { WsException } from "@nestjs/websockets";
 
 @Injectable()
 export class GameManager {
@@ -31,6 +32,17 @@ export class GameManager {
     game.addPlayer(userName, userId);
     this.games.set(id, game);
     return id;
+  }
+
+  public join(uuid: string, userId: number, userName: string) {
+    if (!this.games[uuid]) {
+      throw new WsException('Game doesn\'t exist');
+    }
+    if ((this.games[uuid].nbPlayers === 2)
+      || (this.games[uuid].getStatus !== GameStatus.WAITING)) {
+      throw new WsException('Game is full');
+    }
+    this.games[uuid].addPlayer(userName, userId);
   }
 
   public playerInput(uuid: string, userId: number, direction: Direction) {
