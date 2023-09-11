@@ -68,22 +68,37 @@ export class Game {
     this.id = uuidv4();
     this.nbPlayers = 0;
     this.status = GameStatus.WAITING;
-    this.courtSize.x = 2000;
-    this.courtSize.y = 900;
+    this.courtSize = {
+      x: 2000,
+      y: 900,
+    };
     this.paddleSpeed = 10;
     this.ballInitialSpeed = 5;
     this.pointsToWin = 5;
-    this.ball.position.x = this.courtSize.x / 2;
-    this.ball.position.y = this.courtSize.y / 2;
-    this.ball.velocity.y = 0;
-    this.players[0].paddle.position = this.courtSize.y / 2;
-    this.players[1].paddle.position = this.courtSize.y / 2;
-    this.players[0].paddle.size = 200;
-    this.players[1].paddle.size = 200;
-    this.players[0].paddle.movement = Direction.NONE;
-    this.players[1].paddle.movement = Direction.NONE;
-    this.players[0].score = 0;
-    this.players[1].score = 0;
+    this.ball = {
+      position: {
+        x: this.courtSize.x / 2,
+        y: this.courtSize.y / 2,
+      },
+      velocity: {
+        x: 0,
+        y: 0,
+      },
+      size: 5,
+    };
+    this.players = new Array();
+    for (let i = 0; i < 2; i++) {
+      this.players.push({
+        paddle: {
+          position: this.courtSize.y / 2,
+          size: 200,
+          movement: Direction.NONE,
+        },
+        score: 0,
+        id: 0,
+        name: '',
+      });
+    }
   }
 
   public getId(): string {
@@ -145,7 +160,7 @@ export class Game {
     this.status = GameStatus.PLAYING;
     this.launchBall();
     this.broadcastState();
-    this.updateInterval = setInterval(this.update, updateDelay);
+    this.updateInterval = setInterval(() => this.update(), updateDelay);
   }
 
   private startRound() {
@@ -237,12 +252,13 @@ export class Game {
   }
 
   private getInfo(): GameInfo {
-    let info: GameInfo;
-    info.id = this.id;
-    info.status = this.status;
-    info.courtSize = this.courtSize;
-    info.ball = this.ball;
-    info.players = this.players;
+    let info: GameInfo = {
+      id: this.id,
+      status: this.status,
+      courtSize: this.courtSize,
+      ball: this.ball,
+      players: this.players,
+    };
     return (info);
   }
 

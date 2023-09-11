@@ -12,7 +12,9 @@ export class GameManager {
     @Inject(forwardRef(() => GameGateway))
     private gameGateway: GameGateway,
     private prismaService: PrismaService,
-  ) {}
+  ) {
+    this.games = new Map<string, Game>;
+  }
 
   public getStatus(uuid: string): GameStatus {
     return this.games[uuid].getStatus();
@@ -30,6 +32,13 @@ export class GameManager {
     const game = new Game(this.gameGateway, this.prismaService, true);
     const id = game.getId();
     game.addPlayer(userName, userId);
+    this.games.set(id, game);
+    return id;
+  }
+
+  public create(): string {
+    const game = new Game(this.gameGateway, this.prismaService, false);
+    const id = game.getId();
     this.games.set(id, game);
     return id;
   }
