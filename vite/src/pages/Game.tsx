@@ -6,7 +6,7 @@ import { GameZone } from '../components/game/GameZone';
 import Navbar from '../components/Navbar';
 import apiUser from '../api/user';
 import { io } from 'socket.io-client';
-import { Direction, GameInfo } from '../utils/game/types';
+import { Direction, GameInfo, WsException } from '../utils/game/types';
 
 function Game(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
   const [score, setScore] = useState<number[]>([0, 0]);
@@ -57,26 +57,37 @@ function Game(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
   useEffect(() => {
     function handleWaiting() {
       console.log(`Waiting for other player to join`);
+      //Todo: display waiting for other player screen/dialog
     }
     function handleStart(uuid: string) {
       console.log(`Starting game ${uuid}`);
+      //Todo: display game
     }
     function handleUpdateGame(gameInfo: GameInfo) {
       console.log(`Received game update`);
       console.log(gameInfo);
+      //Todo: update canvas with new info
     }
     function handleWinner(winnerId: number) {
       console.log(`Winner: ${winnerId}`);
+      //Todo: Display loss or win
+    }
+    function handleException(error: WsException) {
+      console.log(`Websocket exception: ${error.message}`);
+      //Tried joining a full game
+      //Todo: redirect to homepage
     }
     socket.on('waiting', handleWaiting);
     socket.on('start', handleStart);
     socket.on('game', handleUpdateGame);
     socket.on('winner', handleWinner);
+    socket.on('exception', handleException);
     return () => {
       socket.off('wait', handleWaiting);
       socket.off('start', handleStart);
       socket.off('game', handleUpdateGame);
       socket.off('winner', handleWinner);
+      socket.off('exception', handleException);
     };
   }, []);
 

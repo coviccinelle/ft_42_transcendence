@@ -41,3 +41,8 @@ export type GameInfo = {
   ball: Ball;
   players: Player[];
 }
+
+export type WsException = {
+  status: string;
+  message: string;
+}
