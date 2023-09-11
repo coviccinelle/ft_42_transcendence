@@ -91,8 +91,8 @@ function Game(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
     };
   }, []);
 
-  function startGame() {
-    socket.emit('new');
+  function startGame(isHard: boolean) {
+    socket.emit('new', isHard);
   }
 
   function sendInput(direction: Direction) {

@@ -30,6 +30,7 @@ export type Ball = {
 export type Paddle = {
   position: number;
   size: number;
+  speed: number;
   movement: Direction;
 }
 
@@ -53,8 +54,10 @@ export class Game {
   private status: GameStatus;
   private updateInterval: NodeJS.Timer;
   private courtSize: Vector2d;
-  private paddleSpeed: number;
+  private paddleMaxSpeed: number;
+  private paddleMinSize: number;
   private ballInitialSpeed: number;
+  private ballMaxSpeed: number;
   private pointsToWin: number;
   private ball: Ball;
   private players: Player[];
@@ -64,6 +67,7 @@ export class Game {
     private gameGateway: GameGateway,
     private prismaService: PrismaService,
     private isPublic: boolean,
+    private isHard: boolean,
   ) {
     this.id = uuidv4();
     this.nbPlayers = 0;
@@ -72,7 +76,6 @@ export class Game {
       x: 2000,
       y: 900,
     };
-    this.paddleSpeed = 10;
     this.ballInitialSpeed = 5;
     this.pointsToWin = 5;
     this.ball = {
@@ -92,6 +95,7 @@ export class Game {
         paddle: {
           position: this.courtSize.y / 2,
           size: 200,
+          speed: 10,
           movement: Direction.NONE,
         },
         score: 0,
@@ -107,6 +111,10 @@ export class Game {
 
   public getIsPublic(): boolean {
     return this.isPublic;
+  }
+
+  public getIsHard(): boolean {
+    return this.isHard;
   }
 
   public getStatus(): GameStatus {
@@ -203,6 +211,7 @@ export class Game {
         const overTravel = this.ball.size - this.ball.position.x
         this.ball.position.x += 2 * overTravel;
         this.ball.velocity.x *= -1;
+        if (this.isHard) this.makeHarder(0);
         //Todo: add spin
       } else {
         this.players[1].score += 1;
@@ -218,6 +227,7 @@ export class Game {
         const overTravel = this.ball.position.x - this.ball.size - this.courtSize.x;
         this.ball.position.x -= 2 * overTravel;
         this.ball.velocity.x *= -1;
+        if (this.isHard) this.makeHarder(0);
         //Todo: add spin
       } else {
         this.players[0].score += 1;
@@ -234,14 +244,14 @@ export class Game {
     this.players.forEach(player => {
       if (player.paddle.movement !== Direction.NONE) {
         if (player.paddle.movement === Direction.UP) {
-          player.paddle.position -= this.paddleSpeed;
+          player.paddle.position -= player.paddle.speed;
           if (player.paddle.position < player.paddle.size / 2) {
             player.paddle.position = player.paddle.size / 2;
             player.paddle.movement = Direction.NONE;
           }
         }
         if (player.paddle.movement === Direction.DOWN) {
-          player.paddle.position += this.paddleSpeed;
+          player.paddle.position += player.paddle.speed;
           if (player.paddle.position > this.courtSize.y - player.paddle.size / 2) {
             player.paddle.position = this.courtSize.y - player.paddle.size / 2;
             player.paddle.movement = Direction.NONE;
@@ -280,6 +290,21 @@ export class Game {
     const ballIsBellowPaddle = (topEdgeBall > bottomEdgePaddle
       && bottomEdgeBall > bottomEdgePaddle);
     return (!ballIsAbovePaddle && !ballIsBellowPaddle);
+  }
+
+  private makeHarder(playerNb: number) {
+    const ballSpeed = Math.sqrt(Math.pow(this.ball.velocity.x, 2)
+      + Math.pow(this.ball.velocity.y, 2));
+    if (ballSpeed < this.ballMaxSpeed) {
+      this.ball.velocity.x *= 1.05;
+      this.ball.velocity.y *= 1.05;
+    }
+    if (this.players[playerNb].paddle.size > this.paddleMinSize) {
+      this.players[playerNb].paddle.size *= 0.95;
+    }
+    if (this.players[playerNb].paddle.speed < this.paddleMaxSpeed) {
+      this.players[playerNb].paddle.speed *= 1.05;
+    }
   }
 
   private launchBall() {

@@ -20,16 +20,16 @@ export class GameManager {
     return this.games[uuid].getStatus();
   }
 
-  public new(userId: number, userName: string): string {
+  public new(userId: number, userName: string, isHard: boolean): string {
     if (this.isInLobby(userId)) {
       //Todo Reject request
     }
-    const openLobby = this.findOpenLobby();
+    const openLobby = this.findOpenLobby(isHard);
     if (openLobby) {
       openLobby.addPlayer(userName, userId);
       return openLobby.getId();
     }
-    const game = new Game(this.gameGateway, this.prismaService, true);
+    const game = new Game(this.gameGateway, this.prismaService, true, isHard);
     const id = game.getId();
     game.addPlayer(userName, userId);
     this.games.set(id, game);
@@ -37,7 +37,7 @@ export class GameManager {
   }
 
   public create(): string {
-    const game = new Game(this.gameGateway, this.prismaService, false);
+    const game = new Game(this.gameGateway, this.prismaService, false, false);
     const id = game.getId();
     this.games.set(id, game);
     return id;
@@ -75,9 +75,13 @@ export class GameManager {
     return false;
   }
 
-  private findOpenLobby(): Game | null {
+  private findOpenLobby(isHard: boolean): Game | null {
     for (const game of this.games.values()) {
-      if (game.getIsPublic() && game.getStatus() === GameStatus.WAITING) {
+      if (
+        game.getIsPublic()
+        && game.getIsHard() === isHard
+        && game.getStatus() === GameStatus.WAITING
+      ) {
         return game;
       }
     }

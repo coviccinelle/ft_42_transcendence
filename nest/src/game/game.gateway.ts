@@ -35,10 +35,12 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @SubscribeMessage('new')
   handleNew(
     @ConnectedSocket() client: Socket,
+    @MessageBody() isHard: boolean,
   ) {
     const gameId = this.gameManager.new(
       client.data.user.id,
-      client.data.user.firstName
+      client.data.user.firstName,
+      isHard,
     );
     client.data.gameId = gameId;
     client.join(gameId);
