@@ -102,6 +102,10 @@ export class Game {
     return [this.players[0].id, this.players[1].id];
   }
 
+  public getNbPlayers(): number {
+    return this.nbPlayers;
+  }
+
   public broadcastState() {
     this.gameGateway.broadcastInfo(this.id, this.getInfo());
   }
@@ -126,7 +130,15 @@ export class Game {
   }
   
   public removePlayer(userId: number) {
-    //TODO
+    if (this.status === GameStatus.PLAYING) {
+      if (this.players[0].id === userId) {
+        this.players[1].score = this.pointsToWin;
+      } else {
+        this.players[0].score = this.pointsToWin;
+      }
+      this.endGame();
+    }
+    this.nbPlayers--;
   }
   
   private start() {
@@ -142,7 +154,9 @@ export class Game {
 
   private endGame() {
     this.status = GameStatus.FINISHED;
-    clearInterval(this.updateInterval);
+    if (this.updateInterval) {
+      clearInterval(this.updateInterval);
+    }
     let winnerId: number;
     if (this.players[0].score === this.pointsToWin) {
       winnerId = this.players[0].id;

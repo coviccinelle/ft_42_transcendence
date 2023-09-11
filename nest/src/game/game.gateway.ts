@@ -27,7 +27,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(client: Socket) {
-    if (client.data.gameId) {
+    if (client.data.gameId && client.data.user) {
       this.gameManager.playerDisconnect(client.data.gameId, client.data.user.id);
     }
   }

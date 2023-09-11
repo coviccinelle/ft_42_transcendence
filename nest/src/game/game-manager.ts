@@ -41,7 +41,9 @@ export class GameManager {
 
   public playerDisconnect(uuid: string, userId: number) {
     this.games[uuid].removePlayer(userId);
-    //Todo: remove game from array once done
+    if (this.games[uuid].getNbPlayers === 0) {
+      this.games.delete(uuid);
+    }
   }
 
   private isInLobby(userId: number): boolean {
@@ -49,7 +51,7 @@ export class GameManager {
       const ids = game.getPlayerIds();
       if (ids[0] === userId || ids[1] === userId) return true;
     }
-    return false
+    return false;
   }
 
   private findOpenLobby(): Game | null {
