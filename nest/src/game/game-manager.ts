@@ -11,6 +11,10 @@ export class GameManager {
     private gameGateway: GameGateway,
   ) {}
 
+  public getStatus(uuid: string): GameStatus {
+    return this.games[uuid].getStatus();
+  }
+
   public new(userId: number, userName: string): string {
     if (this.isInLobby(userId)) {
       //Todo Reject request
@@ -28,7 +32,9 @@ export class GameManager {
   }
 
   public playerInput(uuid: string, userId: number, direction: Direction) {
-    this.games[uuid].playerInput(userId, direction);
+    if (this.games[uuid].getStatus() === GameStatus.PLAYING) {
+      this.games[uuid].playerInput(userId, direction);
+    }
   }
 
   public playerDisconnect(uuid: string, userId: number) {

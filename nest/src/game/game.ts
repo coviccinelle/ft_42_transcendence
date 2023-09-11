@@ -1,6 +1,8 @@
 import { v4 as uuidv4 } from 'uuid';
 import { GameGateway } from './game.gateway';
 
+const updateDelay = 10;
+
 export enum Direction {
   NONE,
   UP,
@@ -112,8 +114,8 @@ export class Game {
 
   public addPlayer(name: string, id: number) {
     if ((this.nbPlayers === 1) && (this.players[0].id === id)) {
-      //Todo throw error
       console.log('User joined game with themselves');
+      return;
     }
     this.players[this.nbPlayers].name = name;
     this.players[this.nbPlayers].id = id;
@@ -126,15 +128,26 @@ export class Game {
   }
   
   private start() {
-    const angle = (Math.random() - 0.5) * Math.PI / 12;
-    this.ball.velocity.x = Math.floor(Math.cos(angle) * this.ballInitialSpeed);
-    this.ball.velocity.y = Math.floor(Math.sin(angle) * this.ballInitialSpeed);
-    if ((this.players[0].score + this.players[1].score) % 2) {
-      this.ball.velocity.x *= -1;
-    }
     this.status = GameStatus.PLAYING;
+    this.launchBall();
     this.broadcastState();
-    this.updateInterval = setInterval(this.update, 10);
+    this.updateInterval = setInterval(this.update, updateDelay);
+  }
+
+  private startRound() {
+    this.launchBall();
+  }
+
+  private endGame() {
+    this.status = GameStatus.FINISHED;
+    clearInterval(this.updateInterval);
+    let winnerId: number;
+    if (this.players[0].score === this.pointsToWin) {
+      winnerId = this.players[0].id;
+    } else {
+      winnerId = this.players[1].id;
+    }
+    this.gameGateway.broadcastWinner(this.id, winnerId);
   }
 
   private updateBall() {
@@ -160,7 +173,11 @@ export class Game {
         //Todo: add spin
       } else {
         this.players[1].score += 1;
-        //Start new round
+        if (this.players[1].score === this.pointsToWin) {
+          this.endGame();
+          return;
+        }
+        this.startRound();
       }
     }
     if (this.ball.position.x + this.ball.size > this.courtSize.x) {
@@ -171,7 +188,11 @@ export class Game {
         //Todo: add spin
       } else {
         this.players[0].score += 1;
-        //Start new round
+        if (this.players[0].score === this.pointsToWin) {
+          this.endGame();
+          return;
+        }
+        this.startRound();
       }
     }
   }
@@ -225,5 +246,14 @@ export class Game {
     const ballIsBellowPaddle = (topEdgeBall > bottomEdgePaddle
       && bottomEdgeBall > bottomEdgePaddle);
     return (!ballIsAbovePaddle && !ballIsBellowPaddle);
+  }
+
+  private launchBall() {
+    const angle = (Math.random() - 0.5) * Math.PI / 12; //Angle between +15 -15°
+    this.ball.velocity.x = Math.floor(Math.cos(angle) * this.ballInitialSpeed);
+    this.ball.velocity.y = Math.floor(Math.sin(angle) * this.ballInitialSpeed);
+    if ((this.players[0].score + this.players[1].score) % 2) {
+      this.ball.velocity.x *= -1;
+    }
   }
 }

@@ -3,7 +3,7 @@ import { ConnectedSocket, MessageBody, OnGatewayConnection, OnGatewayDisconnect,
 import { Server, Socket } from 'socket.io';
 import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
 import { GameManager } from './game-manager';
-import { Direction, GameInfo } from './game';
+import { Direction, GameInfo, GameStatus } from './game';
 
 @WebSocketGateway({ namespace: 'game' })
 @UseGuards(AuthenticatedGuard)
@@ -27,7 +27,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   }
 
   handleDisconnect(client: Socket) {
-    this.gameManager.playerDisconnect(client.data.gameId, client.data.user.id);
+    if (client.data.gameId) {
+      this.gameManager.playerDisconnect(client.data.gameId, client.data.user.id);
+    }
   }
 
   @SubscribeMessage('new')
@@ -40,6 +42,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     );
     client.data.gameId = gameId;
     client.join(gameId);
+    if (this.gameManager.getStatus(gameId) === GameStatus.WAITING) {
+      client.emit('waiting');
+    }
   }
 
   @SubscribeMessage('input')
@@ -62,5 +67,9 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   broadcastInfo(uuid: string, gameInfo: GameInfo) {
     this.wss.in(uuid).emit('game', gameInfo);
+  }
+
+  broadcastWinner(uuid: string, winnerId: number) {
+    this.wss.in(uuid).emit('winner', winnerId);
   }
 }
