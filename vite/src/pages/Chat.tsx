@@ -117,7 +117,7 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
   if (userExist === false) return <div></div>;
   return (
     <div className="flex h-screen flex-col min-h-0 w-full">
-      <Navbar darkMode={props.darkMode} toggleDarkMode={props.toggleDarkMode} />
+      <Navbar />
       <div className="flex-auto flex flex-col min-h-0 w-full">
         <div className="flex-auto flex flex-row min-h-0">
           <div className="sm:w-1/4 w-1/6 flex flex-col border-r-2 border-gray-950">

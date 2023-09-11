@@ -38,10 +38,7 @@ function Game(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
     <>
       <LoadingScreen isLoading={isLoading} />
       <div className="flex flex-col w-screen h-screen items-center">
-        <Navbar
-          darkMode={props.darkMode}
-          toggleDarkMode={props.toggleDarkMode}
-        />
+        <Navbar />
         <h1 className="flex text-center dark:text-white text-gray-900">
           {score[0]} - {score[1]}
         </h1>
