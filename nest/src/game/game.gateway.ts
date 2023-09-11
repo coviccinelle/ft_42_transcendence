@@ -43,7 +43,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     client.data.gameId = gameId;
     client.join(gameId);
     if (this.gameManager.getStatus(gameId) === GameStatus.WAITING) {
-      client.emit('waiting');
+      client.emit('wait');
     }
   }
 
@@ -63,6 +63,10 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const sockets = await this.wss.fetchSockets();
     if (sockets.find((socket) => socket.data.user?.id === userId)) return true;
     return false;
+  }
+
+  broadcastStart(uuid: string) {
+    this.wss.in(uuid).emit('start', uuid);
   }
 
   broadcastInfo(uuid: string, gameInfo: GameInfo) {
