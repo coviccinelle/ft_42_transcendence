@@ -7,7 +7,7 @@ function User(props: { user: any; onClick: any; setFriendsListDialog: any }) {
   return (
     <div className="flex flex-row">
       <div
-        className="flex flex-row py-4 px-2 items-center dark:hover:bg-gray-600 cursor-pointer dark:text-white text-gray-900 hover:bg-rose-300 w-full"
+        className="flex flex-row py-4 px-2 rounded-2xl items-center dark:hover:bg-gray-600 cursor-pointer dark:text-white text-gray-900 hover:bg-rose-300 w-full"
         onClick={props.onClick}
       >
         <div className="w-1/4">
@@ -29,7 +29,7 @@ function User(props: { user: any; onClick: any; setFriendsListDialog: any }) {
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className="h-6 w-6 mr-2"
+          className="h-6 w-6"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
