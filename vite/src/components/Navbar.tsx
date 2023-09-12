@@ -1,7 +1,8 @@
-import { Link } from 'react-router-dom';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
+  const navigate = useNavigate();
   return (
     <div className="z-40 py-4 bg-gray-800 px-4">
       
@@ -32,7 +33,7 @@ function Navbar() {
             className="p-2 bg-white text-green-400 align-middle rounded-full hover:text-white hover:bg-green-400 focus:outline-none"
             aria-haspopup="true"
             onClick={() => {
-              return navigate('/registration');
+              return navigate('/settings');
             }}
           >
             {/* Setiings icon */}
