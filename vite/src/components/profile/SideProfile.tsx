@@ -38,21 +38,6 @@ function SideProfile(props: { user: any; userMe: any }) {
   return (
     <aside className="z-20 flex-shrink-0 hidden w-64 pl-2 overflow-y-auto bg-gray-800 md:block no-scrollbar">
       <div>
-        <div className="text-white">
-          <div className="flex p-2 bg-gray-800">
-            <div className="flex py-3 px-2 items-center">
-              <Link className="text-3xl text-yellow-500 font-bold" to="/">
-                42
-              </Link>
-              <Link
-                className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-2xl font-black"
-                to="/"
-              >
-                Duckie Pooong
-              </Link>
-            </div>
-          </div>
-        </div>
       </div>
 
       <div className="flex justify-center">

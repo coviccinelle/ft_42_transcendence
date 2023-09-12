@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import apiChannel from '../api/chat/channel';
 import { io } from 'socket.io-client';
 import ChatTabAdd from '../components/chat/ChatTabAdd';
-import Navbar from '../components/Navbar';
+import Navbar2 from '../components/NavBar2';
 import LeaveChannelDialog from '../components/chat/dialog/LeaveChannelDialog';
 import { useNavigate, useParams } from 'react-router-dom';
 import apiUser from '../api/user';
@@ -117,7 +117,9 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
   if (userExist === false) return <div></div>;
   return (
     <div className="flex h-screen flex-col min-h-0 w-full">
-      <Navbar />
+      <div className="z-40 py-2 bg-gray-800">
+        <Navbar2 />
+      </div>
       <div className="flex-auto flex flex-col min-h-0 w-full">
         <div className="flex-auto flex flex-row min-h-0">
           <div className="sm:w-1/4 w-1/6 flex flex-col border-r-2 border-gray-950">
@@ -139,10 +141,10 @@ function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
                       tab.isPublic && !tab.isPasswordProtected
                         ? 'Public'
                         : tab.isPasswordProtected
-                        ? 'Protected'
-                        : !tab.isGroup
-                        ? 'DM'
-                        : 'Private'
+                          ? 'Protected'
+                          : !tab.isGroup
+                            ? 'DM'
+                            : 'Private'
                     }
                     createChannel={false}
                   />
