@@ -17,12 +17,12 @@ export class GameManager {
   }
 
   public getStatus(uuid: string): GameStatus {
-    return this.games[uuid].getStatus();
+    return this.games.get(uuid).getStatus();
   }
 
   public new(userId: number, userName: string, isHard: boolean): string {
     if (this.isInLobby(userId)) {
-      //Todo Reject request
+      throw new WsException('You are already in a game');
     }
     const openLobby = this.findOpenLobby(isHard);
     if (openLobby) {
@@ -63,7 +63,7 @@ export class GameManager {
   }
 
   public playerDisconnect(uuid: string, userId: number) {
-    this.games[uuid].removePlayer(userId);
+    this.games.get(uuid).removePlayer(userId);
     if (this.games[uuid].getNbPlayers === 0) {
       this.games.delete(uuid);
     }

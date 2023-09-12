@@ -166,6 +166,7 @@ export class Game {
   
   private start() {
     this.status = GameStatus.PLAYING;
+    this.gameGateway.broadcastStart(this.id);
     this.launchBall();
     this.broadcastState();
     this.updateInterval = setInterval(() => this.update(), updateDelay);
