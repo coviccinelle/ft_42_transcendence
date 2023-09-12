@@ -56,7 +56,7 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
       <div className="flex h-screen bg-gray-800 text-center no-scrollbar">
         <SideProfile user={user} userMe={userMe} />
         <div className="flex flex-col flex-1 w-full overflow-y-auto no-scrollbar">
-          <div className="z-4 py-4 bg-gray-800">
+          <div className="z-40 py-4 bg-gray-800">
             <Navbar2 />
           </div>
 
