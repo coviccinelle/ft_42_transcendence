@@ -22,7 +22,7 @@ function MyMenu(props: {
   {
     const [password, setPassword] = useState('');
     const [passwordDialog, setPasswordDialog] = useState(false);
-    console.log(props.type);
+    // console.log(props.type);
     return (
       <div className="flex">
         <div className="relative inline-block">

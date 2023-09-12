@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { PayloadTooLargeException, UseGuards } from '@nestjs/common';
 import {
   SubscribeMessage,
   WebSocketGateway,
@@ -47,6 +47,9 @@ export class ChatGateway implements OnGatewayConnection {
     @ConnectedSocket() client: Socket,
     @MessageBody() createMessageDto: CreateMessageDto,
   ) {
+    if (createMessageDto.content.length == 0 || createMessageDto.content.length > 512) {
+      throw new PayloadTooLargeException("Message too long or too short, must not be empty or higher than 512 characters max.");
+    }
     const user = client.data.user;
     const member = await this.prisma.member.findFirst({
       where: {

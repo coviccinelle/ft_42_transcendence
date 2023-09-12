@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -10,6 +10,7 @@ import { UsersGateway } from './users.gateway';
 import { ConnectionState } from './dto/user-connection-status.dto';
 import { uniqueNamesGenerator, Config, adjectives, colors, animals } from 'unique-names-generator';
 import { GameGateway } from 'src/game/game.gateway';
+import { validateEmail } from 'src/main';
 
 export const roundsOfHashing = 10;
 
@@ -24,25 +25,41 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto) {
     if (createUserDto.password) {
+      if (createUserDto.password.length > 64) {
+        throw new BadRequestException("Password too long, must be 64 characters max.");
+      }
       const hashedPassword = await hash(
         createUserDto.password,
         roundsOfHashing,
       );
       createUserDto.password = hashedPassword;
     }
-    // if (!createUserDto.nickname || createUserDto.nickname.length === 0) {
-    //   let nickname: string = '';
-    //   const customConfig: Config = {
-    //     dictionaries: [adjectives, colors],
-    //     separator: '-',
-    //     length: 3,
-    //   };
+    if (!createUserDto.nickname || createUserDto.nickname.length === 0) {
+      let nickname: string = '';
+      const customConfig: Config = {
+        dictionaries: [adjectives, colors],
+        separator: '-',
+        length: 2,
+      };
 
-    //   do {
-    //     nickname = uniqueNamesGenerator(customConfig) + "-" + Math.floor(9999 * Math.random()).toString();
-    //   } while (!this.findOneByNickname(nickname));
-    //   createUserDto.nickname = nickname;
-    // }
+      do {
+        nickname = uniqueNamesGenerator(customConfig) + "-" + Math.floor(9999 * Math.random()).toString();
+      } while (!this.findOneByNickname(nickname));
+      createUserDto.nickname = nickname;
+    }
+    if (createUserDto.nickname.length == 0 || createUserDto.nickname.length > 32) {
+      throw new BadRequestException("Nickname too long or too short, must not be empty and 25 characters max.");
+    }
+    if (createUserDto.firstName && createUserDto.firstName.length > 25) {
+      throw new BadRequestException("First name too long, need to be 25 characters max.");
+    }
+    if (createUserDto.lastName && createUserDto.lastName.length > 25) {
+      throw new BadRequestException("Last name too long, need to be 25 characters max.");
+    }
+    if (!validateEmail(createUserDto.email)) {
+      throw new BadRequestException("Email is not valid.");
+    }
+    // TODO: check picture
 
     const newUser = await this.prisma.user.create({ data: createUserDto });
     return newUser;
@@ -66,11 +83,28 @@ export class UsersService {
 
   async update(id: number, updateUserDto: UpdateUserDto) {
     if (updateUserDto.password) {
+      if (updateUserDto.password.length > 64) {
+        throw new BadRequestException("Password too long, must be 64 characters max.");
+      }
       updateUserDto.password = await hash(
         updateUserDto.password,
         roundsOfHashing,
       );
     }
+    if (updateUserDto.nickname && (updateUserDto.nickname.length == 0 || updateUserDto.nickname.length > 32)) {
+      throw new BadRequestException("Nickname too long or too short, must not be empty and 25 characters max.");
+    }
+    if (updateUserDto.firstName && updateUserDto.firstName.length > 25) {
+      throw new BadRequestException("First name too long, need to be 25 characters max.");
+    }
+    if (updateUserDto.lastName && updateUserDto.lastName.length > 25) {
+      throw new BadRequestException("Last name too long, need to be 25 characters max.");
+    }
+    if (!updateUserDto.email || !validateEmail(updateUserDto.email)) {
+      throw new BadRequestException("Email is not valid.");
+    }
+    // TODO: check picture
+
     return this.prisma.user.update({ where: { id }, data: updateUserDto });
   }
 

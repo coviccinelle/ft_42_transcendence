@@ -38,23 +38,26 @@ const getUsersInChannel = async (channelId: number) => {
   }
 };
 
-// interface UpdateUserDto {
-//   email: string;
-//   nickname: string;
-//   firstName: string;
-//   lastName: string;
-//   picture: string;
-//   password: string;
-// }
+export interface UpdateUserDto {
+  email?: string;
+  nickname?: string;
+  firstName?: string;
+  lastName?: string;
+  picture?: string;
+  password?: string;
+}
 
-// const updateMe = async (updateUserDto: UpdateUserDto) => {
-//   try {
-//     const response = await axios.patch(`${API}/users/me`, updateUserDto);
-//     return response.data;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
+const updateMe = async (updateUserDto: UpdateUserDto) => {
+  try {
+    const user = await getMe();
+    const updatedUserDto = Object.assign({}, user, updateUserDto);
+
+    const response = await axios.patch(`${API}/users/me`, updatedUserDto);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const muteUser = async (channelId: number, userId: number, time: number) => {
   try {
@@ -223,7 +226,7 @@ export default {
   getUsersInChannel,
   getMe,
   getUser,
-  // updateMe,
+  updateMe,
   muteUser,
   kickUser,
   banUser,

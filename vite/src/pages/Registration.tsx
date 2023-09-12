@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import apiUser from '../api/user';
+import apiUser, { UpdateUserDto } from '../api/user';
 import { useNavigate } from 'react-router-dom';
 
 function Registration() {
@@ -33,13 +33,13 @@ function Registration() {
   // Handle form submit
   const handleFormSubmit = (event: any) => {
     event.preventDefault();
-    const formData = {
-      nickname: nickname,
-      picture: img,
+    const formData: UpdateUserDto = {
+        nickname: nickname,
+        picture: img,
     };
-    // apiUser.updateMe(formData); //Changeeee HEREE
+    apiUser.updateMe(formData);
     navigate('/profile');
-  };
+};
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">

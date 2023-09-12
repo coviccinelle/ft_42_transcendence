@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
@@ -10,6 +11,7 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { authenticator } from 'otplib';
 import { toDataURL } from 'qrcode';
+import { validateEmail } from 'src/main';
 
 @Injectable()
 export class AuthService {
@@ -23,6 +25,9 @@ export class AuthService {
   ): Promise<UserEntity> {
     console.log('Signup request: creating new user...');
     const lowerEmail = email.toLowerCase();
+    if (!email || !validateEmail(email)) {
+      throw new BadRequestException("Email is not valid.");
+    }
     const user = await this.usersService.findOneByEmail(lowerEmail);
 
     if (user) {
@@ -34,6 +39,7 @@ export class AuthService {
       email: lowerEmail,
       firstName: firstName,
       lastName: lastName,
+      nickname: null,
       picture:
         'https://i.pinimg.com/originals/a4/97/d7/a497d78803c0821e1f0cdb8b8b8a6d32.jpg',
       password: password,
@@ -42,10 +48,16 @@ export class AuthService {
   }
 
   async login(email: string, password: string): Promise<UserEntity> {
-    console.log(`login ${email}`);
     const lowerEmail = email.toLowerCase();
+    if (!email || !validateEmail(email)) {
+      throw new BadRequestException("Email is not valid.");
+    }
+
     const user = await this.usersService.findOneByEmail(lowerEmail);
 
+    if (password.length == 0 || password.length > 64) {
+      throw new BadRequestException("Password too long or too short, must not be empty and 64 characters max.");
+    }
     if (!user) {
       throw new NotFoundException(`No user found with email: ${lowerEmail}`);
     }
@@ -70,6 +82,10 @@ export class AuthService {
   }
 
   isTwoFACodeValid(userTwoFASecret: string, code: string) {
+    if (code.length > 6) {
+      throw new BadRequestException("Code too long, must be 6 characters max.");
+    }
+
     return (
       authenticator.verify({
         token: code,

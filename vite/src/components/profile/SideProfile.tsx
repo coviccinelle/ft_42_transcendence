@@ -84,7 +84,6 @@ function SideProfile(props: { user: any; userMe: any }) {
           </div>
           <p className="font-bold text-base text-gray-400 pt-2 text-center w-24">
             {isMe ? props.userMe.username : props.user.username}
-            //show my nickname
             {isMe ? ( <p className="font-bold text-base text-gray-400 pt-2 text-center w-24">
             {props.userMe.nickname}
             </p>) : (<p></p>)}

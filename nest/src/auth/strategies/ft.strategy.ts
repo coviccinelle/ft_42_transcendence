@@ -43,6 +43,7 @@ export class FtStrategy extends PassportStrategy(Strategy, 'ft') {
         firstName: profileData.first_name,
         lastName: profileData.last_name,
         picture: profileData.image.versions.medium,
+        nickname: null,
         password: null,
       };
       console.log(newUserDto);

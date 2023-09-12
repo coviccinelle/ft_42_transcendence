@@ -23,8 +23,6 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { AuthenticatedGuard } from './guards/authenticated.guard';
 import { User } from 'src/users/users.decorator';
 import { UsersService } from 'src/users/users.service';
-import { TwoFAStrategy } from './strategies/twofa.strategy';
-import { AuthGuard } from '@nestjs/passport';
 import { TwoFAAuthGuard } from './guards/twofa-auth.guard';
 import { TotpCodeDto } from './dto/totpCode.dto';
 
@@ -128,9 +126,6 @@ export class AuthController {
       user.twoFASecret,
       totpCodeDto.code,
     );
-    console.log("TURN ON 2FA CODE VALIDITY");
-    console.log(isCodeValid);
-    console.log(totpCodeDto);
     if (!isCodeValid)
       throw new UnauthorizedException('Wrong 2FA code');
 

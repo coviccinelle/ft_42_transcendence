@@ -1,4 +1,4 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, HttpStatus, Injectable, PayloadTooLargeException } from '@nestjs/common';
 import { CreateChannelDto } from './dto/create-channel.dto';
 import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateChannelNameDto } from './dto/update-channel-name.dto';
@@ -29,6 +29,14 @@ export class ChatService {
   async create(createChannelDto: CreateChannelDto, userId: number) {
     let hashedPassword: string;
     let channel: ChannelEntity;
+
+    if (createChannelDto.name.length == 0 || createChannelDto.name.length > 25) {
+      throw new BadRequestException("Channel name too long or too short, must not be empty and 25 characters max.");
+    }
+    if (createChannelDto.password.length > 64) {
+      throw new BadRequestException("Password too long, must be 64 characters max.");
+    }
+
     if (createChannelDto.isPublic && createChannelDto.password) {
       hashedPassword = await hash(createChannelDto.password, roundsOfHashing);
       channel = await this.prisma.channel.create({
@@ -300,6 +308,9 @@ export class ChatService {
     createMessageDto: CreateMessageDto,
     user: UserEntity,
   ) {
+    if (createMessageDto.content.length == 0 || createMessageDto.content.length > 512) {
+      throw new PayloadTooLargeException("Message too long or too short, must not be empty or higher than 512 characters max.");
+    }
     const member = await this.prisma.member.findFirst({
       where: {
         userId: user.id,
@@ -323,6 +334,9 @@ export class ChatService {
   }
   
   async updateName(id: number, updateChannelNameDto: UpdateChannelNameDto) {
+    if (updateChannelNameDto.name.length == 0 || updateChannelNameDto.name.length > 25) {
+      throw new BadRequestException("Channel name too long or too short, must not be empty and 25 characters max.");
+    }
     const channel = await this.prisma.channel.update({
       where: { id: id },
       data: {
@@ -544,6 +558,9 @@ export class ChatService {
 
   async updatePassword(channelId: number, password: string) {
     if (password) {
+      if (password.length > 64) {
+        throw new BadRequestException("Password too long, must be 64 characters max.");
+      }
       const hashedPassword = await hash(password, roundsOfHashing);
       return await this.prisma.channel.update({
         where: { id: channelId },

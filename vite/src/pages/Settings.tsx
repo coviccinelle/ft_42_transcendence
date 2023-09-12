@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import apiUser from "../api/user";
+import apiUser, { UpdateUserDto } from "../api/user";
 import { useNavigate } from 'react-router-dom';
 import Toggle2FA from "../components/profile/Toggle2FA";
 
@@ -27,20 +27,20 @@ function Settings() {
     }, []);
 
     // Handle file input change
-    const handleFileChange = (event) => {
+    const handleFileChange = (event: any) => {
         const file = event.target.files[0];
         const imageUrl = URL.createObjectURL(file);
         setImage(imageUrl);
     };
 
     // Handle form submit
-    const handleFormSubmit = (event) => {
+    const handleFormSubmit = (event: any) => {
         event.preventDefault();
-        const formData = {
+        const formData: UpdateUserDto = {
             nickname: nickname,
             picture: img,
         };
-        // apiUser.updateMe(formData); //Changeeee HEREE
+        apiUser.updateMe(formData);
         navigate('/profile');
     };
 

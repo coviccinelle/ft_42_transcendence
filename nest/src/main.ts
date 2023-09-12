@@ -9,6 +9,14 @@ import PassportIoAdapter from './passport.adapter';
 
 export const domainName = 'localhost:8080';
 
+export const validateEmail = (email: string) => {
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+};
+
 function checkEnvVariables(configService: ConfigService) {
   const envVariables = [
     'DOMAIN_NAME',
