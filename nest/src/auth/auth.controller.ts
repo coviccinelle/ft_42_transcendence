@@ -37,6 +37,7 @@ export class AuthController {
   login(@Request() req) {
     // TODO: add delay to prevent brute force (https://docs.nestjs.com/security/rate-limiting)
     const user = req.user;
+    // TODO: redirect to registration if its a new user
 
     if (user.isTwoFAEnabled) {
       req.session.needTwoFA = true;
@@ -61,6 +62,7 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   redirectGoogle(@Req() req, @Res() response: Response) {
     const user = req.user;
+    // TODO: redirect to registration if its a new user
 
     if (user.isTwoFAEnabled) {
       req.session.needTwoFA = true;
@@ -78,6 +80,7 @@ export class AuthController {
   @UseGuards(FtAuthGuard)
   redirectFt(@Req() req, @Res() response: Response) {
     const user = req.user;
+    // TODO: redirect to registration if its a new user
 
     if (user.isTwoFAEnabled) {
       req.session.needTwoFA = true;
