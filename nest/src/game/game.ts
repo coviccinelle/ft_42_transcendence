@@ -3,6 +3,7 @@ import { GameGateway } from './game.gateway';
 import { PrismaService } from 'src/prisma/prisma.service';
 
 const updateDelay = 10;
+const startDelay = 500;
 
 export enum Direction {
   NONE,
@@ -53,6 +54,7 @@ export class Game {
   private id: string;
   private status: GameStatus;
   private updateInterval: NodeJS.Timer;
+  private startInterval: NodeJS.Timer;
   private courtSize: Vector2d;
   private paddleMaxSpeed: number;
   private paddleMinSize: number;
@@ -149,7 +151,9 @@ export class Game {
     this.players[this.nbPlayers].name = name;
     this.players[this.nbPlayers].id = id;
     this.nbPlayers++;
-    if (this.nbPlayers === 2) this.start();
+    if (this.nbPlayers === 2) {
+      this.startInterval = setInterval(() => this.start(), startDelay);
+    }
   }
   
   public removePlayer(userId: number) {
@@ -165,6 +169,9 @@ export class Game {
   }
   
   private start() {
+    if (this.startInterval) {
+      clearInterval(this.startInterval);
+    }
     this.status = GameStatus.PLAYING;
     this.gameGateway.broadcastStart(this.id);
     this.launchBall();
