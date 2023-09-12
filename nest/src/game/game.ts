@@ -156,14 +156,19 @@ export class Game {
     }
   }
   
-  public removePlayer(userId: number) {
+  public async removePlayer(userId: number) {
     if (this.status === GameStatus.PLAYING) {
       if (this.players[0].id === userId) {
         this.players[1].score = this.pointsToWin;
       } else {
         this.players[0].score = this.pointsToWin;
       }
-      this.endGame();
+      await this.endGame();
+    }
+    if (this.players[0].id === userId) {
+      this.players[0].id = -1;
+    } else {
+      this.players[1].id = -1;
     }
     this.nbPlayers--;
   }
@@ -183,7 +188,7 @@ export class Game {
     this.launchBall();
   }
 
-  private endGame() {
+  private async endGame() {
     this.status = GameStatus.FINISHED;
     if (this.updateInterval) {
       clearInterval(this.updateInterval);
@@ -195,8 +200,8 @@ export class Game {
       winnerId = this.players[1].id;
     }
     this.gameGateway.broadcastWinner(this.id, winnerId);
-    this.addMatchToHistory();
-    this.updateElo();
+    await this.addMatchToHistory();
+    await this.updateElo();
   }
 
   private updateBall() {
