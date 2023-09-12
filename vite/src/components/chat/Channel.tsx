@@ -166,16 +166,33 @@ function Channel(props: {
           );
         })}
       </div>
-      <div className="pt-auto pb-3 px-4">
-        <form action="submit" onSubmit={handleSubmit}>
-          <input
-            className="w-full dark:border dark:border-gray-700 dark:border-light-blue-300 dark:bg-gray-950 bg-rose-100 py-5 px-3 rounded-xl dark:text-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-sky-950 focus:border-transparent"
-            type="text"
-            value={message}
-            onChange={handleChange}
-            placeholder="type your message here..."
-          />
-        </form>
+      <div className="flex flex-row w-full">
+        <div className="mx-2 flex flex-row">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => {
+              // send a message with a link to the game
+              apiMessage.sendMessage(
+                `Join me for a game here: http://localhost:3000/game/${props.channelId}`,
+                props.channelId,
+                props.socket,
+              );
+            }}
+          >
+            Invite for game
+          </button>
+        </div>
+        <div className="pt-auto pb-3 px-4 w-full">
+          <form action="submit" onSubmit={handleSubmit}>
+            <input
+              className="w-full dark:border dark:border-gray-700 dark:border-light-blue-300 dark:bg-gray-950 bg-rose-100 py-5 px-3 rounded-xl dark:text-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-sky-950 focus:border-transparent"
+              type="text"
+              value={message}
+              onChange={handleChange}
+              placeholder="type your message here..."
+            />
+          </form>
+        </div>
       </div>
     </div>
   );

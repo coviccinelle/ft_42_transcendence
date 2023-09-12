@@ -13,25 +13,27 @@ export const GameZone = (props: {
   gameInfos: any;
 }): JSX.Element => {
   const [windowSize, setWindowSize] = useState<Size>({
-    width: window.innerWidth,
+    width: window.innerWidth + (window.innerWidth / 100) * 2,
     height: window.innerHeight,
   });
   const [paddleSize, setPaddleSize] = useState<Size>({
+    height:
+      (windowSize.height * props.gameInfos.players[0].paddle.size) /
+      props.gameInfos.courtSize.y,
     width: window.innerWidth / 100,
-    height: window.innerHeight / 10,
   });
-  const [ballWidth, setBallWidth] = useState<number>(window.innerWidth / 100);
-  const [myPaddlePos, setMyPaddlePos] = useState<number[]>([
-    10,
-    windowSize.height / 2 - paddleSize.height / 2,
-  ]);
+  const [windowSizeGame, setWindowSizeGame] = useState<Size>({
+    width: windowSize.width - paddleSize.width * 2,
+    height: windowSize.height,
+  });
+  const [ballWidth, setBallWidth] = useState<number>(0);
+  const [myPaddlePos, setMyPaddlePos] = useState<number[]>([0, 0]);
   const [playerTwoPaddlePos, setPlayerTwoPaddlePos] = useState<number[]>([
-    windowSize.width - 10 - paddleSize.width,
-    windowSize.height / 2 - paddleSize.height / 2,
+    0, 0,
   ]);
   const [ballPos, setBallPos] = useState<number[]>([
-    windowSize.width / 2,
-    windowSize.height / 2,
+    windowSizeGame.width / 2,
+    windowSizeGame.height / 2,
   ]);
   const canvas = useRef<HTMLCanvasElement | null>(null);
 
@@ -40,6 +42,10 @@ export const GameZone = (props: {
       width: window.innerWidth,
       height: window.innerHeight,
     });
+    setWindowSizeGame({
+      width: windowSize.width - paddleSize.width * 2,
+      height: windowSize.height,
+    });
     setPaddleSize({
       height:
         (windowSize.height * props.gameInfos.players[0].paddle.size) /
@@ -47,21 +53,25 @@ export const GameZone = (props: {
       width: window.innerWidth / 100,
     });
     setMyPaddlePos([
-      -paddleSize.width / 2,
-      props.gameInfos.players[0].paddle.position - paddleSize.height / 2,
+      0,
+      (props.gameInfos.players[0].paddle.position * windowSize.height) /
+        props.gameInfos.courtSize.y -
+        paddleSize.height / 2,
     ]);
     setPlayerTwoPaddlePos([
-      windowSize.width + paddleSize.width / 2,
-      props.gameInfos.players[1].paddle.position - paddleSize.height / 2,
+      windowSize.width,
+      (props.gameInfos.players[1].paddle.position * windowSize.height) /
+        props.gameInfos.courtSize.y -
+        paddleSize.height / 2,
     ]);
     setBallWidth(
       (window.innerWidth * props.gameInfos.ball.size) /
         props.gameInfos.courtSize.x,
     );
     setBallPos([
-      (windowSize.width * props.gameInfos.ball.position.x) /
+      (windowSizeGame.width * props.gameInfos.ball.position.x) /
         props.gameInfos.courtSize.x,
-      (windowSize.height * props.gameInfos.ball.position.y) /
+      (windowSizeGame.height * props.gameInfos.ball.position.y) /
         props.gameInfos.courtSize.y,
     ]);
   }
@@ -84,6 +94,7 @@ export const GameZone = (props: {
         paddleSize.height,
       );
       ball(ctx, ballPos[0], ballPos[1], ballWidth);
+      console.log('ballPos', props.gameInfos.ball.position);
     }
   }
 
@@ -129,7 +140,7 @@ export const GameZone = (props: {
     <div className="flex max-w-[95%] max-h-[75%] justify-center items-center">
       <canvas
         id="gamezone"
-        className="flex bg-gray-500 w-full h-full aspect-[16/9] mt-6"
+        className="flex bg-gray-500 w-full h-full aspect-[16/9]"
         ref={canvas}
         width={windowSize.width}
         height={windowSize.height}

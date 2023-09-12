@@ -18,29 +18,29 @@ export enum GameStatus {
 }
 
 export type Vector2d = {
-  x: number,
-  y: number,
-}
+  x: number;
+  y: number;
+};
 
 export type Ball = {
-  position: Vector2d,
-  velocity: Vector2d,
-  size: number,
-}
+  position: Vector2d;
+  velocity: Vector2d;
+  size: number;
+};
 
 export type Paddle = {
   position: number;
   size: number;
   speed: number;
   movement: Direction;
-}
+};
 
 export type Player = {
   id: number;
   paddle: Paddle;
   name: string;
   score: number;
-}
+};
 
 export type GameInfo = {
   id: string;
@@ -48,7 +48,7 @@ export type GameInfo = {
   courtSize: Vector2d;
   ball: Ball;
   players: Player[];
-}
+};
 
 export class Game {
   private id: string;
@@ -89,7 +89,7 @@ export class Game {
         x: 0,
         y: 0,
       },
-      size: 5,
+      size: 20,
     };
     this.players = new Array();
     for (let i = 0; i < 2; i++) {
@@ -144,7 +144,7 @@ export class Game {
   }
 
   public addPlayer(name: string, id: number) {
-    if ((this.nbPlayers === 1) && (this.players[0].id === id)) {
+    if (this.nbPlayers === 1 && this.players[0].id === id) {
       console.log('User joined game with themselves');
       return;
     }
@@ -155,7 +155,7 @@ export class Game {
       this.startInterval = setInterval(() => this.start(), startDelay);
     }
   }
-  
+
   public async removePlayer(userId: number) {
     if (this.status === GameStatus.PLAYING) {
       if (this.players[0].id === userId) {
@@ -174,7 +174,7 @@ export class Game {
     }
     this.nbPlayers--;
   }
-  
+
   private start() {
     if (this.startInterval) {
       clearInterval(this.startInterval);
@@ -211,19 +211,20 @@ export class Game {
     this.ball.position.y += this.ball.velocity.y;
     //Collision in y direction
     if (this.ball.position.y - this.ball.size < 0) {
-      const overTravel = this.ball.size - this.ball.position.y
+      const overTravel = this.ball.size - this.ball.position.y;
       this.ball.position.y += 2 * overTravel;
       this.ball.velocity.y *= -1;
     }
     if (this.ball.position.y + this.ball.size > this.courtSize.y) {
-      const overTravel = this.ball.position.y + this.ball.size - this.courtSize.y;
+      const overTravel =
+        this.ball.position.y + this.ball.size - this.courtSize.y;
       this.ball.position.y -= 2 * overTravel;
       this.ball.velocity.y *= -1;
     }
     //Out of court in x direction
     if (this.ball.position.x - this.ball.size < 0) {
       if (this.ballIsCaught(0)) {
-        const overTravel = this.ball.size - this.ball.position.x
+        const overTravel = this.ball.size - this.ball.position.x;
         this.ball.position.x += 2 * overTravel;
         this.ball.velocity.x *= -1;
         if (this.isHard) this.makeHarder(0);
@@ -239,7 +240,8 @@ export class Game {
     }
     if (this.ball.position.x + this.ball.size > this.courtSize.x) {
       if (this.ballIsCaught(1)) {
-        const overTravel = this.ball.position.x + this.ball.size - this.courtSize.x;
+        const overTravel =
+          this.ball.position.x + this.ball.size - this.courtSize.x;
         this.ball.position.x -= 2 * overTravel;
         this.ball.velocity.x *= -1;
         if (this.isHard) this.makeHarder(0);
@@ -256,7 +258,7 @@ export class Game {
   }
 
   private updatePaddles() {
-    this.players.forEach(player => {
+    this.players.forEach((player) => {
       if (player.paddle.movement !== Direction.NONE) {
         if (player.paddle.movement === Direction.UP) {
           player.paddle.position -= player.paddle.speed;
@@ -267,7 +269,10 @@ export class Game {
         }
         if (player.paddle.movement === Direction.DOWN) {
           player.paddle.position += player.paddle.speed;
-          if (player.paddle.position > this.courtSize.y - player.paddle.size / 2) {
+          if (
+            player.paddle.position >
+            this.courtSize.y - player.paddle.size / 2
+          ) {
             player.paddle.position = this.courtSize.y - player.paddle.size / 2;
             player.paddle.movement = Direction.NONE;
           }
@@ -284,7 +289,7 @@ export class Game {
       ball: this.ball,
       players: this.players,
     };
-    return (info);
+    return info;
   }
 
   private update() {
@@ -296,20 +301,23 @@ export class Game {
   private ballIsCaught(playerNb: number): boolean {
     //This method is very unreliable for high angles and slow update cycles
     //Todo draw a line intercept to see if it crosses paddle
-    const topEdgePaddle = this.players[playerNb].paddle.position
-      - this.players[playerNb].paddle.size / 2;
-    const bottomEdgePaddle = this.players[playerNb].paddle.position
-      + this.players[playerNb].paddle.size / 2;
+    const topEdgePaddle =
+      this.players[playerNb].paddle.position -
+      this.players[playerNb].paddle.size / 2;
+    const bottomEdgePaddle =
+      this.players[playerNb].paddle.position +
+      this.players[playerNb].paddle.size / 2;
     const topEdgeBall = this.ball.position.y - this.ball.size;
     const bottomEdgeBall = this.ball.position.y + this.ball.size;
-    const ballIsAbovePaddle = (bottomEdgeBall < topEdgePaddle);
-    const ballIsBellowPaddle = (topEdgeBall > bottomEdgePaddle);
-    return (!ballIsAbovePaddle && !ballIsBellowPaddle);
+    const ballIsAbovePaddle = bottomEdgeBall < topEdgePaddle;
+    const ballIsBellowPaddle = topEdgeBall > bottomEdgePaddle;
+    return !ballIsAbovePaddle && !ballIsBellowPaddle;
   }
 
   private makeHarder(playerNb: number) {
-    const ballSpeed = Math.sqrt(Math.pow(this.ball.velocity.x, 2)
-      + Math.pow(this.ball.velocity.y, 2));
+    const ballSpeed = Math.sqrt(
+      Math.pow(this.ball.velocity.x, 2) + Math.pow(this.ball.velocity.y, 2),
+    );
     if (ballSpeed < this.ballMaxSpeed) {
       this.ball.velocity.x *= 1.05;
       this.ball.velocity.y *= 1.05;
@@ -325,7 +333,7 @@ export class Game {
   private launchBall() {
     this.ball.position.x = this.courtSize.x / 2;
     this.ball.position.y = this.courtSize.y / 2;
-    const angle = (Math.random() - 0.5) * Math.PI / 12.0; //Angle between +15 -15°
+    const angle = ((Math.random() - 0.5) * Math.PI) / 12.0; //Angle between +15 -15°
     this.ball.velocity.x = Math.cos(angle) * this.ballInitialSpeed;
     this.ball.velocity.y = Math.sin(angle) * this.ballInitialSpeed;
     if ((this.players[0].score + this.players[1].score) % 2) {
@@ -339,24 +347,24 @@ export class Game {
         player: {
           connect: { id: this.players[0].id },
         },
-        result: (this.players[0].score === this.pointsToWin) ? 'WIN' : 'LOSS',
+        result: this.players[0].score === this.pointsToWin ? 'WIN' : 'LOSS',
         otherPlayerId: this.players[1].id,
         otherPlayerName: this.players[1].name,
         myScore: this.players[0].score,
         otherScore: this.players[1].score,
-      }
+      },
     });
     await this.prismaService.matchResult.create({
       data: {
         player: {
           connect: { id: this.players[1].id },
         },
-        result: (this.players[1].score === this.pointsToWin) ? 'WIN' : 'LOSS',
+        result: this.players[1].score === this.pointsToWin ? 'WIN' : 'LOSS',
         otherPlayerId: this.players[0].id,
         otherPlayerName: this.players[0].name,
         myScore: this.players[1].score,
         otherScore: this.players[0].score,
-      }
+      },
     });
   }
 
@@ -371,10 +379,14 @@ export class Game {
     const totalPoints = this.players[0].score + this.players[1].score;
     const player1Score = this.players[0].score / totalPoints;
     const player2Score = this.players[1].score / totalPoints;
-    const player1Expected = 1 / (1 + Math.pow(10, (player2.elo - player1.elo) / 400));
-    const player2Expected = 1 / (1 + Math.pow(10, (player1.elo - player2.elo) / 400));
-    const player1NewElo = player1.elo + kFactor * (player1Score - player1Expected);
-    const player2NewElo = player2.elo + kFactor * (player2Score - player2Expected);
+    const player1Expected =
+      1 / (1 + Math.pow(10, (player2.elo - player1.elo) / 400));
+    const player2Expected =
+      1 / (1 + Math.pow(10, (player1.elo - player2.elo) / 400));
+    const player1NewElo =
+      player1.elo + kFactor * (player1Score - player1Expected);
+    const player2NewElo =
+      player2.elo + kFactor * (player2Score - player2Expected);
     await this.prismaService.user.update({
       where: { id: this.players[0].id },
       data: { elo: player1NewElo },

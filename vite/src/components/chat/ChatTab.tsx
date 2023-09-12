@@ -38,7 +38,7 @@ function ChatTab(props: {
   function displayMessageOrType() {
     if (props.type === 'Public' && messages.length > 0) {
       return (
-        <p className="dark:text-gray-300 text-gray-800 hidden sm:flex">
+        <p className="dark:text-gray-300 text-gray-800 hidden sm:flex truncate">
           {messages[messages.length - 1].content}
         </p>
       );
