@@ -199,6 +199,12 @@ function Game(): JSX.Element {
             darkMode={props.darkMode}
             toggleDarkMode={props.toggleDarkMode}
           />
+          <p className="text-2xl text-black dark:text-white font-bold">
+            {gameInfos.players[0].name} vs {gameInfos.players[1].name}
+          </p>
+          <p className="text-2xl text-black dark:text-white font-bold">
+            {gameInfos.players[0].score} - {gameInfos.players[1].score}
+          </p>
           <GameZone sendInput={sendInput} gameInfos={gameInfos}></GameZone>
         </div>
       )}
