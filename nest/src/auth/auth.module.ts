@@ -9,6 +9,7 @@ import { GoogleStrategy } from './strategies/google.strategy';
 import { SessionSerializer } from './session.serializer';
 import { FtStrategy } from './strategies/ft.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
+import { TotpStrategy } from './strategies/totp.strategy';
 
 @Module({
   imports: [ConfigModule, PrismaModule, PassportModule, UsersModule],
@@ -18,6 +19,7 @@ import { LocalStrategy } from './strategies/local.strategy';
     LocalStrategy,
     GoogleStrategy,
     FtStrategy,
+    TotpStrategy,
     SessionSerializer,
   ],
 })

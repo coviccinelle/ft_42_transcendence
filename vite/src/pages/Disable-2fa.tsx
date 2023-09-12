@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function DisableTwoFA() {
-  const [code, setCode] = useState<string>();
+  const [code, setCode] = useState<string>('');
   const [userEmail, setUserEmail] = useState<string>('');
   const navigate = useNavigate();
 

@@ -12,6 +12,7 @@ export class TotpStrategy extends PassportStrategy(Strategy, 'totp') {
     private readonly usersService: UsersService,
   ) {
     super({
+      authorizationURL: "",
       passReqToCallback: true,
     });
   }

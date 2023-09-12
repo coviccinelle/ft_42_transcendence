@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 
 function VerifyTwoFA() {
-  const [code, setCode] = useState<string>();
+  const [code, setCode] = useState<string>('');
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 

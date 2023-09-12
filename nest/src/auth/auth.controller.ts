@@ -110,10 +110,9 @@ export class AuthController {
       throw new ConflictException("No secret generated.");
 
     // * Validation with user
-    console.log(user);
     const isCodeValid = this.authService.isTwoFACodeValid(
-      body.twoFactorAuthenticationCode,
       user.twoFASecret,
+      body.twoFactorAuthenticationCode,
     );
     if (!isCodeValid)
       throw new UnauthorizedException('Wrong 2FA code');
@@ -135,8 +134,8 @@ export class AuthController {
 
     // * Confirmation to disable 2FA
     const isCodeValid = this.authService.isTwoFACodeValid(
-      body.twoFactorAuthenticationCode,
       user.twoFASecret,
+      body.twoFactorAuthenticationCode,
     );
     if (!isCodeValid)
       throw new UnauthorizedException('Wrong 2FA code');
