@@ -7,7 +7,7 @@ const prisma = new PrismaClient();
 export const roundsOfHashing = 10;
 
 async function main() {
-  const passwordUser1 = await hash("testpassword", roundsOfHashing);
+  const passwordUser1 = await hash('testpassword', roundsOfHashing);
 
   const user1 = await prisma.user.upsert({
     where: { id: 1 },
@@ -15,23 +15,62 @@ async function main() {
       password: passwordUser1,
     },
     create: {
-      email: "test@test.com",
-      firstName: "Test1",
-      lastName: "TestNom",
-      picture: "",
+      email: 'test@test.com',
+      firstName: 'Test1',
+      lastName: 'TestNom',
+      picture: '',
       password: passwordUser1,
       isTwoFAEnabled: true,
       twoFASecret: "oisjeoigjseoijgoijigoesoi",
       matchHistory: {
-        create: {
-          result: 'WIN',
-          otherPlayerId: 0,
-          otherPlayerName: 'Bob',
-          myScore: 5,
-          otherScore: 3,
-        }
-      }
-    }
+        createMany: {
+          data: [
+            {
+              result: 'WIN',
+              otherPlayerId: 0,
+              otherPlayerName: 'Bob',
+              myScore: 5,
+              otherScore: 3,
+            },
+            {
+              result: 'LOSS',
+              otherPlayerId: 0,
+              otherPlayerName: 'Bob',
+              myScore: 3,
+              otherScore: 5,
+            },
+            {
+              result: 'WIN',
+              otherPlayerId: 0,
+              otherPlayerName: 'Bob',
+              myScore: 5,
+              otherScore: 3,
+            },
+            {
+              result: 'LOSS',
+              otherPlayerId: 2,
+              otherPlayerName: 'Chancka',
+              myScore: 3,
+              otherScore: 5,
+            },
+            {
+              result: 'WIN',
+              otherPlayerId: 2,
+              otherPlayerName: 'Chancka',
+              myScore: 5,
+              otherScore: 3,
+            },
+            {
+              result: 'LOSS',
+              otherPlayerId: 2,
+              otherPlayerName: 'Chancka',
+              myScore: 3,
+              otherScore: 5,
+            },
+          ],
+        },
+      },
+    },
   });
 
   const generalChannel = await prisma.channel.upsert({
@@ -44,7 +83,7 @@ async function main() {
       isPasswordProtected: false,
     },
   });
-  
+
   const randomChannel = await prisma.channel.upsert({
     where: { id: 2 },
     update: {},

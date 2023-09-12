@@ -1,9 +1,8 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
-import UserProfile from './components/profile/UserProfile';
 import Game from './pages/Game';
 import Chat from './pages/Chat';
 import SignUp from './pages/SignUp';
@@ -17,6 +16,7 @@ import { io } from 'socket.io-client';
 import VerifyTwoFA from './pages/Verify-2fa';
 import EnableTwoFA from './pages/Enable-2fa';
 import DisableTwoFA from './pages/Disable-2fa';
+import { useLocation } from 'react-router-dom';
 
 export const getUser = async (): Promise<UserEntity | null> => {
   const { data } = await client.get('/users/me');
@@ -29,7 +29,9 @@ export async function handleLogout() {
 }
 
 function App() {
+  // set darkmode to true by default
   const [darkMode, setDarkMode] = useState(false);
+  // const location = useLocation();
   const [socket, setSocket] = useState(io({ autoConnect: false }));
 
   useEffect(() => {
@@ -45,12 +47,8 @@ function App() {
   }, []);
 
   useEffect(() => {
-    function handleConnection() {
-      console.log('Main socket connected');
-    }
-    function handleDisconnect() {
-      console.log('Main socket disconnected');
-    }
+    function handleConnection() {}
+    function handleDisconnect() {}
     socket.connect();
     socket.on('connect', handleConnection);
     socket.on('disconnect', handleDisconnect);
@@ -75,8 +73,29 @@ function App() {
     }
   };
 
+  // const showDarkModeButton = location.pathname === '/login' || location.pathname === '/';
+
   return (
     <div className="flex h-screen flex-col">
+      <div style={{ zIndex: 2 }}
+        className="top-4 fixed right-4 p-2 rounded-full cursor-pointer dark:bg-yellow-200 bg-gray-600" onClick={toggleDarkMode}>
+        <span
+          role="img"
+          aria-label="dark mode"
+          className="cursor-pointer"
+        >
+          {darkMode ? '🌻' : '🌙'}
+        </span>
+        <label htmlFor="darkModeToggle" className="cursor-pointer"/>
+        <input
+          type="checkbox"
+          id="darkModeToggle"
+          className="hidden"
+          onChange={toggleDarkMode}
+          checked={darkMode}
+        />
+      </div>
+  
       <BrowserRouter>
         <Routes>
           <Route
@@ -99,25 +118,25 @@ function App() {
           <Route
             path="/profile"
             element={
-              <Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+              <Profile />
             }
           />
           <Route
             path="/chat"
             element={
-              <Chat darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+              <Chat />
             }
           />
           <Route
             path="/chat/:id"
             element={
-              <Chat darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+              <Chat />
             }
           />
           <Route
             path="/game"
             element={
-              <Game darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+              <Game />
             }
           />
           <Route path="/signup" element={<SignUp />} />

@@ -28,6 +28,7 @@ import { UserIdDto } from './dto/user-id.dto';
 import { MatchResultEntity } from './entities/match-result.entity';
 import { UserStatsDto } from './dto/user-stats.dto';
 import { UserConnectionStatusDto } from './dto/user-connection-status.dto';
+import { UserIsBlockedDto } from './dto/user-is-blocked';
 
 @Controller('users')
 @ApiTags('users')
@@ -59,7 +60,7 @@ export class UsersController {
       console.log('REQUESTING user data for: ' + user.email);
       return new UserEntity(user);
     } else {
-      console.log('User not logged')
+      console.log('User not logged');
       return null;
       // throw new Error("USERS ERROR: No user found user/me (findMe())");
     }
@@ -81,6 +82,82 @@ export class UsersController {
     } else {
       throw new Error('USERS ERROR: No user found to update (updateMe())');
     }
+  }
+
+  @Post('block')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiCreatedResponse({ type: UserEntity })
+  async block(@Body() userIdDto: UserIdDto, @User() user: UserEntity) {
+    return await this.usersService.block(user, userIdDto.id);
+  }
+
+  @Post('unblock')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiCreatedResponse({ type: UserEntity })
+  async unblock(@Body() userIdDto: UserIdDto, @User() user: UserEntity) {
+    return await this.usersService.unblock(user, userIdDto.id);
+  }
+
+  @Get('friends')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserEntity, isArray: true })
+  async getFriends(@User() user: UserEntity) {
+    return await this.usersService.getFriends(user.id);
+  }
+
+  @Post('friends')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserEntity })
+  async addFriend(@Body() userIdDto: UserIdDto, @User() user: UserEntity) {
+    return await this.usersService.addFriend(user.id, userIdDto.id);
+  }
+
+  @Delete('friends')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserEntity })
+  async removeFriend(@Body() userIdDto: UserIdDto, @User() user: UserEntity) {
+    return await this.usersService.removeFriend(user.id, userIdDto.id);
+  }
+
+  @Get(':id/matchHistory')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: MatchResultEntity, isArray: true })
+  async getMatchHistory(@Param('id', ParseIntPipe) id: number) {
+    return await this.usersService.getMatchHistory(id);
+  }
+
+  @Get(':id/stats')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserStatsDto })
+  async getStats(@Param('id', ParseIntPipe) userId: number) {
+    return await this.usersService.getStats(userId);
+  }
+
+  @Get(':id/connectionStatus')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserConnectionStatusDto })
+  async getStatus(@Param('id', ParseIntPipe) userId: number) {
+    return await this.usersService.getStatus(userId);
+  }
+
+  @Get(':id/isBlocked')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserIsBlockedDto })
+  async getIsBlocked(
+    @Param('id', ParseIntPipe) blockedId: number,
+    @User() user: UserEntity,
+  ): Promise<UserIsBlockedDto> {
+    const isBlocked = await this.usersService.getIsBlocked(user.id, blockedId);
+    return({ isBlocked: isBlocked });
   }
 
   @Get(':id')
@@ -109,7 +186,10 @@ export class UsersController {
     @User() user: UserEntity,
   ) {
     if (user.id !== id) {
-      throw new HttpException('Can\'t modify another user', HttpStatus.FORBIDDEN);
+      throw new HttpException(
+        "Can't modify another user",
+        HttpStatus.FORBIDDEN,
+      );
     }
     return new UserEntity(await this.usersService.update(id, updateUserDto));
   }
@@ -120,87 +200,14 @@ export class UsersController {
   @ApiOkResponse({ type: UserEntity })
   async remove(
     @Param('id', ParseIntPipe) id: number,
-    @User() user: UserEntity
+    @User() user: UserEntity,
   ) {
     if (user.id !== id) {
-      throw new HttpException('Can\'t delete another user', HttpStatus.FORBIDDEN);
+      throw new HttpException(
+        "Can't delete another user",
+        HttpStatus.FORBIDDEN,
+      );
     }
     return new UserEntity(await this.usersService.remove(id));
-  }
-
-  @Post('block')
-  @UseGuards(AuthenticatedGuard)
-  @ApiBearerAuth()
-  @ApiCreatedResponse({ type: UserEntity })
-  async block(
-    @Body() userIdDto: UserIdDto,
-    @User() user: UserEntity,
-  ) {
-    return await this.usersService.block(user, userIdDto.id);
-  }
-
-  @Post('unblock')
-  @UseGuards(AuthenticatedGuard)
-  @ApiBearerAuth()
-  @ApiCreatedResponse({ type: UserEntity })
-  async unblock(
-    @Body() userIdDto: UserIdDto,
-    @User() user: UserEntity,
-  ) {
-    return await this.usersService.unblock(user, userIdDto.id);
-  }
-
-  @Get('friends')
-  @UseGuards(AuthenticatedGuard)
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: UserEntity, isArray: true })
-  async getFriends(@User() user: UserEntity) {
-    return await this.usersService.getFriends(user.id);
-  }
-
-  @Post('friends')
-  @UseGuards(AuthenticatedGuard)
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: UserEntity })
-  async addFriend(
-    @Body() userIdDto: UserIdDto,
-    @User() user: UserEntity,
-  ) {
-    return await this.usersService.addFriend(user.id, userIdDto.id);
-  }
-
-  @Delete('friends')
-  @UseGuards(AuthenticatedGuard)
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: UserEntity })
-  async removeFriend(
-    @Body() userIdDto: UserIdDto,
-    @User() user: UserEntity,
-  ) {
-    return await this.usersService.removeFriend(user.id, userIdDto.id);
-  }
-
-  @Get(':id/matchHistory')
-  @UseGuards(AuthenticatedGuard)
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: MatchResultEntity, isArray: true })
-  async getMatchHistory(@Param('id', ParseIntPipe) id: number) {
-    return await this.usersService.getMatchHistory(id);
-  }
-
-  @Get(':id/stats')
-  @UseGuards(AuthenticatedGuard)
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: UserStatsDto })
-  async getStats(@Param('id', ParseIntPipe) userId: number) {
-    return await this.usersService.getStats(userId);
-  }
-
-  @Get(':id/connectionStatus')
-  @UseGuards(AuthenticatedGuard)
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: UserConnectionStatusDto })
-  async getStatus(@Param('id', ParseIntPipe) userId: number) {
-    return await this.usersService.getStatus(userId);
   }
 }

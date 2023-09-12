@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import Navbar2 from '../components/NavBar2';
+import Navbar from '../components/Navbar';
 import Dashboard from '../components/profile/DashBoard';
 import SideProfile from '../components/profile/SideProfile';
 import apiUser from '../api/user';
 import { useNavigate, useParams } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
 
-function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
+function Profile() {
   const [userMe, setUserMe] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);
@@ -28,7 +28,7 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
 
     const fetchUser = async () => {
       const res = await apiUser.getUser(id.id as unknown as number);
-      if (res) {
+      if (res && res.id) {
         setUser(res);
       } else {
         navigate('/404');
@@ -57,7 +57,7 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
         <SideProfile user={user} userMe={userMe} />
         <div className="flex flex-col flex-1 w-full overflow-y-auto no-scrollbar">
           <div className="z-40 py-4 bg-gray-800">
-            <Navbar2 />
+            <Navbar />
           </div>
 
           {/* Main content */}

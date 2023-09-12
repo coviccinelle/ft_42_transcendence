@@ -228,5 +228,12 @@ export class UsersService {
         isTwoFAEnabled: false,
       },
     });
+
+  async getIsBlocked(userId: number, blockedId: number): Promise<boolean> {
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId },
+      include: { blocked: true },
+    });
+    return (!!user.blocked.find((blockedUser) => blockedUser.id === blockedId));
   }
 }

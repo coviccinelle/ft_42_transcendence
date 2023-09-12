@@ -33,7 +33,7 @@ function LoginTile({ user }: { user: any }): JSX.Element {
 }
 
 function Sticker(props: StickerProps): JSX.Element {
-  if (props.screenSize.width <= 768) return <></>;
+  if (props.screenSize.width <= 768 || props.screenSize.height <= 580) return <></>;
   const xPos =
     props.screenSize.width / 2 +
     props.screenSize.radius * Math.cos(props.angle) -
