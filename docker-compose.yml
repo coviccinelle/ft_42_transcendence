@@ -38,6 +38,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./nest:/usr/src/app
+      - ./nginx/avatars:/usr/src/app/avatars
     networks:
       - tr
     # healthcheck:
@@ -60,6 +61,7 @@ services:
     restart: unless-stopped
     volumes:
       - ./vite/dist:/var/www/dist
+      - ./nginx/avatars:/var/www/avatars
     ports:
       - 8080:8080
     networks:
