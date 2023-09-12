@@ -163,7 +163,9 @@ export class Game {
       } else {
         this.players[0].score = this.pointsToWin;
       }
-      await this.endGame();
+      if (this.players[0].id !== -1 && this.players[1].id !== -1) {
+        await this.endGame();
+      }
     }
     if (this.players[0].id === userId) {
       this.players[0].id = -1;
@@ -214,7 +216,7 @@ export class Game {
       this.ball.velocity.y *= -1;
     }
     if (this.ball.position.y + this.ball.size > this.courtSize.y) {
-      const overTravel = this.ball.position.y + this.ball.size - this.courtSize.x;
+      const overTravel = this.ball.position.y + this.ball.size - this.courtSize.y;
       this.ball.position.y -= 2 * overTravel;
       this.ball.velocity.y *= -1;
     }
@@ -237,7 +239,7 @@ export class Game {
     }
     if (this.ball.position.x + this.ball.size > this.courtSize.x) {
       if (this.ballIsCaught(1)) {
-        const overTravel = this.ball.position.x - this.ball.size - this.courtSize.x;
+        const overTravel = this.ball.position.x + this.ball.size - this.courtSize.x;
         this.ball.position.x -= 2 * overTravel;
         this.ball.velocity.x *= -1;
         if (this.isHard) this.makeHarder(0);
@@ -292,6 +294,8 @@ export class Game {
   }
 
   private ballIsCaught(playerNb: number): boolean {
+    //This method is very unreliable for high angles and slow update cycles
+    //Todo draw a line intercept to see if it crosses paddle
     const topEdgePaddle = this.players[playerNb].paddle.position
       - this.players[playerNb].paddle.size / 2;
     const bottomEdgePaddle = this.players[playerNb].paddle.position
