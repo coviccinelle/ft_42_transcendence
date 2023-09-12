@@ -79,7 +79,6 @@ function App() {
         <span
           role="img"
           aria-label="dark mode"
-          aria-label="dark"
           className="cursor-pointer"
         >
           {darkMode ? '🌻' : '🌙'}
