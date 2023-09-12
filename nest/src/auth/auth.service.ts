@@ -8,6 +8,8 @@ import { compare } from 'bcrypt';
 import { UsersService } from 'src/users/users.service';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
+import { authenticator } from 'otplib';
+import { toDataURL } from 'qrcode';
 
 @Injectable()
 export class AuthService {
@@ -55,5 +57,25 @@ export class AuthService {
     }
 
     return user;
+  }
+
+  async generateQrCodeDataURL(user: UserEntity) {
+    const secret = authenticator.generateSecret();
+    await this.usersService.setTwoFASecret(user.id, secret);
+
+    const otpAuthUrl = authenticator.keyuri(user.email, "Duckie Pong", secret);
+    // console.log(otpAuthUrl);
+
+    return toDataURL(otpAuthUrl);
+  }
+
+  async isTwoFACodeValid(userTwoFASecret: string, code: string) {
+    console.log(userTwoFASecret);
+    return (
+      authenticator.verify({
+        token: code,
+        secret: userTwoFASecret,
+      })
+    );
   }
 }

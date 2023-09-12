@@ -14,6 +14,9 @@ export class UserMemberEntity implements User {
   @ApiProperty()
   email: string;
 
+  @ApiProperty()
+  nickname: string;
+
   @ApiProperty({ required: false, nullable: true })
   firstName: string;
 
@@ -28,6 +31,12 @@ export class UserMemberEntity implements User {
 
   @ApiProperty()
   elo: number;
+
+  @ApiProperty()
+  isTwoFAEnabled: boolean;
+
+  @ApiProperty({ required: false, nullable: true })
+  twoFASecret: string;
 
   @Exclude()
   password: string;

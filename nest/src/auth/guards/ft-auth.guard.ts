@@ -6,8 +6,10 @@ export class FtAuthGuard extends AuthGuard('ft') {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const activate = (await super.canActivate(context)) as boolean;
     const request = await context.switchToHttp().getRequest();
-
-    await super.logIn(request);
+    
+    if (!request.user.isTwoFAEnabled) {
+      await super.logIn(request);
+    }
     return activate;
   }
 }

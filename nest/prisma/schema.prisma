@@ -13,12 +13,16 @@ datasource db {
 
 model User {
   id            Int     @id @default(autoincrement())
+  nickname      String  @unique @default(uuid())
   email         String  @unique
   password      String?
 
   firstName     String?
   lastName      String?
   picture       String?
+
+  isTwoFAEnabled  Boolean @default(false)
+  twoFASecret     String? @unique
 
   members       Member[]
 

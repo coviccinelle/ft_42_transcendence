@@ -1,8 +1,9 @@
 import axios, { AxiosError, AxiosResponse } from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { domainName } from '../main';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
+import apiUser from '../api/user';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -19,7 +20,12 @@ function Login() {
     axios
       .post(`http://${domainName}/api/auth/local/login`, formData)
       .then((res) => {
-        console.log('GOGOGOGOGOGOGO TO PROFILE');
+        console.log("POST OK");
+        if (res.data.isTwoFAEnabled) {
+          localStorage.removeItem('userEmail');
+          localStorage.setItem('userEmail', res.data.email);
+          return navigate('/login/verify-2fa');
+        }
         return navigate('/profile');
       })
       .catch((e) => {

@@ -11,8 +11,11 @@ import Registration from './pages/Registration';
 import Settings from './pages/Settings';
 import './styles/App.css';
 import { UserEntity, client } from './main';
-import TwoFa from './pages/2fa';
+import TwoFa from './pages/Enable-2fa';
 import { io } from 'socket.io-client';
+import VerifyTwoFA from './pages/Verify-2fa';
+import EnableTwoFA from './pages/Enable-2fa';
+import DisableTwoFA from './pages/Disable-2fa';
 import { useLocation } from 'react-router-dom';
 
 export const getUser = async (): Promise<UserEntity | null> => {
@@ -109,6 +112,9 @@ function App() {
               <Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
             }
           />
+          <Route path="/login/enable-2fa" element={<EnableTwoFA />} />
+          <Route path="/login/disable-2fa" element={<DisableTwoFA />} />
+          <Route path="/login/verify-2fa" element={<VerifyTwoFA />} />
           <Route
             path="/profile"
             element={

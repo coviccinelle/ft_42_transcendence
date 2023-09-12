@@ -18,7 +18,9 @@ function Toggle2FA() {
   }, []);
 
   function onChange() {
-    return navigate('/2fa');
+    if (enabled)
+      return navigate('/login/disable-2fa');
+    return navigate('/login/enable-2fa');
   }
 
   return (

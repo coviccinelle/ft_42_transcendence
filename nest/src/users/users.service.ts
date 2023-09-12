@@ -9,6 +9,7 @@ import { ChatService } from 'src/chat/chat.service';
 import { UserStatsDto } from './dto/user-stats.dto';
 import { UsersGateway } from './users.gateway';
 import { ConnectionState } from './dto/user-connection-status.dto';
+import { authenticator } from 'otplib';
 
 export const roundsOfHashing = 10;
 
@@ -28,6 +29,7 @@ export class UsersService {
       );
       createUserDto.password = hashedPassword;
     }
+
     const newUser = await this.prisma.user.create({ data: createUserDto });
     return newUser;
   }
@@ -200,6 +202,32 @@ export class UsersService {
     }
     return { status: ConnectionState.DISCONNECTED };
   }
+
+  async setTwoFASecret(userId: number, secret: string) {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        twoFASecret: secret,
+      },
+    });
+  }
+
+  async enableTwoFA(userId: number) {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        isTwoFAEnabled: true,
+      },
+    });
+  }
+
+  async disableTwoFA(userId: number) {
+    return await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        isTwoFAEnabled: false,
+      },
+    });
 
   async getIsBlocked(userId: number, blockedId: number): Promise<boolean> {
     const user = await this.prisma.user.findUnique({
