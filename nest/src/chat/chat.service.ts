@@ -119,7 +119,7 @@ export class ChatService {
     if (channel.password) {
       const passwordIsValid = await compare(joinChannelDto.password, channel.password);
       if (!joinChannelDto.password || !passwordIsValid) {
-        throw new HttpException('Incorrect password', HttpStatus.FORBIDDEN);
+        return { error: 'Incorrect password' };
       }
     }
     //Check if member already exists

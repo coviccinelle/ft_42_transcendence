@@ -19,6 +19,12 @@ function ChangeNameDialog(props: {
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.value.length > 20) {
+      return;
+    }
+    if (e.target.value.includes(' ')) {
+      return;
+    }
     setNameOfChannel(e.target.value);
   }
 

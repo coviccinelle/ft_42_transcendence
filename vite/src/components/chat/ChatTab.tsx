@@ -21,12 +21,13 @@ function ChatTab(props: {
       const name = users.find((user: any) => user.id !== userMe.id)?.firstName;
       setName(name);
     };
-    fetchUser();
+    if (props.type === 'DM') {
+      fetchUser();
+    }
   }, []);
 
   useEffect(() => {
     const fetchMessages = async () => {
-      console.log('props.id : ', props.id);
       const messages = await apiMessage.getMessages(props.id);
       setMessages(messages);
     };
@@ -58,15 +59,15 @@ function ChatTab(props: {
       <div className="sm:w-1/4">
         <img src={props.avatar} className="h-12 w-12 rounded-full" />
       </div>
-      <div className="sm:w-32">
+      <div className="sm:w-3/4 flex flex-col">
         <div className="text-lg font-semibold hidden sm:flex">
           <p className="overflow-hidden overflow-ellipsis hover:underline">
             {props.name ? props.name : name}
           </p>
         </div>
-        <div className="dark:text-gray-300 text-gray-800 hidden sm:flex">
+        <p className="dark:text-gray-300 text-gray-800 truncate">
           {displayMessageOrType()}
-        </div>
+        </p>
       </div>
     </div>
   );

@@ -80,11 +80,18 @@ function Channel(props: {
   }, [props.channelId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value.length > 1000) {
+      return;
+    }
     setMessage(e.target.value);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (message.length === 0) {
+      return;
+    }
+    console.log(message);
     apiMessage.sendMessage(message, props.channelId, props.socket);
     setMessage('');
   };
@@ -150,7 +157,7 @@ function Channel(props: {
       </div>
       <div
         id="messages"
-        className="flex-col mt-5 mx-3 flex-auto overflow-y-auto overflow-y-scroll no-scrollbar"
+        className="flex-col mt-5 mx-3 flex-auto overflow-y-auto overflow-y-scroll no-scrollbar overflow-x-hidden"
       >
         {props.messages.map((message: any) => {
           return (
