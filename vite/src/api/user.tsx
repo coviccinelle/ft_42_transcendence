@@ -176,6 +176,30 @@ const getFriends = async () => {
   }
 };
 
+const blockUser = async (userId: number) => {
+  try {
+    const response = await axios.post(`${API}/users/block`, {
+      id: userId,
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const unblockUser = async (userId: number) => {
+  try {
+    const response = await axios.delete(`${API}/users/block`, {
+      data: {
+        id: userId,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export default {
   getUsers,
   getUsersInChannel,
@@ -194,4 +218,6 @@ export default {
   addFriend,
   removeFriend,
   getFriends,
+  blockUser,
+  unblockUser,
 };
