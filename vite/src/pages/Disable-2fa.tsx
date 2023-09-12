@@ -36,8 +36,7 @@ function DisableTwoFA() {
   const handleTurnOffTwoFA = (event: any) => {
     event.preventDefault();
     const formData = {
-      user: userEmail,
-      totpToken: code,
+      code: code,
     };
 
     axios

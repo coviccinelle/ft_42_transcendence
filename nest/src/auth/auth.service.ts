@@ -69,8 +69,7 @@ export class AuthService {
     return toDataURL(otpAuthUrl);
   }
 
-  async isTwoFACodeValid(userTwoFASecret: string, code: string) {
-    console.log(userTwoFASecret);
+  isTwoFACodeValid(userTwoFASecret: string, code: string) {
     return (
       authenticator.verify({
         token: code,

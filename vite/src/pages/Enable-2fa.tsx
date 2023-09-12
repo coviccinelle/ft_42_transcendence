@@ -48,8 +48,7 @@ function EnableTwoFA() {
   const handleTurnOnTwoFA = (event: any) => {
     event.preventDefault();
     const formData = {
-      user: userEmail,
-      totpToken: code,
+      code: code,
     };
 
     axios

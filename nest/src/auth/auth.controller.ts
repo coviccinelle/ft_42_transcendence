@@ -26,6 +26,7 @@ import { UsersService } from 'src/users/users.service';
 import { TwoFAStrategy } from './strategies/twofa.strategy';
 import { AuthGuard } from '@nestjs/passport';
 import { TwoFAAuthGuard } from './guards/twofa-auth.guard';
+import { TotpCodeDto } from './dto/totpCode.dto';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -116,7 +117,7 @@ export class AuthController {
    */
   @Post('2fa/turn-on')
   @UseGuards(AuthenticatedGuard)
-  async turnOnTwoFA(@User() user, @Body() body) {
+  async turnOnTwoFA(@User() user, @Body() totpCodeDto: TotpCodeDto) {
     if (user.isTwoFAEnabled)
       throw new ConflictException("2FA is already enabled.");
     if (!user.twoFASecret)
@@ -125,8 +126,11 @@ export class AuthController {
     // * Validation with user
     const isCodeValid = this.authService.isTwoFACodeValid(
       user.twoFASecret,
-      body.twoFactorAuthenticationCode,
+      totpCodeDto.code,
     );
+    console.log("TURN ON 2FA CODE VALIDITY");
+    console.log(isCodeValid);
+    console.log(totpCodeDto);
     if (!isCodeValid)
       throw new UnauthorizedException('Wrong 2FA code');
 
@@ -141,14 +145,14 @@ export class AuthController {
    */
   @Post('2fa/turn-off')
   @UseGuards(AuthenticatedGuard)
-  async turnOffTwoFA(@User() user, @Body() body) {
+  async turnOffTwoFA(@User() user, @Body() totpCodeDto: TotpCodeDto) {
     if (!user.isTwoFAEnabled)
       throw new ConflictException("2FA is already disabled.");
 
     // * Confirmation to disable 2FA
     const isCodeValid = this.authService.isTwoFACodeValid(
       user.twoFASecret,
-      body.twoFactorAuthenticationCode,
+      totpCodeDto.code,
     );
     if (!isCodeValid)
       throw new UnauthorizedException('Wrong 2FA code');

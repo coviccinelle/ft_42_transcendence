@@ -33,9 +33,9 @@ export class TwoFAStrategy extends PassportStrategy(Strategy, 'twofa') {
 
     const isValid = this.authService.isTwoFACodeValid(user.twoFASecret, code);
 
-    if (!isValid)
+    if (isValid)
+      return done(null, user);
+    else
       throw new UnauthorizedException('TOTP code is invalid');
-
-    return done(null, user);
   }
 }

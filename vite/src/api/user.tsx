@@ -223,7 +223,7 @@ export default {
   getUsersInChannel,
   getMe,
   getUser,
-  updateMe,
+  // updateMe,
   muteUser,
   kickUser,
   banUser,
