@@ -29,7 +29,7 @@ export class TotpStrategy extends PassportStrategy(Strategy, 'totp') {
     if (!user)
       return (done(null, false, { message: "No valid user provided" }));
 
-    const isValid = this.authService.isTwoFACodeValid(user, token);
+    const isValid = this.authService.isTwoFACodeValid(user.twoFASecret, token);
 
     if (isValid)
       return (done(null, user));

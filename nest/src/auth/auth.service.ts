@@ -69,11 +69,12 @@ export class AuthService {
     return toDataURL(otpAuthUrl);
   }
 
-  async isTwoFACodeValid(user: UserEntity, code: string) {
+  async isTwoFACodeValid(userTwoFASecret: string, code: string) {
+    console.log(userTwoFASecret);
     return (
       authenticator.verify({
         token: code,
-        secret: user.twoFASecret,
+        secret: userTwoFASecret,
       })
     );
   }

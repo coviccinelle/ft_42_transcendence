@@ -7,7 +7,7 @@ import axios from 'axios';
 import '../styles/Login.css';
 
 function EnableTwoFA() {
-  const [code, setCode] = useState<string>();
+  const [code, setCode] = useState<string>('');
   const [image, setImage] = useState<string>('');
   const [userEmail, setUserEmail] = useState<string>('');
   const navigate = useNavigate();
