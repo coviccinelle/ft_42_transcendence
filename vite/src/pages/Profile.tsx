@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Navbar2 from '../components/NavBar2';
+import Navbar from '../components/Navbar';
 import Dashboard from '../components/profile/DashBoard';
 import SideProfile from '../components/profile/SideProfile';
 import apiUser from '../api/user';
@@ -57,7 +57,7 @@ function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
         <SideProfile user={user} userMe={userMe} />
         <div className="flex flex-col flex-1 w-full overflow-y-auto no-scrollbar">
           <div className="z-40 py-4 bg-gray-800">
-            <Navbar2 />
+            <Navbar />
           </div>
 
           {/* Main content */}
