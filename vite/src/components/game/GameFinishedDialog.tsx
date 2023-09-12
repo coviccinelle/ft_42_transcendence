@@ -1,11 +1,13 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function GameFinishedDialog(props: {
   gameFinishedDialog: any;
   setGameFinishedDialog: any;
   score: string;
 }) {
+  const navigate = useNavigate();
   function closeDialog() {
     props.setGameFinishedDialog(false);
   }
@@ -47,12 +49,20 @@ function GameFinishedDialog(props: {
             >
               <div className="inline-block max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform dark:bg-gray-800 bg-rose-100 shadow-xl rounded-2xl">
                 {props.score === 'WIN' ? (
-                  <Dialog.Title
-                    as="h3"
-                    className="text-lg font-medium leading-6 dark:text-gray-200 text-gray-900 text-center"
-                  >
-                    You won
-                  </Dialog.Title>
+                  <div className="flex flex-col items-center">
+                    <Dialog.Title
+                      as="h3"
+                      className="text-lg font-medium leading-6 dark:text-gray-200 text-gray-900 text-center"
+                    >
+                      You won
+                    </Dialog.Title>
+                    <button
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                      onClick={() => navigate('/game')}
+                    >
+                      Play again
+                    </button>
+                  </div>
                 ) : (
                   <div className="flex flex-col items-center">
                     <Dialog.Title
@@ -63,7 +73,7 @@ function GameFinishedDialog(props: {
                     </Dialog.Title>
                     <button
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                      onClick={() => window.location.reload()}
+                      onClick={() => navigate('/game')}
                     >
                       Play again
                     </button>

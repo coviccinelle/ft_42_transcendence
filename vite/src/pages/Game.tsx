@@ -64,28 +64,13 @@ function Game(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
   let id = useParams();
 
   useEffect(() => {
-    if (isLoading) {
-      const fetchUser = async () => {
-        try {
-          const user = await apiUser.getMe();
-          if (user) {
-            setUserMe(user);
-            setTimeout(() => {
-              setIsLoading(false);
-            }, 500);
-          } else {
-            navigate('/login');
-          }
-        } catch (error) {
-          console.error(
-            "Erreur lors de la récupération de l'utilisateur :",
-            error,
-          );
-        }
-      };
-      fetchUser();
-    }
-  }, [isLoading]);
+    const getUser = async () => {
+      const user = await apiUser.getMe();
+      setUserMe(user);
+      setIsLoading(false);
+    };
+    getUser();
+  }, []);
 
   useEffect(() => {
     function handleConnection() {
@@ -122,14 +107,15 @@ function Game(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
       setGameInfos(gameInfo);
       //Todo: update canvas with new info
     }
-    function handleWinner(winnerId: number) {
+    async function handleWinner(winnerId: number) {
       console.log(`Winner: ${winnerId}`);
-      setGameFinishedDialog(true);
-      if (userMe.id === winnerId) {
+      const res = await apiUser.getMe();
+      if (res.id === winnerId) {
         setWin(true);
       } else {
         setWin(false);
       }
+      setGameFinishedDialog(true);
       //Todo: Display loss or win
     }
     function handleException(error: WsException) {
