@@ -3,6 +3,7 @@ import apiTwoFA from '../api/2fa';
 import apiUser from '../api/user';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { domainName } from '../main';
 
 function DisableTwoFA() {
   const [code, setCode] = useState<string>('');
@@ -16,10 +17,10 @@ function DisableTwoFA() {
 
         if (user) {
           if (!user.isTwoFAEnabled)
-            return navigate('/enable-2fa');
+            return navigate('/registration');
           setUserEmail(user.email);
         } else {
-          navigate('/login');
+          navigate('/registration');
         }
       } catch (error) {
         console.error(
@@ -39,7 +40,8 @@ function DisableTwoFA() {
       totpToken: code,
     };
 
-    axios.post('/api/auth/2fa/turn-off', formData)
+    axios
+    .post(`http://${domainName}/api/auth/2fa/turn-off`, formData)
       .then((res) => {
         console.log(res);
         return navigate('/registration');

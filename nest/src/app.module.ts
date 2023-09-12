@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { ChatModule } from './chat/chat.module';
+import { TwoFAStrategy } from './auth/strategies/twofa.strategy';
+import { AuthService } from './auth/auth.service';
 
 @Module({
   imports: [

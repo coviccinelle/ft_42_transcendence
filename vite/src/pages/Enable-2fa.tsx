@@ -5,6 +5,7 @@ import apiUser from '../api/user';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/Login.css';
+import { domainName } from '../main';
 
 function EnableTwoFA() {
   const [code, setCode] = useState<string>('');
@@ -19,10 +20,10 @@ function EnableTwoFA() {
 
         if (user) {
           if (user.isTwoFAEnabled)
-            return navigate('/login/disable-2fa');
+            return navigate('/registration');
           setUserEmail(user.email);
         } else {
-          navigate('/login');
+          navigate('/registration');
         }
       } catch (error) {
         console.error(
@@ -51,7 +52,8 @@ function EnableTwoFA() {
       totpToken: code,
     };
 
-    axios.post('/api/auth/2fa/turn-on', formData)
+    axios
+      .post(`http://${domainName}/api/auth/2fa/turn-on`, formData)
       .then((res) => {
         console.log(res);
         return navigate('/registration');

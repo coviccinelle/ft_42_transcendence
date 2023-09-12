@@ -23,7 +23,9 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { AuthenticatedGuard } from './guards/authenticated.guard';
 import { User } from 'src/users/users.decorator';
 import { UsersService } from 'src/users/users.service';
-import { TotpAuthGuard } from './guards/totp-auth.guard';
+import { TwoFAStrategy } from './strategies/twofa.strategy';
+import { AuthGuard } from '@nestjs/passport';
+import { TwoFAAuthGuard } from './guards/twofa-auth.guard';
 
 @Controller('auth')
 @ApiTags('auth')
@@ -35,7 +37,14 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   login(@Request() req) {
     // TODO: add delay to prevent brute force (https://docs.nestjs.com/security/rate-limiting)
-    return req.user;
+    const user = req.user;
+
+    if (user.isTwoFAEnabled) {
+      req.session.needTwoFA = true;
+    } else {
+      req.session.needTwoFA = false;
+    }
+    return user;
   }
 
   @Post('local/signup')
@@ -55,8 +64,10 @@ export class AuthController {
     const user = req.user;
 
     if (user.isTwoFAEnabled) {
+      req.session.needTwoFA = true;
       return response.redirect('/login/verify-2fa?userEmail=' + user.email);
     }
+    req.session.needTwoFA = false;
     return response.redirect('/');
   }
 
@@ -70,16 +81,18 @@ export class AuthController {
     const user = req.user;
 
     if (user.isTwoFAEnabled) {
+      req.session.needTwoFA = true;
       return response.redirect('/login/verify-2fa?userEmail=' + user.email);
     }
+    req.session.needTwoFA = false;
     return response.redirect('/');
   }
 
   @Post('2fa/login')
-  @UseGuards(TotpAuthGuard)
-  loginTotp(@Req() req) {
-    console.log("LOGIN TOTP DONE?");
-    console.log(req);
+  @UseGuards(TwoFAAuthGuard)
+  loginTwoFA(@Request() req) {
+    req.session.needTwoFA = false;
+    return req.user;
   }
 
   /**

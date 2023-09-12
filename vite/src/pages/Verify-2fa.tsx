@@ -21,8 +21,8 @@ function VerifyTwoFA() {
   const handleLoginTotp = (event: any) => {
     event.preventDefault();
     const formData = {
-      user: localStorage.getItem('userEmail'),
-      totpToken: code,
+      email: localStorage.getItem('userEmail'),
+      code: code,
     };
 
     axios.post('/api/auth/2fa/login', formData)
