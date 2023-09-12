@@ -10,7 +10,7 @@ import LeaveChannelDialog from '../components/chat/dialog/LeaveChannelDialog';
 import { useNavigate, useParams } from 'react-router-dom';
 import apiUser from '../api/user';
 
-function ChatPage(props: { darkMode: boolean; toggleDarkMode: any }) {
+function ChatPage() {
   const [channels, setChannels] = useState<any>([]);
   const [currentChannel, setCurrentChannel] = useState(0);
   const [messages, setMessages] = useState<any>([]);

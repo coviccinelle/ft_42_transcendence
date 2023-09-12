@@ -6,7 +6,7 @@ import apiUser from '../api/user';
 import { useNavigate, useParams } from 'react-router-dom';
 import LoadingScreen from '../components/LoadingScreen';
 
-function Profile(props: { darkMode: boolean; toggleDarkMode: any }) {
+function Profile() {
   const [userMe, setUserMe] = useState<any>(null);
   const [user, setUser] = useState<any>(null);
   const [dataLoaded, setDataLoaded] = useState<boolean>(false);

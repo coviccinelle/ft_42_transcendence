@@ -1,5 +1,5 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Profile from './pages/Profile';
@@ -25,7 +25,8 @@ export async function handleLogout() {
 }
 
 function App() {
-  const [darkMode, setDarkMode] = useState(false);
+  // set darkmode to true by default
+  const [darkMode, setDarkMode] = useState(true);
   const [socket, setSocket] = useState(io({ autoConnect: false }));
 
   useEffect(() => {
@@ -69,6 +70,26 @@ function App() {
 
   return (
     <div className="flex h-screen flex-col">
+      <div style={{ zIndex: 9999}}
+        className="top-4 fixed right-4 p-2 rounded-full cursor-pointer dark:bg-yellow-200 bg-gray-600" onClick={toggleDarkMode}>
+        <span
+          role="img"
+          aria-label="dark mode"
+          aria-label="dark"
+          className="cursor-pointer"
+        >
+          {darkMode ? '🌻' : '🌙'}
+        </span>
+        <label htmlFor="darkModeToggle" className="cursor-pointer"/>
+        <input
+          type="checkbox"
+          id="darkModeToggle"
+          className="hidden"
+          onChange={toggleDarkMode}
+          checked={darkMode}
+        />
+      </div>
+  
       <BrowserRouter>
         <Routes>
           <Route
@@ -88,25 +109,25 @@ function App() {
           <Route
             path="/profile"
             element={
-              <Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+              <Profile />
             }
           />
           <Route
             path="/chat"
             element={
-              <Chat darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+              <Chat />
             }
           />
           <Route
             path="/chat/:id"
             element={
-              <Chat darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+              <Chat />
             }
           />
           <Route
             path="/game"
             element={
-              <Game darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+              <Game />
             }
           />
           <Route path="/signup" element={<SignUp />} />

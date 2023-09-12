@@ -6,7 +6,7 @@ import { GameZone } from '../components/game/GameZone';
 import Navbar2 from '../components/NavBar2';
 import apiUser from '../api/user';
 
-function Game(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
+function Game(): JSX.Element {
   const [score, setScore] = useState<number[]>([0, 0]);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
