@@ -44,27 +44,27 @@ export class GameManager {
   }
 
   public join(uuid: string, userId: number, userName: string) {
-    if (!this.games[uuid]) {
+    if (!this.games.get(uuid)) {
       throw new WsException("Game doesn't exist");
     }
     if (
-      this.games[uuid].nbPlayers === 2 ||
-      this.games[uuid].getStatus !== GameStatus.WAITING
+      this.games.get(uuid).getNbPlayers() === 2 ||
+      this.games.get(uuid).getStatus() !== GameStatus.WAITING
     ) {
       throw new WsException('Game is full');
     }
-    this.games[uuid].addPlayer(userName, userId);
+    this.games.get(uuid).addPlayer(userName, userId);
   }
 
   public playerInput(uuid: string, userId: number, direction: Direction) {
-    if (this.games[uuid].getStatus() === GameStatus.PLAYING) {
-      this.games[uuid].playerInput(userId, direction);
+    if (this.games.get(uuid).getStatus() === GameStatus.PLAYING) {
+      this.games.get(uuid).playerInput(userId, direction);
     }
   }
 
   public playerDisconnect(uuid: string, userId: number) {
     this.games.get(uuid).removePlayer(userId);
-    if (this.games[uuid].getNbPlayers === 0) {
+    if (this.games.get(uuid).getNbPlayers() === 0) {
       this.games.delete(uuid);
     }
   }
