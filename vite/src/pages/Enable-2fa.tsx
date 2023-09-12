@@ -20,10 +20,10 @@ function EnableTwoFA() {
 
         if (user) {
           if (user.isTwoFAEnabled)
-            return navigate('/registration');
+            return navigate('/settings');
           setUserEmail(user.email);
         } else {
-          navigate('/registration');
+          navigate('/settings');
         }
       } catch (error) {
         console.error(
@@ -56,7 +56,7 @@ function EnableTwoFA() {
       .post(`http://${domainName}/api/auth/2fa/turn-on`, formData)
       .then((res) => {
         console.log(res);
-        return navigate('/registration');
+        return navigate('/settings');
       })
       .catch((res) => {
         console.log(res);

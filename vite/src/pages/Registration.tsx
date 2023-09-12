@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import apiUser from '../api/user';
 import { useNavigate } from 'react-router-dom';
-import Toggle2FA from '../components/profile/Toggle2FA';
 
 function Registration() {
   const [img, setImage] = useState('');
@@ -96,10 +95,6 @@ function Registration() {
           >
             Register
           </button>
-          <div className="flex flex-raw justify-self-center w-full">
-            <p className="flex text-white font-bold mr-2">2FA</p>
-            <Toggle2FA />
-          </div>
         </form>
       </div>
     </div>

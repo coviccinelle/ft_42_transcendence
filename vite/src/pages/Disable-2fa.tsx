@@ -17,10 +17,10 @@ function DisableTwoFA() {
 
         if (user) {
           if (!user.isTwoFAEnabled)
-            return navigate('/registration');
+            return navigate('/settings');
           setUserEmail(user.email);
         } else {
-          navigate('/registration');
+          navigate('/settings');
         }
       } catch (error) {
         console.error(
@@ -44,7 +44,7 @@ function DisableTwoFA() {
     .post(`http://${domainName}/api/auth/2fa/turn-off`, formData)
       .then((res) => {
         console.log(res);
-        return navigate('/registration');
+        return navigate('/settings');
       })
       .catch((res) => {
         console.log(res);

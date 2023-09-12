@@ -38,6 +38,24 @@ const getUsersInChannel = async (channelId: number) => {
   }
 };
 
+// interface UpdateUserDto {
+//   email: string;
+//   nickname: string;
+//   firstName: string;
+//   lastName: string;
+//   picture: string;
+//   password: string;
+// }
+
+// const updateMe = async (updateUserDto: UpdateUserDto) => {
+//   try {
+//     const response = await axios.patch(`${API}/users/me`, updateUserDto);
+//     return response.data;
+//   } catch (error) {
+//     console.error(error);
+//   }
+// };
+
 const muteUser = async (channelId: number, userId: number, time: number) => {
   try {
     const response = await axios.post(`${API}/chat/${channelId}/mute`, {
@@ -205,6 +223,7 @@ export default {
   getUsersInChannel,
   getMe,
   getUser,
+  updateMe,
   muteUser,
   kickUser,
   banUser,

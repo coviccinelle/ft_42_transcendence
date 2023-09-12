@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import apiUser from "../api/user";
 import { useNavigate } from 'react-router-dom';
+import Toggle2FA from "../components/profile/Toggle2FA";
 
 function Settings() {
     const [img, setImage] = useState('');
@@ -15,7 +16,7 @@ function Settings() {
                     setImage('../assets/duckie_bg_rm/sticker1.png');
                 } else {
                     setImage(user.picture);
-                    setNickname(user.firstName);
+                    setNickname(user.nickname);
                 }
             } else {
                 navigate('/login');
@@ -80,6 +81,10 @@ function Settings() {
                             />
                         </div>
 
+                        <div className="flex flex-raw justify-self-center w-full">
+                            <p className="flex text-white font-bold mr-2">2FA</p>
+                            <Toggle2FA />
+                        </div>
                     </div>
 
                     <button className="bg-gray-300 hover:bg-amber-400 text-amber-600 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-3xl"

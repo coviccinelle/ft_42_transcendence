@@ -3,13 +3,12 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { hash } from 'bcrypt';
-import { connect } from 'http2';
 import { UserEntity } from './entities/user.entity';
 import { ChatService } from 'src/chat/chat.service';
 import { UserStatsDto } from './dto/user-stats.dto';
 import { UsersGateway } from './users.gateway';
 import { ConnectionState } from './dto/user-connection-status.dto';
-import { authenticator } from 'otplib';
+import { uniqueNamesGenerator, Config, adjectives, colors, animals } from 'unique-names-generator';
 
 export const roundsOfHashing = 10;
 
@@ -29,6 +28,19 @@ export class UsersService {
       );
       createUserDto.password = hashedPassword;
     }
+    // if (!createUserDto.nickname || createUserDto.nickname.length === 0) {
+    //   let nickname: string = '';
+    //   const customConfig: Config = {
+    //     dictionaries: [adjectives, colors],
+    //     separator: '-',
+    //     length: 3,
+    //   };
+
+    //   do {
+    //     nickname = uniqueNamesGenerator(customConfig) + "-" + Math.floor(9999 * Math.random()).toString();
+    //   } while (!this.findOneByNickname(nickname));
+    //   createUserDto.nickname = nickname;
+    // }
 
     const newUser = await this.prisma.user.create({ data: createUserDto });
     return newUser;
@@ -44,6 +56,10 @@ export class UsersService {
 
   findOneByEmail(email: string) {
     return this.prisma.user.findUnique({ where: { email } });
+  }
+
+  findOneByNickname(nickname: string) {
+    return this.prisma.user.findUnique({ where: { nickname } });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto) {
@@ -228,6 +244,7 @@ export class UsersService {
         isTwoFAEnabled: false,
       },
     });
+  }
 
   async getIsBlocked(userId: number, blockedId: number): Promise<boolean> {
     const user = await this.prisma.user.findUnique({
