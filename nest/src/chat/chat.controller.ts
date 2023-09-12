@@ -34,6 +34,7 @@ import { JoinChannelDto } from './dto/join-channel.dto';
 import { UserMemberEntity } from './entities/user-member.entity';
 import { MuteUserDto } from './dto/mute-user.dto';
 import { UpdateChannelPasswordDto } from './dto/update-channel-password.dto';
+import { Channel } from '@prisma/client';
 
 @Controller('chat')
 @ApiTags('chat')
@@ -71,7 +72,12 @@ export class ChatController {
     @User() user: UserEntity,
     @Body() joinChannelDto: JoinChannelDto,
   ) {
-    return new ChannelEntity (await this.chatService.joinChannel(joinChannelDto, user));
+    let res: any;
+    res = await this.chatService.joinChannel(joinChannelDto, user);
+    if (res.error) {
+      return res;
+    }
+    return new ChannelEntity(res);
   }
 
   @Get(':id/leave')
