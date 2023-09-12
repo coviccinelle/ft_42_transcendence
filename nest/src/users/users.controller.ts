@@ -28,6 +28,7 @@ import { UserIdDto } from './dto/user-id.dto';
 import { MatchResultEntity } from './entities/match-result.entity';
 import { UserStatsDto } from './dto/user-stats.dto';
 import { UserConnectionStatusDto } from './dto/user-connection-status.dto';
+import { UserIsBlockedDto } from './dto/user-is-blocked';
 
 @Controller('users')
 @ApiTags('users')
@@ -145,6 +146,18 @@ export class UsersController {
   @ApiOkResponse({ type: UserConnectionStatusDto })
   async getStatus(@Param('id', ParseIntPipe) userId: number) {
     return await this.usersService.getStatus(userId);
+  }
+
+  @Get(':id/isBlocked')
+  @UseGuards(AuthenticatedGuard)
+  @ApiBearerAuth()
+  @ApiOkResponse({ type: UserIsBlockedDto })
+  async getIsBlocked(
+    @Param('id', ParseIntPipe) blockedId: number,
+    @User() user: UserEntity,
+  ): Promise<UserIsBlockedDto> {
+    const isBlocked = await this.usersService.getIsBlocked(user.id, blockedId);
+    return({ isBlocked: isBlocked });
   }
 
   @Get(':id')
