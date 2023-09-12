@@ -9,6 +9,7 @@ import { PassportModule } from '@nestjs/passport';
 import { ChatModule } from './chat/chat.module';
 import { TwoFAStrategy } from './auth/strategies/twofa.strategy';
 import { AuthService } from './auth/auth.service';
+import { GameModule } from './game/game.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { AuthService } from './auth/auth.service';
     AuthModule,
     PassportModule.register({ session: true }),
     ChatModule,
+    GameModule,
   ],
   controllers: [AppController],
   providers: [AppService],

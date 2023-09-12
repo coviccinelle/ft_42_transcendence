@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import paddle from '../../utils/game/paddle';
 import ball from '../../utils/game/ball';
-import GameFinishedDialog from './GameFinishedDialog';
+import { Direction } from '../../utils/game/types';
 
 interface Size {
   width: number;
@@ -9,8 +9,8 @@ interface Size {
 }
 
 export const GameZone = (props: {
-  score: number[];
-  setScore: React.Dispatch<React.SetStateAction<number[]>>;
+  sendInput: any;
+  gameInfos: any;
 }): JSX.Element => {
   const [windowSize, setWindowSize] = useState<Size>({
     width: window.innerWidth,
@@ -33,10 +33,7 @@ export const GameZone = (props: {
     windowSize.width / 2,
     windowSize.height / 2,
   ]);
-  const [ballSpeedX, setBallSpeedX] = useState<number>(-4);
-  const [ballSpeedY, setBallSpeedY] = useState<number>(4);
   const canvas = useRef<HTMLCanvasElement | null>(null);
-  const [game, setGame] = useState<any>(null);
 
   function updateGameSize() {
     setWindowSize({
@@ -44,16 +41,29 @@ export const GameZone = (props: {
       height: window.innerHeight,
     });
     setPaddleSize({
+      height:
+        (windowSize.height * props.gameInfos.players[0].paddle.size) /
+        props.gameInfos.courtSize.y,
       width: window.innerWidth / 100,
-      height: window.innerHeight / 10,
     });
-    setMyPaddlePos([10, windowSize.height / 2 - paddleSize.height / 2]);
-    setPlayerTwoPaddlePos([
-      windowSize.width - 10 - paddleSize.width,
-      windowSize.height / 2 - paddleSize.height / 2,
+    setMyPaddlePos([
+      -paddleSize.width / 2,
+      props.gameInfos.players[0].paddle.position - paddleSize.height / 2,
     ]);
-    setBallWidth(window.innerWidth / 100);
-    setBallPos([windowSize.width / 2, windowSize.height / 2]);
+    setPlayerTwoPaddlePos([
+      windowSize.width + paddleSize.width / 2,
+      props.gameInfos.players[1].paddle.position - paddleSize.height / 2,
+    ]);
+    setBallWidth(
+      (window.innerWidth * props.gameInfos.ball.size) /
+        props.gameInfos.courtSize.x,
+    );
+    setBallPos([
+      (windowSize.width * props.gameInfos.ball.position.x) /
+        props.gameInfos.courtSize.x,
+      (windowSize.height * props.gameInfos.ball.position.y) /
+        props.gameInfos.courtSize.y,
+    ]);
   }
 
   function draw(ctx?: CanvasRenderingContext2D | null) {
@@ -68,7 +78,7 @@ export const GameZone = (props: {
       );
       paddle(
         ctx,
-        playerTwoPaddlePos[0],
+        playerTwoPaddlePos[0] - paddleSize.width,
         playerTwoPaddlePos[1],
         paddleSize.width,
         paddleSize.height,
@@ -77,93 +87,31 @@ export const GameZone = (props: {
     }
   }
 
-  const [gameFinishedDialog, setGameFinishedDialog] = useState<boolean>(false);
-
-  function stopGame() {
-    clearTimeout(game);
-    setBallSpeedX(0);
-    setBallSpeedY(0);
-
-    setGame(0);
-  }
-
-  function gameFinished() {
-    if (props.score[0] === 1 || props.score[1] === 1) {
-      stopGame();
-      setGameFinishedDialog(true);
-    }
-  }
-
-  useEffect(() => {
-    gameFinished();
-  }, [props.score]);
-
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      let newMyPaddlePos = [...myPaddlePos];
-      if (e.key === 'ArrowUp' && myPaddlePos[1] > 0 + 10) {
-        newMyPaddlePos[1] -= 10;
+      if (e.key === 'ArrowDown') {
+        props.sendInput(Direction.DOWN);
       }
-      if (
-        e.key === 'ArrowDown' &&
-        myPaddlePos[1] < windowSize.height - paddleSize.height - 10
-      ) {
-        newMyPaddlePos[1] += 10;
+      if (e.key === 'ArrowUp') {
+        props.sendInput(Direction.UP);
       }
-      setMyPaddlePos(newMyPaddlePos);
-      let newPlayerTwoPaddlePos = [...playerTwoPaddlePos];
-      if (e.key === 'w' && playerTwoPaddlePos[1] > 0 + 10) {
-        newPlayerTwoPaddlePos[1] -= 10;
-      }
-      if (
-        e.key === 's' &&
-        playerTwoPaddlePos[1] < windowSize.height - paddleSize.height - 10
-      ) {
-        newPlayerTwoPaddlePos[1] += 10;
-      }
-      setPlayerTwoPaddlePos(newPlayerTwoPaddlePos);
     };
+    const handleKeyUp = () => {
+      props.sendInput(Direction.NONE);
+    };
+    window.addEventListener('keyup', handleKeyUp);
     window.addEventListener('keydown', handleKeyDown);
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('keyup', handleKeyUp);
     };
   }, [myPaddlePos, windowSize, playerTwoPaddlePos]);
 
   useEffect(() => {
-    const updateBallPosition = () => {
-      const newBallPosX = ballPos[0] + ballSpeedX;
-      const newBallPosY = ballPos[1] + ballSpeedY;
-
-      if (newBallPosY <= 0 || newBallPosY >= windowSize.height - ballWidth) {
-        setBallSpeedY(ballSpeedY * -1);
-      }
-      if (
-        (newBallPosX <= myPaddlePos[0] + paddleSize.width + 10 &&
-          newBallPosY >= myPaddlePos[1] &&
-          newBallPosY <= myPaddlePos[1] + paddleSize.height) ||
-        (newBallPosX >= playerTwoPaddlePos[0] - paddleSize.width &&
-          newBallPosY >= playerTwoPaddlePos[1] &&
-          newBallPosY <= playerTwoPaddlePos[1] + paddleSize.height)
-      ) {
-        setBallSpeedX(ballSpeedX * -1);
-      }
-      setBallPos([newBallPosX, newBallPosY]);
-      if (newBallPosX <= 0) {
-        props.setScore([props.score[0], props.score[1] + 1]);
-        setBallPos([windowSize.width / 2, windowSize.height / 2]);
-        setBallSpeedX(ballSpeedX * -1);
-      }
-      if (newBallPosX >= windowSize.width - ballWidth) {
-        props.setScore([props.score[0] + 1, props.score[1]]);
-        setBallPos([windowSize.width / 2, windowSize.height / 2]);
-        setBallSpeedX(ballSpeedX * -1);
-      }
-    };
-    setGame(setTimeout(updateBallPosition, 1000 / 120));
-    return () => {
-      clearTimeout(game);
-    };
-  }, [ballPos, ballSpeedX, ballSpeedY, windowSize]);
+    if (props.gameInfos) {
+      updateGameSize();
+    }
+  }, [props.gameInfos]);
 
   useEffect(() => {
     if (canvas.current) {
@@ -178,21 +126,14 @@ export const GameZone = (props: {
     };
   }, [windowSize, myPaddlePos, playerTwoPaddlePos, ballPos]);
   return (
-    <>
-      <div className="flex max-w-[95%] max-h-[75%] justify-center items-center">
-        <canvas
-          id="gamezone"
-          className="flex bg-gray-500 w-full h-full aspect-[16/9]"
-          ref={canvas}
-          width={windowSize.width}
-          height={windowSize.height}
-        />
-        <GameFinishedDialog
-          gameFinishedDialog={gameFinishedDialog}
-          setGameFinishedDialog={setGameFinishedDialog}
-          score={props.score}
-        />
-      </div>
-    </>
+    <div className="flex max-w-[95%] max-h-[75%] justify-center items-center">
+      <canvas
+        id="gamezone"
+        className="flex bg-gray-500 w-full h-full aspect-[16/9] mt-6"
+        ref={canvas}
+        width={windowSize.width}
+        height={windowSize.height}
+      />
+    </div>
   );
 };

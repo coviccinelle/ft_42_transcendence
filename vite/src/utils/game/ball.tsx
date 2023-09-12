@@ -6,9 +6,8 @@ function ball(
 ) {
   if (ctx != null) {
     ctx.fillStyle = 'white';
-    // fill for ball so round not rect
     ctx.beginPath();
-    ctx.arc(x, y, ballWidth, 0, Math.PI * 2);
+    ctx.rect(x, y, ballWidth, ballWidth);
     ctx.fill();
   }
 }

@@ -139,6 +139,12 @@ function App() {
               <Game />
             }
           />
+          <Route
+            path="/game/:id"
+            element={
+              <Game darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            }
+          />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/registration" element={<Registration />} />
           <Route path="/settings" element={<Settings />} />
