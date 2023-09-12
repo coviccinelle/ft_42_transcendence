@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Navbar() {
   return (
-    <div className="z-40 py-4 bg-gray-800">
+    <div className="z-40 py-4 bg-gray-800 px-4">
       
     <div className="flex mx-auto mr-2 justify-end">
     <ul className="flex items-center space-x-6">

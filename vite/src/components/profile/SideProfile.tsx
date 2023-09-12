@@ -53,10 +53,9 @@ function SideProfile(props: { user: any; userMe: any }) {
 
   return (
     <aside className="z-20 flex-shrink-0 hidden w-64 pl-2 overflow-y-auto bg-gray-800 md:block no-scrollbar">
-      <div>
       <div className="text-white">
-          <div className="flex p-2 bg-gray-800">
-            <div className="flex py-3 px-2 items-center">
+        <div className="flex p-3 py-4 bg-gray-800">
+            <div className="flex py-4 px-2 items-center">
               <Link className="text-3xl text-yellow-500 font-bold" to="/">
                 42
               </Link>
@@ -67,11 +66,10 @@ function SideProfile(props: { user: any; userMe: any }) {
                 Duckie Pooong
               </Link>
             </div>
-          </div>
         </div>
       </div>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center py-4">
         <div>
           <div className="flex justify-center relative">
             <img
@@ -96,6 +94,10 @@ function SideProfile(props: { user: any; userMe: any }) {
           </div>
           <p className="font-bold text-base text-gray-400 pt-2 text-center w-24">
             {isMe ? props.userMe.username : props.user.username}
+            //show my nickname
+            {isMe ? ( <p className="font-bold text-base text-gray-400 pt-2 text-center w-24">
+            {props.userMe.nickname}
+            </p>) : (<p></p>)}
           </p>
         </div>
       </div>
