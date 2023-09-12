@@ -61,7 +61,7 @@ function Game(): JSX.Element {
     ],
   });
 
-  let id = useParams();
+  let params = useParams();
 
   useEffect(() => {
     const getUser = async () => {
@@ -155,10 +155,10 @@ function Game(): JSX.Element {
     );
   }
 
-  console.log(id);
+  console.log(params);
   return (
     <>
-      {!id.id && !isWaiting && !isStarted && (
+      {!params.uuid && !isWaiting && !isStarted && (
         <div className="flex flex-col w-screen h-screen items-center">
           <Navbar
             darkMode={props.darkMode}
@@ -180,7 +180,7 @@ function Game(): JSX.Element {
           </div>
         </div>
       )}
-      {!id.id && isWaiting && (
+      {!params.uuid && isWaiting && (
         <div className="flex flex-col w-screen h-screen items-center">
           <Navbar
             darkMode={props.darkMode}
@@ -193,7 +193,7 @@ function Game(): JSX.Element {
           </div>
         </div>
       )}
-      {!id.id && isStarted && (
+      {isStarted && (
         <div className="flex flex-col w-screen h-screen items-center">
           <Navbar
             darkMode={props.darkMode}
@@ -208,13 +208,15 @@ function Game(): JSX.Element {
           <GameZone sendInput={sendInput} gameInfos={gameInfos}></GameZone>
         </div>
       )}
-      {id.id && (
+      {params.uuid && (
         <div className="flex flex-col w-screen h-screen items-center">
           <Navbar
             darkMode={props.darkMode}
             toggleDarkMode={props.toggleDarkMode}
           />
-          <button onClick={() => joinGame(id.id as string)}>Join game</button>
+          <button onClick={() => joinGame(params.uuid as string)}>
+            Join game
+          </button>
         </div>
       )}
       <GameFinishedDialog

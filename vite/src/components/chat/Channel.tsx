@@ -9,6 +9,7 @@ import AddSomeoneDialog from './dialog/AddSomeoneDialog';
 import ListOfUsersDialog from './dialog/ListOfUsersDialog';
 import { Socket } from 'socket.io-client';
 import AdminDialog from './dialog/AdminDialog';
+import apiGame from '../../api/game';
 
 function Channel(props: {
   channelId: number;
@@ -177,10 +178,11 @@ function Channel(props: {
         <div className="mx-2 flex flex-row">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            onClick={() => {
-              // send a message with a link to the game
+            onClick={async () => {
+              // send a message to invite someone to the game and make it clickable
+              const idGame = await apiGame.getIdGame();
               apiMessage.sendMessage(
-                `Join me for a game here: http://localhost:3000/game/${props.channelId}`,
+                `Hey, join me for a game at localhost:8080/game/${idGame.uuid}`,
                 props.channelId,
                 props.socket,
               );
