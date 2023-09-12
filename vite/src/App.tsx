@@ -13,6 +13,7 @@ import './styles/App.css';
 import { UserEntity, client } from './main';
 import TwoFa from './pages/2fa';
 import { io } from 'socket.io-client';
+import { useLocation } from 'react-router-dom';
 
 export const getUser = async (): Promise<UserEntity | null> => {
   const { data } = await client.get('/users/me');
@@ -26,7 +27,8 @@ export async function handleLogout() {
 
 function App() {
   // set darkmode to true by default
-  const [darkMode, setDarkMode] = useState(true);
+  const [darkMode, setDarkMode] = useState(false);
+  // const location = useLocation();
   const [socket, setSocket] = useState(io({ autoConnect: false }));
 
   useEffect(() => {
@@ -67,6 +69,8 @@ function App() {
       htmlElement?.classList.remove('dark'); // Remove dark mode class
     }
   };
+
+  // const showDarkModeButton = location.pathname === '/login' || location.pathname === '/';
 
   return (
     <div className="flex h-screen flex-col">
