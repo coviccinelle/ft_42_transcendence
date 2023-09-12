@@ -74,7 +74,7 @@ function App() {
 
   return (
     <div className="flex h-screen flex-col">
-      <div
+      <div style={{ zIndex: 2 }}
         className="top-4 fixed right-4 p-2 rounded-full cursor-pointer dark:bg-yellow-200 bg-gray-600" onClick={toggleDarkMode}>
         <span
           role="img"
