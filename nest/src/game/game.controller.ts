@@ -16,7 +16,7 @@ export class GameController {
   newGame(): GameUuidDto {
     const game: GameUuidDto = {
       uuid: this.gameService.createPrivateGame(),
-    }
+    };
     return game;
   }
 }

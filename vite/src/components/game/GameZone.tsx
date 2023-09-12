@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import paddle from '../../utils/game/paddle';
 import ball from '../../utils/game/ball';
-import GameFinishedDialog from './GameFinishedDialog';
 
 interface Size {
   width: number;
@@ -9,8 +8,8 @@ interface Size {
 }
 
 export const GameZone = (props: {
-  score: number[];
-  setScore: React.Dispatch<React.SetStateAction<number[]>>;
+  sendInput: any;
+  gameInfos: any;
 }): JSX.Element => {
   const [windowSize, setWindowSize] = useState<Size>({
     width: window.innerWidth,
@@ -44,8 +43,8 @@ export const GameZone = (props: {
       height: window.innerHeight,
     });
     setPaddleSize({
-      width: window.innerWidth / 100,
-      height: window.innerHeight / 10,
+      height: props.gameInfos.players[0].paddle.size,
+      width: props.gameInfos.players[0].paddle.size / 10,
     });
     setMyPaddlePos([10, windowSize.height / 2 - paddleSize.height / 2]);
     setPlayerTwoPaddlePos([
@@ -77,8 +76,6 @@ export const GameZone = (props: {
     }
   }
 
-  const [gameFinishedDialog, setGameFinishedDialog] = useState<boolean>(false);
-
   function stopGame() {
     clearTimeout(game);
     setBallSpeedX(0);
@@ -86,17 +83,6 @@ export const GameZone = (props: {
 
     setGame(0);
   }
-
-  function gameFinished() {
-    if (props.score[0] === 1 || props.score[1] === 1) {
-      stopGame();
-      setGameFinishedDialog(true);
-    }
-  }
-
-  useEffect(() => {
-    gameFinished();
-  }, [props.score]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -186,11 +172,6 @@ export const GameZone = (props: {
           ref={canvas}
           width={windowSize.width}
           height={windowSize.height}
-        />
-        <GameFinishedDialog
-          gameFinishedDialog={gameFinishedDialog}
-          setGameFinishedDialog={setGameFinishedDialog}
-          score={props.score}
         />
       </div>
     </>

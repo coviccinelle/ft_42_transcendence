@@ -4,7 +4,7 @@ import { Fragment } from 'react';
 function GameFinishedDialog(props: {
   gameFinishedDialog: any;
   setGameFinishedDialog: any;
-  score: number[];
+  score: string;
 }) {
   function closeDialog() {
     props.setGameFinishedDialog(false);
@@ -46,7 +46,7 @@ function GameFinishedDialog(props: {
               leaveTo="opacity-0 scale-95"
             >
               <div className="inline-block max-w-md p-6 my-8 overflow-hidden text-left align-middle transition-all transform dark:bg-gray-800 bg-rose-100 shadow-xl rounded-2xl">
-                {props.score[0] > props.score[1] ? (
+                {props.score === 'WIN' ? (
                   <Dialog.Title
                     as="h3"
                     className="text-lg font-medium leading-6 dark:text-gray-200 text-gray-900 text-center"
