@@ -214,7 +214,7 @@ export class Game {
       this.ball.velocity.y *= -1;
     }
     if (this.ball.position.y + this.ball.size > this.courtSize.y) {
-      const overTravel = this.ball.position.y - this.ball.size - this.courtSize.x;
+      const overTravel = this.ball.position.y + this.ball.size - this.courtSize.x;
       this.ball.position.y -= 2 * overTravel;
       this.ball.velocity.y *= -1;
     }
@@ -298,10 +298,8 @@ export class Game {
       + this.players[playerNb].paddle.size / 2;
     const topEdgeBall = this.ball.position.y - this.ball.size;
     const bottomEdgeBall = this.ball.position.y + this.ball.size;
-    const ballIsAbovePaddle = (topEdgeBall < topEdgePaddle
-      && bottomEdgeBall < topEdgePaddle);
-    const ballIsBellowPaddle = (topEdgeBall > bottomEdgePaddle
-      && bottomEdgeBall > bottomEdgePaddle);
+    const ballIsAbovePaddle = (bottomEdgeBall < topEdgePaddle);
+    const ballIsBellowPaddle = (topEdgeBall > bottomEdgePaddle);
     return (!ballIsAbovePaddle && !ballIsBellowPaddle);
   }
 
