@@ -1,8 +1,8 @@
-import { Inject, Injectable, forwardRef } from "@nestjs/common";
-import { Direction, Game, GameStatus } from "./game";
-import { GameGateway } from "./game.gateway";
-import { PrismaService } from "src/prisma/prisma.service";
-import { WsException } from "@nestjs/websockets";
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import { Direction, Game, GameStatus } from './game';
+import { GameGateway } from './game.gateway';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { WsException } from '@nestjs/websockets';
 
 @Injectable()
 export class GameManager {
@@ -13,7 +13,7 @@ export class GameManager {
     private gameGateway: GameGateway,
     private prismaService: PrismaService,
   ) {
-    this.games = new Map<string, Game>;
+    this.games = new Map<string, Game>();
   }
 
   public getStatus(uuid: string): GameStatus {
@@ -45,10 +45,12 @@ export class GameManager {
 
   public join(uuid: string, userId: number, userName: string) {
     if (!this.games[uuid]) {
-      throw new WsException('Game doesn\'t exist');
+      throw new WsException("Game doesn't exist");
     }
-    if ((this.games[uuid].nbPlayers === 2)
-      || (this.games[uuid].getStatus !== GameStatus.WAITING)) {
+    if (
+      this.games[uuid].nbPlayers === 2 ||
+      this.games[uuid].getStatus !== GameStatus.WAITING
+    ) {
       throw new WsException('Game is full');
     }
     this.games[uuid].addPlayer(userName, userId);
@@ -78,9 +80,9 @@ export class GameManager {
   private findOpenLobby(isHard: boolean): Game | null {
     for (const game of this.games.values()) {
       if (
-        game.getIsPublic()
-        && game.getIsHard() === isHard
-        && game.getStatus() === GameStatus.WAITING
+        game.getIsPublic() &&
+        game.getIsHard() === isHard &&
+        game.getStatus() === GameStatus.WAITING
       ) {
         return game;
       }

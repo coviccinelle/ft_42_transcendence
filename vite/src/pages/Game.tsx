@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import '../styles/game.css';
 import { useEffect, useState } from 'react';
 import LoadingScreen from '../components/LoadingScreen';
@@ -13,6 +13,10 @@ function Game(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
   const [isLoading, setIsLoading] = useState(true);
   const [socket, setSocket] = useState(io('/game', { autoConnect: false }));
   const navigate = useNavigate();
+  const [isWaiting, setIsWaiting] = useState(false);
+  const [isStarted, setIsStarted] = useState(false);
+
+  let id = useParams();
 
   useEffect(() => {
     if (isLoading) {
@@ -57,10 +61,13 @@ function Game(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
   useEffect(() => {
     function handleWaiting() {
       console.log(`Waiting for other player to join`);
+      setIsWaiting(true);
       //Todo: display waiting for other player screen/dialog
     }
     function handleStart(uuid: string) {
       console.log(`Starting game ${uuid}`);
+      setIsWaiting(false);
+      setIsStarted(true);
       //Todo: display game
     }
     function handleUpdateGame(gameInfo: GameInfo) {
@@ -105,17 +112,36 @@ function Game(props: { darkMode: boolean; toggleDarkMode: any }): JSX.Element {
 
   return (
     <>
-      <LoadingScreen isLoading={isLoading} />
-      <div className="flex flex-col w-screen h-screen items-center">
-        <Navbar
-          darkMode={props.darkMode}
-          toggleDarkMode={props.toggleDarkMode}
-        />
-        <h1 className="flex text-center dark:text-white text-gray-900">
-          {score[0]} - {score[1]}
-        </h1>
-        <GameZone score={score} setScore={setScore} />
-      </div>
+      {!isWaiting && !isStarted && (
+        <div className="flex flex-col w-screen h-screen items-center">
+          <Navbar
+            darkMode={props.darkMode}
+            toggleDarkMode={props.toggleDarkMode}
+          />
+          <button onClick={() => startGame(false)}>Start game simple</button>
+          <button onClick={() => startGame(true)}>Start game hard</button>
+        </div>
+      )}
+      {isWaiting && (
+        <div className="flex flex-col w-screen h-screen items-center">
+          <Navbar
+            darkMode={props.darkMode}
+            toggleDarkMode={props.toggleDarkMode}
+          />
+          <div className="flex flex-col items-center">
+            <p>Waiting for other player to join</p>
+          </div>
+        </div>
+      )}
+      {isStarted && (
+        <div className="flex flex-col w-screen h-screen items-center">
+          <Navbar
+            darkMode={props.darkMode}
+            toggleDarkMode={props.toggleDarkMode}
+          />
+          <GameZone sendInput={sendInput} />
+        </div>
+      )}
     </>
   );
 }
