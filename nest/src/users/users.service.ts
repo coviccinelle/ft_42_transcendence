@@ -287,11 +287,11 @@ export class UsersService {
     return (!!user.blocked.find((blockedUser) => blockedUser.id === blockedId));
   }
 
-  async uploadAvatar(userId: number): Promise<any> {
+  async uploadAvatar(userId: number, fileName: string): Promise<any> {
     await this.prisma.user.update({
       where: { id: userId },
       data: {
-        picture: `/avatars/${userId}.jpeg`,
+        picture: `/avatars/${fileName}`,
       },
     });
   }
