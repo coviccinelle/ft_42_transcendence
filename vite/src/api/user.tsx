@@ -210,7 +210,7 @@ const blockUser = async (userId: number) => {
 
 const unblockUser = async (userId: number) => {
   try {
-    const response = await axios.delete(`${API}/users/unblock`, {
+    const response = await axios.post(`${API}/users/unblock`, {
       data: {
         id: userId,
       },

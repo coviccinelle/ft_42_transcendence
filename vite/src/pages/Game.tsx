@@ -66,7 +66,8 @@ function Game(): JSX.Element {
   useEffect(() => {
     const getUser = async () => {
       const user = await apiUser.getMe();
-      setUserMe(user);
+      if (user) setUserMe(user);
+      else navigate('/login');
       setIsLoading(false);
     };
     getUser();
@@ -138,12 +139,6 @@ function Game(): JSX.Element {
     };
   }, []);
 
-  useEffect(() => {
-    if (params.uuid) {
-      joinGame(params.uuid);
-    }
-  }, [params.uuid]);
-
   function startGame(isHard: boolean) {
     socket.emit('new', isHard);
   }
@@ -159,7 +154,7 @@ function Game(): JSX.Element {
   console.log(params);
   return (
     <>
-      {!isWaiting && !isStarted && (
+      {!params.uuid && !isWaiting && !isStarted && (
         <div className="flex flex-col w-screen h-screen">
           <div className="z-40 py-2 bg-gray-800">
             <Navbar2 />
@@ -210,6 +205,18 @@ function Game(): JSX.Element {
           <p className="text-2xl text-black dark:text-white font-bold">
             Waiting for other player to join...
           </p>
+        </div>
+      )}
+      {params.uuid && !isWaiting && !isStarted && (
+        // Join game
+        <div className="flex flex-col w-screen h-screen items-center">
+          <Navbar2 />
+          <button
+            className="text-2xl text-black dark:text-white font-bold justify-center"
+            onClick={() => joinGame(params.uuid as string)}
+          >
+            Join game ?
+          </button>
         </div>
       )}
       <GameFinishedDialog
