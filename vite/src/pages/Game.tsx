@@ -176,7 +176,7 @@ function Game(): JSX.Element {
           <div className="z-40 py-2 bg-gray-800">
             <Navbar2 />
           </div>
-          <div className="flex flex-col items-center justify-center h-full">
+          <div className="flex flex-col items-center justify-center h-full text-center">
             <p className="text-2xl text-black dark:text-white font-bold">
               Waiting for other player to join...
             </p>
@@ -199,7 +199,7 @@ function Game(): JSX.Element {
           <div className="z-40 py-2 bg-gray-800">
             <Navbar2 />
           </div>
-          <p className="text-2xl text-black dark:text-white font-bold items-center">
+          <p className="text-2xl text-black dark:text-white font-bold items-center text-center">
             Waiting for other player to join...
           </p>
         </div>
