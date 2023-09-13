@@ -2,6 +2,9 @@
 .env
 **/.env
 
+# avatars
+nginx/avatars
+
 # compiled output
 dist
 node_modules

@@ -10,12 +10,19 @@ import {
   UseGuards,
   HttpException,
   HttpStatus,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipe,
+  MaxFileSizeValidator,
+  FileTypeValidator,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
   ApiBearerAuth,
+  ApiBody,
+  ApiConsumes,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiTags,
@@ -29,6 +36,8 @@ import { MatchResultEntity } from './entities/match-result.entity';
 import { UserStatsDto } from './dto/user-stats.dto';
 import { UserConnectionStatusDto } from './dto/user-connection-status.dto';
 import { UserIsBlockedDto } from './dto/user-is-blocked';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { diskStorage } from 'multer';
 
 @Controller('users')
 @ApiTags('users')
@@ -192,5 +201,43 @@ export class UsersController {
       );
     }
     return new UserEntity(await this.usersService.update(id, updateUserDto));
+  }
+
+  @Post('avatar')
+  @UseGuards(AuthenticatedGuard)
+  @ApiCreatedResponse()
+  @ApiBearerAuth()
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        file: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+    },
+  })
+  @UseInterceptors(FileInterceptor('file', {
+    storage: diskStorage({
+      destination: './avatars',
+      filename: function(req: any, file, cb) {
+        cb(null, req.user.id.toString() + '.jpeg');
+      },
+    })
+  }))
+  async uploadFile(
+    @UploadedFile(
+      new ParseFilePipe({
+        validators: [
+          new MaxFileSizeValidator({ maxSize: 100000 }),
+          new FileTypeValidator({ fileType: 'image/jpeg' }),
+        ],
+      }),
+    ) file: Express.Multer.File,
+    @User() user: UserEntity,
+  ) {
+    await this.usersService.uploadAvatar(user.id);
   }
 }

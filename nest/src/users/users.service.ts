@@ -287,4 +287,13 @@ export class UsersService {
     });
     return (!!user.blocked.find((blockedUser) => blockedUser.id === blockedId));
   }
+
+  async uploadAvatar(userId: number) {
+    await this.prisma.user.update({
+      where: { id: userId },
+      data: {
+        picture: `/avatars/${userId}.jpeg`,
+      },
+    });
+  }
 }

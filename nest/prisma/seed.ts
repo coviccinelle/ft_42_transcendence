@@ -20,8 +20,7 @@ async function main() {
       lastName: 'TestNom',
       picture: '',
       password: passwordUser1,
-      isTwoFAEnabled: true,
-      twoFASecret: "oisjeoigjseoijgoijigoesoi",
+      isTwoFAEnabled: false,
       matchHistory: {
         createMany: {
           data: [
