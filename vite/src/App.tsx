@@ -104,12 +104,7 @@ function App() {
           />
           <Route path="/login" element={<Login />} />
           {/* <Route path="/profile/:id" element={<UserProfile />} /> */}
-          <Route
-            path="/profile/:id"
-            element={
-              <Profile darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-            }
-          />
+          <Route path="/profile/:id" element={<Profile />} />
           <Route path="/login/enable-2fa" element={<EnableTwoFA />} />
           <Route path="/login/disable-2fa" element={<DisableTwoFA />} />
           <Route path="/login/verify-2fa" element={<VerifyTwoFA />} />
@@ -117,12 +112,7 @@ function App() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/chat/:id" element={<Chat />} />
           <Route path="/game" element={<Game />} />
-          <Route
-            path="/game/:uuid"
-            element={
-              <Game darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
-            }
-          />
+          <Route path="/game/:uuid" element={<Game />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/registration" element={<Registration />} />
           <Route path="/settings" element={<Settings />} />
