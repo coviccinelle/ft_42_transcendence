@@ -176,7 +176,7 @@ function Game(): JSX.Element {
           <div className="z-40 py-2 bg-gray-800">
             <Navbar2 />
           </div>
-          <div className="flex flex-col items-center justify-center h-full">
+          <div className="flex flex-col items-center justify-center h-full text-center">
             <p className="text-2xl text-black dark:text-white font-bold">
               Waiting for other player to join...
             </p>
@@ -184,30 +184,37 @@ function Game(): JSX.Element {
         </div>
       )}
       {isStarted && (
-        <div className="flex flex-col w-screen h-screen items-center">
-          <p className="text-2xl text-black dark:text-white font-bold">
+        <div className="flex flex-col w-screen h-screen">
+          <div className="z-40 py-2 bg-gray-800">
+            <Navbar2 />
+          </div>
+          <p className="text-2xl text-black dark:text-white font-bold items-center text-center">
             {gameInfos.players[0].name} vs {gameInfos.players[1].name}
           </p>
-          <p className="text-2xl text-black dark:text-white font-bold">
+          <p className="text-2xl text-black dark:text-white font-bold items-center text-center">
             {gameInfos.players[0].score} - {gameInfos.players[1].score}
           </p>
           <GameZone sendInput={sendInput} gameInfos={gameInfos}></GameZone>
         </div>
       )}
       {params.uuid && isWaiting && (
-        <div className="flex flex-col w-screen h-screen items-center">
-          <Navbar2 />
-          <p className="text-2xl text-black dark:text-white font-bold">
+        <div className="flex flex-col w-screen h-screen">
+          <div className="z-40 py-2 bg-gray-800">
+            <Navbar2 />
+          </div>
+          <p className="text-2xl text-black dark:text-white font-bold items-center text-center">
             Waiting for other player to join...
           </p>
         </div>
       )}
       {params.uuid && !isWaiting && !isStarted && (
         // Join game
-        <div className="flex flex-col w-screen h-screen items-center">
-          <Navbar2 />
+        <div className="flex flex-col w-screen h-screen">
+          <div className="z-40 py-2 bg-gray-800">
+            <Navbar2 />
+          </div>
           <button
-            className="text-2xl text-black dark:text-white font-bold justify-center"
+            className="text-2xl text-black dark:text-white font-bold justify-center items-center"
             onClick={() => joinGame(params.uuid as string)}
           >
             Join game ?
