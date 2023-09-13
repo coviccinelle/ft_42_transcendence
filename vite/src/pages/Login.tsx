@@ -20,7 +20,7 @@ function Login() {
     axios
       .post(`http://${domainName}/api/auth/local/login`, formData)
       .then((res) => {
-        console.log("POST OK");
+        console.log('POST OK');
         if (res.data.isTwoFAEnabled) {
           localStorage.removeItem('userEmail');
           localStorage.setItem('userEmail', res.data.email);
@@ -47,7 +47,7 @@ function Login() {
         Login
       </h1>
 
-      <form>
+      <form onSubmit={handleLogin}>
         <div className="user-box">
           <input
             type="email"

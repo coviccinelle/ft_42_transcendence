@@ -221,6 +221,15 @@ const unblockUser = async (userId: number) => {
   }
 };
 
+const isBlocked = async (userId: number) => {
+  try {
+    const response = await axios.get(`${API}/users/${userId}/isBlocked`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export default {
   getUsers,
   getUsersInChannel,
@@ -242,4 +251,5 @@ export default {
   getFriends,
   blockUser,
   unblockUser,
+  isBlocked,
 };
