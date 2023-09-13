@@ -44,7 +44,7 @@ function Settings() {
   const handleFormAvatarSubmit = (event: any) => {
     event.preventDefault();
     apiUser.uploadAvatar(event.target[0].files[0]);
-    navigate('/profile');
+    // navigate('/profile');
   };
 
   return (
@@ -58,14 +58,14 @@ function Settings() {
           X
         </button>
 
-        <p className="flex flex-col pb-8 font-bold animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl">
+        <p className="flex flex-col pb-4 font-bold animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl">
           Settings
         </p>
 
         {/* //show the current nickname of the user */}
         <div className=" relative ">
           <p className="text-center text-3xl text-white font-bold py-2">
-            {' '}
+            {'#'}
             {nickname}
           </p>
         </div>
@@ -74,7 +74,7 @@ function Settings() {
           onSubmit={handleFormAvatarSubmit}
         >
           <div className="flex flex-col text-center items-center justify-center">
-            <div className="flex flex-col w-32 justify-center items-center px-1 py-1 relative">
+            <div className="flex flex-col w-32 justify-center items-center px-1 py-4 relative">
               <img
                 src={img}
                 alt="Profile Image"
@@ -104,7 +104,7 @@ function Settings() {
 
         <form className="items-center justify-center text-center">
           <div>
-            <div className="col-span-2 px-4 py-12 relative ">
+            <div className="col-span-2 px-4 py-8 relative ">
               <p className="text-center text-white font-bold py-2">
                 Change your nickname
               </p>
