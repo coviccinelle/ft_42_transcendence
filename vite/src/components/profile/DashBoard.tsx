@@ -194,10 +194,12 @@ function Dashboard(props: { user: any }) {
               </div>
             </div>
             <div className="col-span-12 mt-5">
-              <div className="grid gap-2 grid-cols-1 lg:grid-cols-2 ">
+              <div className="lg:grid-cols-2 ">
                 <div className="bg-slate-700 text-black shadow-lg p-4 px-8 rounded-3xl">
                   {' '}
-                  <p className="text-white"> Match history here </p>
+                  <p className="py-3 px-5 text-lg text-white font-bold leading-8 truncate">
+                    Match history
+                  </p>
                   {matchHistory
                     .slice(matchHistory.length - 5, matchHistory.length)
                     .map((match: any) => {
@@ -212,13 +214,13 @@ function Dashboard(props: { user: any }) {
                       );
                     })}
                 </div>
-                <div
+                {/* <div
                   className="bg-slate-500 text-black shadow-lg p-4 rounded-3xl"
                   id="chartpie"
                 >
                   {' '}
                   Top 5 best player here
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="col-span-12 mt-5">
