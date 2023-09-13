@@ -85,7 +85,7 @@ export class Game {
     this.paddleInitialSpeed = 10;
     this.paddleMinSize = 50;
     this.ballMaxSpeed = 40;
-    this.ballInitialSpeed = 15;
+    this.ballInitialSpeed = 12;
     this.pointsToWin = 5;
     this.ball = {
       position: {
@@ -350,7 +350,11 @@ export class Game {
   private launchBall() {
     this.ball.position.x = this.courtSize.x / 2;
     this.ball.position.y = this.courtSize.y / 2;
-    const angle = ((Math.random() - 0.5) * Math.PI) / 12.0; //Angle between +15 -15°
+    let angle: number = 0;
+    //Generate angle between 5° and 15° off center
+    while (angle > -Math.PI / 36 && angle < Math.PI / 36) {
+      angle = ((Math.random() - 0.5) * Math.PI) / 6.0; //Angle between +15 -15°
+    }
     this.ball.velocity.x = Math.cos(angle) * this.ballInitialSpeed;
     this.ball.velocity.y = Math.sin(angle) * this.ballInitialSpeed;
     if ((this.players[0].score + this.players[1].score) % 2) {
