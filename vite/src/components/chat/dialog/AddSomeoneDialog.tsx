@@ -20,7 +20,7 @@ function AddSomeoneDialog(props: {
   }, [props.addSomeoneDialog]);
 
   const filteredUsers = listOfUsers.filter((tab: any) => {
-    return tab.firstName.toLowerCase().includes(search.toLowerCase());
+    return tab.nickname.toLowerCase().includes(search.toLowerCase());
   });
 
   function closeDialog() {

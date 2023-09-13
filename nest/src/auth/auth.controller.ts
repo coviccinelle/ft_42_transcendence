@@ -15,7 +15,7 @@ import { AuthService } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
 import { GoogleAuthGuard } from './guards/google-auth.guard';
-import { domainName } from 'src/main';
+import { ReportErrors, domainName } from 'src/main';
 import { Response } from 'express';
 import { FtAuthGuard } from './guards/ft-auth.guard';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -37,9 +37,10 @@ export class AuthController {
   login(@Request() req) {
     // TODO: add delay to prevent brute force (https://docs.nestjs.com/security/rate-limiting)
     const user = req.user;
-    // TODO: redirect to registration if its a new user
 
+    console.log("LOGIN user " + user.email);
     if (user.isTwoFAEnabled) {
+      console.log("LOGIN user " + user.email + " need to do 2fa auth.");
       req.session.needTwoFA = true;
     } else {
       req.session.needTwoFA = false;
@@ -49,9 +50,9 @@ export class AuthController {
 
   @Post('local/signup')
   async signup(
-    @Body() { email, firstName, lastName, password }: LoginDto,
-  ): Promise<UserEntity> {
-    return await this.authService.signup(firstName, lastName, email, password);
+    @Body() { email, nickname, password }: LoginDto,
+  ): Promise<UserEntity | ReportErrors> {
+    return await this.authService.signup(nickname, email, password);
   }
 
   @Get('google/login')
@@ -62,9 +63,13 @@ export class AuthController {
   @UseGuards(GoogleAuthGuard)
   redirectGoogle(@Req() req, @Res() response: Response) {
     const user = req.user;
-    // TODO: redirect to registration if its a new user
 
+    console.log("LOGIN user " + user.email);
+    if (user.isNewUser) {
+      return response.redirect('/registration');
+    }
     if (user.isTwoFAEnabled) {
+      console.log("LOGIN user " + user.email + " need to do 2fa auth.");
       req.session.needTwoFA = true;
       return response.redirect('/login/verify-2fa?userEmail=' + user.email);
     }
@@ -80,9 +85,13 @@ export class AuthController {
   @UseGuards(FtAuthGuard)
   redirectFt(@Req() req, @Res() response: Response) {
     const user = req.user;
-    // TODO: redirect to registration if its a new user
 
+    console.log("LOGIN user " + user.email);
+    if (user.isNewUser) {
+      return response.redirect('/registration');
+    }
     if (user.isTwoFAEnabled) {
+      console.log("LOGIN user " + user.email + " need to do 2fa auth.");
       req.session.needTwoFA = true;
       return response.redirect('/login/verify-2fa?userEmail=' + user.email);
     }
@@ -94,6 +103,7 @@ export class AuthController {
   @UseGuards(TwoFAAuthGuard)
   loginTwoFA(@Request() req) {
     req.session.needTwoFA = false;
+    console.log("LOGIN 2FA user " + req.user.email);
     return req.user;
   }
 
@@ -105,8 +115,9 @@ export class AuthController {
    */
   @Get('2fa/qrcode')
   @UseGuards(AuthenticatedGuard)
-  async getQrcodeTwoFA(@User() user) {
+  async getQrcodeTwoFA(@User() user): Promise<string> {
     const qrcodeImage = await this.authService.generateQrCodeDataURL(user);
+    console.log("2FA generating qrcode for user " + user.email);
     return (qrcodeImage);
   }
 
@@ -118,20 +129,23 @@ export class AuthController {
    */
   @Post('2fa/turn-on')
   @UseGuards(AuthenticatedGuard)
-  async turnOnTwoFA(@User() user, @Body() totpCodeDto: TotpCodeDto) {
+  async turnOnTwoFA(@User() user, @Body() totpCodeDto: TotpCodeDto): Promise<any> {
+    console.log("2FA TURN-ON try user " + user.email);
     if (user.isTwoFAEnabled)
-      throw new ConflictException("2FA is already enabled.");
+      return { message: "2fa is already enabled." };
     if (!user.twoFASecret)
-      throw new ConflictException("No secret generated.");
+      return { message: "No secret generated." };
 
     // * Validation with user
     const isCodeValid = this.authService.isTwoFACodeValid(
       user.twoFASecret,
       totpCodeDto.code,
     );
+    console.log("2FA code validity is " + isCodeValid);
     if (!isCodeValid)
-      throw new UnauthorizedException('Wrong 2FA code');
+      return { message: "Wrong 2fa code." };
 
+    console.log("2FA enabled for user " + user.email);
     await this.usersService.enableTwoFA(user.id);
   }
 
@@ -143,18 +157,21 @@ export class AuthController {
    */
   @Post('2fa/turn-off')
   @UseGuards(AuthenticatedGuard)
-  async turnOffTwoFA(@User() user, @Body() totpCodeDto: TotpCodeDto) {
+  async turnOffTwoFA(@User() user, @Body() totpCodeDto: TotpCodeDto): Promise<any> {
+    console.log("2FA TURN-OFF try user " + user.email);
     if (!user.isTwoFAEnabled)
-      throw new ConflictException("2FA is already disabled.");
+      return { message: "2fa is already disabled." };
 
     // * Confirmation to disable 2FA
     const isCodeValid = this.authService.isTwoFACodeValid(
       user.twoFASecret,
       totpCodeDto.code,
     );
+    console.log("2FA code validity is " + isCodeValid);
     if (!isCodeValid)
-      throw new UnauthorizedException('Wrong 2FA code');
+      return { message: "Wrong 2fa code." };
 
+    console.log("2FA enabled for user " + user.email);
     await this.usersService.disableTwoFA(user.id);
   }
 
@@ -162,12 +179,11 @@ export class AuthController {
   logout(@Request() req, @Res() response: Response): any {
     req.session.destroy();
     response.redirect('/');
-    // return { msg: 'The user session ended'};
   }
 
   @Get('status')
   @UseGuards(AuthenticatedGuard)
-  status(@Request() req) {
+  status(@Request() req): UserEntity {
     return req.user;
   }
 }

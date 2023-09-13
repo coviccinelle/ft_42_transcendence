@@ -11,66 +11,60 @@ import { UserEntity } from 'src/users/entities/user.entity';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { authenticator } from 'otplib';
 import { toDataURL } from 'qrcode';
-import { validateEmail } from 'src/main';
+import { ReportErrors, errors, limits, validateEmail } from 'src/main';
 
 @Injectable()
 export class AuthService {
   constructor(private readonly usersService: UsersService) {}
 
   async signup(
-    firstName: string,
-    lastName: string,
+    nickname: string,
     email: string,
     password: string,
-  ): Promise<UserEntity> {
+  ): Promise<UserEntity | ReportErrors> {
     const lowerEmail = email.toLowerCase();
     if (!email || !validateEmail(email)) {
-      throw new BadRequestException("Email is not valid.");
+      return (errors[3]);
     }
     const user = await this.usersService.findOneByEmail(lowerEmail);
 
     if (user) {
-      throw new ConflictException(
-        `User found while registering with email: ${lowerEmail}`,
-      );
+      return (errors[4]);
     }
     const newUserDto: CreateUserDto = {
       email: lowerEmail,
-      firstName: firstName,
-      lastName: lastName,
-      nickname: null,
-      picture:
-        'https://i.pinimg.com/originals/a4/97/d7/a497d78803c0821e1f0cdb8b8b8a6d32.jpg',
+      nickname: nickname,
+      picture: null,
       password: password,
     };
     return new UserEntity(await this.usersService.create(newUserDto));
   }
 
-  async login(email: string, password: string): Promise<UserEntity> {
+  async login(email: string, password: string): Promise<UserEntity | ReportErrors> {
     const lowerEmail = email.toLowerCase();
     if (!email || !validateEmail(email)) {
-      throw new BadRequestException("Email is not valid.");
+      return (errors[3]);
     }
 
     const user = await this.usersService.findOneByEmail(lowerEmail);
 
-    if (password.length == 0 || password.length > 64) {
-      throw new BadRequestException("Password too long or too short, must not be empty and 64 characters max.");
+    if (password.length == 0 || password.length > limits.password) {
+      return (errors[5]);
     }
     if (!user) {
-      throw new NotFoundException(`No user found with email: ${lowerEmail}`);
+      return (errors[1]);
     }
 
     const isPasswordValid = await compare(password, (await user).password);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException(`Invalid password`);
+      return (errors[6]);
     }
 
     return user;
   }
 
-  async generateQrCodeDataURL(user: UserEntity) {
+  async generateQrCodeDataURL(user: UserEntity): Promise<string> {
     const secret = authenticator.generateSecret();
     await this.usersService.setTwoFASecret(user.id, secret);
 
@@ -79,9 +73,9 @@ export class AuthService {
     return toDataURL(otpAuthUrl);
   }
 
-  isTwoFACodeValid(userTwoFASecret: string, code: string) {
-    if (code.length > 6) {
-      throw new BadRequestException("Code too long, must be 6 characters max.");
+  isTwoFACodeValid(userTwoFASecret: string, code: string): boolean | ReportErrors {
+    if (code.length !== 6) {
+      return errors[7];
     }
 
     return (

@@ -17,12 +17,6 @@ export class UserEntity implements User {
   nickname: string;
 
   @ApiProperty({ required: false, nullable: true })
-  firstName: string;
-
-  @ApiProperty({ required: false, nullable: true })
-  lastName: string;
-
-  @ApiProperty({ required: false, nullable: true })
   picture: string;
 
   @ApiProperty()
@@ -30,6 +24,9 @@ export class UserEntity implements User {
 
   @ApiProperty()
   isTwoFAEnabled: boolean;
+
+  @ApiProperty()
+  isNewUser: boolean;
 
   @Exclude()
   @ApiProperty({ required: false, nullable: true })

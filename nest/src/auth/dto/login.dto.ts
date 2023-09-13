@@ -8,12 +8,9 @@ export class LoginDto {
   email: string;
 
   @IsString()
+  @IsNotEmpty()
   @ApiProperty()
-  firstName: string;
-
-  @IsString()
-  @ApiProperty()
-  lastName: string;
+  nickname: string;
 
   @IsString()
   @IsNotEmpty()

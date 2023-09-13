@@ -39,7 +39,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   ) {
     const gameId = this.gameManager.new(
       client.data.user.id,
-      client.data.user.firstName,
+      client.data.user.nickname,
       isHard,
     );
     client.data.gameId = gameId;
@@ -69,7 +69,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
     this.gameManager.join(
       uuid,
       client.data.user.id,
-      client.data.user.firstName,
+      client.data.user.nickname,
     );
     client.data.gameId = uuid;
     client.join(uuid);

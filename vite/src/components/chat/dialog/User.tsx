@@ -27,7 +27,7 @@ function User(props: {
             />
           </div>
           <div className="w-full">
-            <div className="textLg font-semibold">{props.user.firstName}</div>{' '}
+            <div className="textLg font-semibold">{props.user.nickname}</div>{' '}
           </div>
         </div>
       )}

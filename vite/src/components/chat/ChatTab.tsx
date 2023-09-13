@@ -18,7 +18,7 @@ function ChatTab(props: {
     const fetchUser = async () => {
       const userMe = await apiUser.getMe();
       const users = await apiUser.getUsersInChannel(props.id);
-      const name = users.find((user: any) => user.id !== userMe.id)?.firstName;
+      const name = users.find((user: any) => user.id !== userMe.id)?.nickname;
       setName(name);
     };
     if (props.type === 'DM') {

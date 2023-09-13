@@ -16,6 +16,7 @@ import { roundsOfHashing } from 'src/users/users.service';
 import { ChannelEntity } from './entities/channel.entity';
 import { JoinChannelDto } from './dto/join-channel.dto';
 import { MuteUserDto } from './dto/mute-user.dto';
+import { errors, limits } from 'src/main';
 
 @Injectable()
 export class ChatService {
@@ -44,7 +45,7 @@ export class ChatService {
         'Channel name too long or too short, must not be empty and 25 characters max.',
       );
     }
-    if (createChannelDto.password.length > 64) {
+    if (createChannelDto.password.length > limits.password) {
       throw new BadRequestException(
         'Password too long, must be 64 characters max.',
       );
@@ -325,8 +326,6 @@ export class ChatService {
               select: {
                 id: true,
                 email: true,
-                firstName: true,
-                lastName: true,
                 picture: true,
                 nickname: true,
               },
@@ -630,7 +629,7 @@ export class ChatService {
 
   async updatePassword(channelId: number, password: string) {
     if (password) {
-      if (password.length > 64) {
+      if (password.length > limits.password) {
         throw new BadRequestException(
           'Password too long, must be 64 characters max.',
         );

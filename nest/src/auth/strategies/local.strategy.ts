@@ -1,9 +1,10 @@
 import { Injectable, NotAcceptableException, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-local';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { AuthService } from '../auth.service';
+import { VerifyCallback } from 'passport-oauth2';
+import { errors } from 'src/main';
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
@@ -14,16 +15,15 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  async validate(email: string, password: string, done: any): Promise<UserEntity> {
+  async validate(email: string, password: string, done: VerifyCallback): Promise<any> {
     if (!email || !password) {
-      return done(null, false);
-      // throw new NotAcceptableException("No email or password provided.");
+      return done(null, false, errors[1]);
     }
-    
+
     const user = await this.authService.login(email, password);
 
     if (!user) {
-      throw new UnauthorizedException("User doesn't exist.");
+      return done(null, false, errors[1]);
     }
 
     return done(null, user);

@@ -28,24 +28,24 @@ export class FtStrategy extends PassportStrategy(Strategy, 'ft') {
     refreshToken: string,
     profile: any,
     done: VerifyCallback,
-  ): Promise<UserEntity> {
+  ): Promise<any> {
     const profileData = await getProfileFt(accessToken);
 
     const user = await this.usersService.findOneByEmail(profileData.email);
 
     if (user) {
-      return user;
+      user.isNewUser = false;
+      return done(null, user);
     } else {
       // If no user => Create new user
       const newUserDto: CreateUserDto = {
         email: profileData.email,
-        firstName: profileData.first_name,
-        lastName: profileData.last_name,
         picture: profileData.image.versions.medium,
         nickname: null,
         password: null,
       };
-      return this.usersService.create(newUserDto);
+      const newUser = await this.usersService.create(newUserDto);
+      return done(null, newUser);
     }
   }
 }

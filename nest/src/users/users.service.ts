@@ -10,7 +10,7 @@ import { UsersGateway } from './users.gateway';
 import { ConnectionState } from './dto/user-connection-status.dto';
 import { uniqueNamesGenerator, Config, adjectives, colors, animals } from 'unique-names-generator';
 import { GameGateway } from 'src/game/game.gateway';
-import { validateEmail } from 'src/main';
+import { errors, limits, validateEmail } from 'src/main';
 
 export const roundsOfHashing = 10;
 
@@ -23,10 +23,10 @@ export class UsersService {
     private gameGateway: GameGateway,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto): Promise<any> {
     if (createUserDto.password) {
-      if (createUserDto.password.length > 64) {
-        throw new BadRequestException("Password too long, must be 64 characters max.");
+      if (createUserDto.password.length > limits.password) {
+        return (errors[5]);
       }
       const hashedPassword = await hash(
         createUserDto.password,
@@ -34,12 +34,16 @@ export class UsersService {
       );
       createUserDto.password = hashedPassword;
     }
-    if (!createUserDto.nickname || createUserDto.nickname.length === 0) {
+    if (createUserDto.nickname && (createUserDto.nickname.length == 0 || createUserDto.nickname.length > limits.nickname)) {
+      console.log("ERROR UPDATE user invalid new nickname");
+      return errors[8];
+    }
+    else if (!createUserDto.nickname || createUserDto.nickname.length === 0 || this.findOneByNickname(createUserDto.nickname)) {
       let nickname: string = '';
       const customConfig: Config = {
         dictionaries: [adjectives, colors],
         separator: '-',
-        length: 2,
+        length: 1,
       };
 
       do {
@@ -47,68 +51,63 @@ export class UsersService {
       } while (!this.findOneByNickname(nickname));
       createUserDto.nickname = nickname;
     }
-    if (createUserDto.nickname.length == 0 || createUserDto.nickname.length > 32) {
-      throw new BadRequestException("Nickname too long or too short, must not be empty and 25 characters max.");
-    }
-    if (createUserDto.firstName && createUserDto.firstName.length > 25) {
-      throw new BadRequestException("First name too long, need to be 25 characters max.");
-    }
-    if (createUserDto.lastName && createUserDto.lastName.length > 25) {
-      throw new BadRequestException("Last name too long, need to be 25 characters max.");
-    }
     if (!validateEmail(createUserDto.email)) {
-      throw new BadRequestException("Email is not valid.");
+      return errors[3];
     }
-    // TODO: check picture
+    if (!createUserDto.picture) {
+      createUserDto.picture = 'https://i.pinimg.com/originals/a4/97/d7/a497d78803c0821e1f0cdb8b8b8a6d32.jpg';
+    }
+    // TODO: check picture is picture, size...
 
     const newUser = await this.prisma.user.create({ data: createUserDto });
+    console.log('CREATING user ' + newUser.email);
     return newUser;
   }
 
-  findAll() {
+  findAll(): any {
     return this.prisma.user.findMany();
   }
 
-  findOneById(id: number) {
+  findOneById(id: number): any {
     return this.prisma.user.findUnique({ where: { id } });
   }
 
-  findOneByEmail(email: string) {
+  findOneByEmail(email: string): any {
     return this.prisma.user.findUnique({ where: { email } });
   }
 
-  findOneByNickname(nickname: string) {
+  findOneByNickname(nickname: string): any {
     return this.prisma.user.findUnique({ where: { nickname } });
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<any> {
     if (updateUserDto.password) {
-      if (updateUserDto.password.length > 64) {
-        throw new BadRequestException("Password too long, must be 64 characters max.");
+      if (updateUserDto.password.length > limits.password) {
+        return (errors[5]);
       }
       updateUserDto.password = await hash(
         updateUserDto.password,
         roundsOfHashing,
       );
     }
-    if (updateUserDto.nickname && (updateUserDto.nickname.length == 0 || updateUserDto.nickname.length > 32)) {
-      throw new BadRequestException("Nickname too long or too short, must not be empty and 25 characters max.");
-    }
-    if (updateUserDto.firstName && updateUserDto.firstName.length > 25) {
-      throw new BadRequestException("First name too long, need to be 25 characters max.");
-    }
-    if (updateUserDto.lastName && updateUserDto.lastName.length > 25) {
-      throw new BadRequestException("Last name too long, need to be 25 characters max.");
+    // TODO: check if nickname is in db: || this.findOneByNickname(updateUserDto.nickname)
+    if (updateUserDto.nickname && ((updateUserDto.nickname.length == 0 || updateUserDto.nickname.length > limits.nickname))) {
+      console.log("ERROR UPDATE user invalid new nickname");
+      return errors[8];
     }
     if (!updateUserDto.email || !validateEmail(updateUserDto.email)) {
-      throw new BadRequestException("Email is not valid.");
+      console.log("ERROR UPDATE user invalid email.");
+      return errors[3];
+    }
+    if (!updateUserDto.picture) {
+      updateUserDto.picture = 'https://i.pinimg.com/originals/a4/97/d7/a497d78803c0821e1f0cdb8b8b8a6d32.jpg';
     }
     // TODO: check picture
 
     return this.prisma.user.update({ where: { id }, data: updateUserDto });
   }
 
-  async block(user: UserEntity, blockId: number) {
+  async block(user: UserEntity, blockId: number): Promise<any> {
     if (user.id === blockId) {
       throw new HttpException('Can\'t block yourself', HttpStatus.FORBIDDEN);
     }
@@ -142,7 +141,7 @@ export class UsersService {
     });
   }
 
-  async unblock(user: UserEntity, blockId: number) {
+  async unblock(user: UserEntity, blockId: number): Promise<any> {
     if (user.id === blockId) {
       throw new HttpException('Can\'t unblock yourself', HttpStatus.FORBIDDEN);
     }
@@ -169,7 +168,7 @@ export class UsersService {
     return user;
   }
 
-  async getFriends(userId: number) {
+  async getFriends(userId: number): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: { friends: true },
@@ -177,7 +176,7 @@ export class UsersService {
     return user.friends;
   }
 
-  async addFriend(userId: number, friendId: number) {
+  async addFriend(userId: number, friendId: number): Promise<any> {
     const friend = await this.prisma.user.findUnique({
       where: { id: friendId },
       include: { friendOf: true },
@@ -194,7 +193,7 @@ export class UsersService {
     });
   }
 
-  async removeFriend(userId: number, friendId: number) {
+  async removeFriend(userId: number, friendId: number): Promise<any> {
     const friend = await this.prisma.user.findUnique({
       where: { id: friendId },
       include: { friendOf: true },
@@ -211,7 +210,7 @@ export class UsersService {
     });
   }
 
-  async getMatchHistory(userId: number) {
+  async getMatchHistory(userId: number): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       include: { matchHistory: true },
@@ -220,7 +219,7 @@ export class UsersService {
     return user.matchHistory;
   }
 
-  async getRank(elo: number) {
+  async getRank(elo: number): Promise<any> {
     const users = await this.prisma.user.findMany({
       where: {
         elo: { gt: elo },
@@ -229,7 +228,7 @@ export class UsersService {
     return (1 + users.length);
   }
 
-  async getStats(userId: number) {
+  async getStats(userId: number): Promise<any> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
     });
@@ -243,7 +242,7 @@ export class UsersService {
     return stats;
   }
 
-  async getStatus(userId: number) {
+  async getStatus(userId: number): Promise<any> {
     if (await this.gameGateway.isUserPlaying(userId)) {
       return { status: ConnectionState.PLAYING };
     }
@@ -253,7 +252,7 @@ export class UsersService {
     return { status: ConnectionState.DISCONNECTED };
   }
 
-  async setTwoFASecret(userId: number, secret: string) {
+  async setTwoFASecret(userId: number, secret: string): Promise<any> {
     return await this.prisma.user.update({
       where: { id: userId },
       data: {
@@ -262,7 +261,7 @@ export class UsersService {
     });
   }
 
-  async enableTwoFA(userId: number) {
+  async enableTwoFA(userId: number): Promise<any> {
     return await this.prisma.user.update({
       where: { id: userId },
       data: {
@@ -271,7 +270,7 @@ export class UsersService {
     });
   }
 
-  async disableTwoFA(userId: number) {
+  async disableTwoFA(userId: number): Promise<any> {
     return await this.prisma.user.update({
       where: { id: userId },
       data: {
@@ -288,7 +287,7 @@ export class UsersService {
     return (!!user.blocked.find((blockedUser) => blockedUser.id === blockedId));
   }
 
-  async uploadAvatar(userId: number) {
+  async uploadAvatar(userId: number): Promise<any> {
     await this.prisma.user.update({
       where: { id: userId },
       data: {

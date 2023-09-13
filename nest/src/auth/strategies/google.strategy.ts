@@ -26,23 +26,23 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     refreshToken: string,
     profile: Profile,
     done: VerifyCallback,
-  ): Promise<UserEntity> {
+  ): Promise<any> {
     const { name, emails, photos } = profile;
 
     const user = await this.usersService.findOneByEmail(emails[0].value);
     if (user) {
-      return user;
+      user.isNewUser = false;
+      return done(null, user);
     } else {
       // If no user -> Create new user
       const newUserDto: CreateUserDto = {
         email: emails[0].value,
-        firstName: name.givenName,
-        lastName: name.familyName,
         picture: photos[0].value,
         nickname: null,
         password: null,
       };
-      return this.usersService.create(newUserDto);
+      const newUser = await this.usersService.create(newUserDto);
+      return done(null, newUser);
     }
   }
 }

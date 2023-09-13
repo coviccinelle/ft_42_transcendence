@@ -7,15 +7,13 @@ import '../styles/Login.css';
 function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
+  const [nickname, setNickname] = useState('');
   const navigate = useNavigate();
 
   const handleSignup = (event: any) => {
     event.preventDefault();
     const formData = {
-      firstName: firstName,
-      lastName: lastName,
+      nickname: nickname,
       email: email,
       password: password,
     };
@@ -47,14 +45,9 @@ function SignUp() {
           Sign Up</h1>
         <form>
           <div className="user-box">
-            <input type="firstName" value={firstName}
-              onChange={(e) => setFirstName(e.target.value)} />
-            <label>First Name</label>
-          </div>
-          <div className="user-box">
-            <input type="lastName" value={lastName}
-              onChange={(e) => setLastName(e.target.value)} />
-            <label>Last Name</label>
+            <input type="nickname" value={nickname}
+              onChange={(e) => setNickname(e.target.value)} />
+            <label>Nickname</label>
           </div>
           <div className="user-box">
             <input type="email" value={email}

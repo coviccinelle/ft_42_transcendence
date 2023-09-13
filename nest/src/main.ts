@@ -17,6 +17,33 @@ export const validateEmail = (email: string) => {
     );
 };
 
+export interface LimitsObject {
+  [x: string]: number
+}
+
+export const limits: LimitsObject = {
+  nickname: 15,
+  password: 64,
+}
+
+export interface ReportErrors {
+  errorCode: number,
+  message: string,
+  other?: any,
+};
+
+export const errors: ReportErrors[] = [
+  { errorCode: 0, message: "Unknown error." },
+  { errorCode: 1, message: "User not found." },
+  { errorCode: 2, message: "User do not need 2FA." },
+  { errorCode: 3, message: "Email is invalid." },
+  { errorCode: 4, message: "Email is already registred." },
+  { errorCode: 5, message: String("Password should be " + limits.password.toString() + " characters max.") },
+  { errorCode: 6, message: "Password is invalid." },
+  { errorCode: 7, message: "2FA code is invalid." },
+  { errorCode: 8, message: String("Nickname should be " + limits.password.toString() + " characters max.") },
+];
+
 function checkEnvVariables(configService: ConfigService) {
   const envVariables = [
     'DOMAIN_NAME',
@@ -27,7 +54,6 @@ function checkEnvVariables(configService: ConfigService) {
     'POSTGRES_PORT',
     'DATABASE_URL',
     'SESSION_SECRET',
-    'COOKIE_MAX_AGE',
     'FT_CLIENT_ID',
     'FT_CLIENT_SECRET',
     'GOOGLE_CLIENT_ID',
@@ -54,7 +80,7 @@ async function bootstrap() {
     saveUninitialized: false,
     resave: false,
     cookie: {
-      maxAge: parseInt(configService.get<string>('COOKIE_MAX_AGE')),
+      maxAge: 86400000,
     },
   });
   app.use(sessionMiddleware);

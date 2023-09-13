@@ -38,6 +38,7 @@ import { UserConnectionStatusDto } from './dto/user-connection-status.dto';
 import { UserIsBlockedDto } from './dto/user-is-blocked';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { errors } from 'src/main';
 
 @Controller('users')
 @ApiTags('users')

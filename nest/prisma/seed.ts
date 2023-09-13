@@ -16,11 +16,10 @@ async function main() {
     },
     create: {
       email: 'test@test.com',
-      firstName: 'Test1',
-      lastName: 'TestNom',
       picture: '',
       password: passwordUser1,
       isTwoFAEnabled: false,
+      isNewUser: true,
       matchHistory: {
         createMany: {
           data: [

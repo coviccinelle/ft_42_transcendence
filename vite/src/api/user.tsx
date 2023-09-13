@@ -41,8 +41,6 @@ const getUsersInChannel = async (channelId: number) => {
 export interface UpdateUserDto {
   email?: string;
   nickname?: string;
-  firstName?: string;
-  lastName?: string;
   picture?: string;
   password?: string;
 }
