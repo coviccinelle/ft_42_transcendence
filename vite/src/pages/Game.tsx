@@ -70,15 +70,18 @@ function Game(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    function handleConnection() {}
-    function handleDisconnect() {}
+    function handleConnection() {
+      console.log(socket.id);
+    }
+    // function handleDisconnect() {
+    // }
     socket.connect();
     socket.on('connect', handleConnection);
-    socket.on('disconnect', handleDisconnect);
+    // socket.on('disconnect', handleDisconnect);
     return () => {
       socket.disconnect();
       socket.off('connect', handleConnection);
-      socket.off('disconnect', handleDisconnect);
+      // socket.off('disconnect', handleDisconnect);
     };
   }, []);
 
@@ -178,7 +181,7 @@ function Game(): JSX.Element {
             <Navbar2 />
           </div>
           <p className="text-2xl text-black  dark:text-white font-bold items-center text-center">
-            {gameInfos.players[0].name} _ vs _  {gameInfos.players[1].name}
+            {gameInfos.players[0].name} _ vs _ {gameInfos.players[1].name}
           </p>
           <p className="text-2xl text-black dark:text-white font-bold items-center text-center">
             {gameInfos.players[0].score} - {gameInfos.players[1].score}

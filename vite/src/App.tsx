@@ -46,8 +46,12 @@ function App() {
   }, []);
 
   useEffect(() => {
-    function handleConnection() {}
-    function handleDisconnect() {}
+    function handleConnection() {
+      console.log('connected main');
+    }
+    function handleDisconnect() {
+      console.log('disconnected main');
+    }
     socket.connect();
     socket.on('connect', handleConnection);
     socket.on('disconnect', handleDisconnect);

@@ -82,8 +82,12 @@ function ChatPage() {
       setCurrentChannel(0);
       fetchChannels();
     }
-    function handleConnection() {}
-    function handleDisconnect() {}
+    function handleConnection() {
+      console.log('connected');
+    }
+    function handleDisconnect() {
+      console.log('disconnected');
+    }
     socket.on('message', handleIncomingMessage);
     socket.on('Leave channel', handleLeaveChannel);
     socket.on('connect', handleConnection);

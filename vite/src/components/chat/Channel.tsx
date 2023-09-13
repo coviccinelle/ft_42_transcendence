@@ -84,8 +84,8 @@ function Channel(props: {
   }, [props.channelId]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value.length > 1000) {
-      return;
+    if (e.target.value.length > 512) {
+      e.target.value = e.target.value.slice(0, 512);
     }
     setMessage(e.target.value);
   };
@@ -202,9 +202,9 @@ function Channel(props: {
               type="text"
               value={message}
               onChange={handleChange}
-              placeholder="type your message here..."/>
-              {/* //add a send icon at the end of the input or Not */}
-              
+              placeholder="type your message here..."
+            />
+            {/* //add a send icon at the end of the input or Not */}
           </form>
         </div>
       </div>
