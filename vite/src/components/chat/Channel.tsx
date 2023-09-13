@@ -203,8 +203,9 @@ function Channel(props: {
               type="text"
               value={message}
               onChange={handleChange}
-              placeholder="type your message here..."
-            />
+              placeholder="type your message here..."/>
+              {/* //add a send icon at the end of the input or Not */}
+              
           </form>
         </div>
       </div>
