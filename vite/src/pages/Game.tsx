@@ -9,7 +9,6 @@ import { io } from 'socket.io-client';
 import { Direction, GameInfo, WsException } from '../utils/game/types';
 import GameFinishedDialog from '../components/game/GameFinishedDialog';
 
-
 function Game(): JSX.Element {
   const [score, setScore] = useState<number[]>([0, 0]);
   const [isLoading, setIsLoading] = useState(true);
@@ -139,6 +138,12 @@ function Game(): JSX.Element {
     };
   }, []);
 
+  useEffect(() => {
+    if (params.uuid) {
+      joinGame(params.uuid);
+    }
+  }, [params.uuid]);
+
   function startGame(isHard: boolean) {
     socket.emit('new', isHard);
   }
@@ -154,7 +159,7 @@ function Game(): JSX.Element {
   console.log(params);
   return (
     <>
-      {!params.uuid && !isWaiting && !isStarted && (
+      {!isWaiting && !isStarted && (
         <div className="flex flex-col w-screen h-screen">
           <div className="z-40 py-2 bg-gray-800">
             <Navbar2 />
@@ -199,12 +204,12 @@ function Game(): JSX.Element {
           <GameZone sendInput={sendInput} gameInfos={gameInfos}></GameZone>
         </div>
       )}
-      {params.uuid && (
+      {params.uuid && isWaiting && (
         <div className="flex flex-col w-screen h-screen items-center">
           <Navbar2 />
-          <button onClick={() => joinGame(params.uuid as string)}>
-            Join game
-          </button>
+          <p className="text-2xl text-black dark:text-white font-bold">
+            Waiting for other player to join...
+          </p>
         </div>
       )}
       <GameFinishedDialog
