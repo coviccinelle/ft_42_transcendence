@@ -27,6 +27,7 @@ function Registration() {
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
     const imageUrl = URL.createObjectURL(file);
+    apiUser.uploadAvatar(file);
     setImage(imageUrl);
   };
 
@@ -34,12 +35,11 @@ function Registration() {
   const handleFormSubmit = (event: any) => {
     event.preventDefault();
     const formData: UpdateUserDto = {
-        nickname: nickname,
-        picture: img,
+      nickname: nickname,
     };
     apiUser.updateMe(formData);
     navigate('/profile');
-};
+  };
 
   return (
     <div className="flex flex-col items-center justify-center h-screen">
@@ -83,7 +83,12 @@ function Registration() {
             <input
               type="nickname"
               value={nickname}
-              onChange={(e) => setNickname(e.target.value)}
+              onChange={(e) => {
+                setNickname(e.target.value);
+                if (e.target.value.length > 32) {
+                  setNickname(e.target.value.substring(0, 32));
+                }
+              }}
               className="w-full px-4 py-2 border text-amber-300 font-black bg-black bg-opacity-30 rounded-lg"
             />
           </div>
