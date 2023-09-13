@@ -12,5 +12,7 @@ then
 	npx prisma db seed
 	exec npm run start:dev
 else
+	rm -rf dist
+	npm run build
 	exec npm run start:prod
 fi
