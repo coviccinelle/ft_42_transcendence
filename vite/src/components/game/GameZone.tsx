@@ -96,11 +96,7 @@ export const GameZone = (props: {
         paddleSize.height,
       );
       ball(ctx, ballPos[0], ballPos[1], ballWidth);
-      console.log('windowSizeGame', windowSizeGame);
-      console.log('windowSize', windowSize);
-      console.log('windowSizeGameInGame', props.gameInfos.courtSize);
-      console.log('ballPos', ballPos);
-      console.log('ballPosInGame', props.gameInfos.ball.position);
+      console.log('paddleSize', props.gameInfos.players[0].paddle.size);
     }
   }
 

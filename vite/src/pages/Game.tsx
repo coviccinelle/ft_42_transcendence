@@ -185,7 +185,6 @@ function Game(): JSX.Element {
       )}
       {isStarted && (
         <div className="flex flex-col w-screen h-screen items-center">
-          <Navbar2 />
           <p className="text-2xl text-black dark:text-white font-bold">
             {gameInfos.players[0].name} vs {gameInfos.players[1].name}
           </p>
