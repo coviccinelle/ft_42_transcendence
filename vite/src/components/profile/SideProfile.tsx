@@ -157,7 +157,7 @@ function SideProfile(props: { user: any; userMe: any }) {
         )}
 
         <ul className="mt-5 leading-10">
-          <li className="relative px-2 py-1">
+          <li className="relative px-8 py-1">
             <div
               className="inline-flex items-center w-full text-sm font-semibold text-white transition-colors duration-150 cursor-pointer hover:text-green-500"
               onClick={() => {
@@ -182,7 +182,7 @@ function SideProfile(props: { user: any; userMe: any }) {
             </div>
           </li>
           {!isMe && (
-            <li className="relative px-2 py-1" x-data="{ Open : false  }">
+            <li className="relative px-8 py-1" x-data="{ Open : false  }">
               <div
                 className="inline-flex items-center justify-between w-full text-base font-semibold transition-colors duration-150 text-gray-500  hover:text-yellow-400 cursor-pointer"
                 x-on:click="Open = !Open"
@@ -216,7 +216,7 @@ function SideProfile(props: { user: any; userMe: any }) {
             setFriendsListDialog={setFriendsListDialog}
           />
           {isMe && (
-            <li className="relative px-2 py-1" x-data="{ Open : false  }">
+            <li className="relative px-8 py-1" x-data="{ Open : false  }">
               <div
                 className="inline-flex items-center justify-between w-full text-base font-semibold transition-colors duration-150 text-gray-500  hover:text-yellow-400 cursor-pointer"
                 x-on:click="Open = !Open"
