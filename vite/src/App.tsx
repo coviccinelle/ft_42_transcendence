@@ -16,7 +16,6 @@ import { io } from 'socket.io-client';
 import VerifyTwoFA from './pages/Verify-2fa';
 import EnableTwoFA from './pages/Enable-2fa';
 import DisableTwoFA from './pages/Disable-2fa';
-import { useLocation } from 'react-router-dom';
 
 export const getUser = async (): Promise<UserEntity | null> => {
   const { data } = await client.get('/users/me');
@@ -77,16 +76,15 @@ function App() {
 
   return (
     <div className="flex h-screen flex-col">
-      <div style={{ zIndex: 2 }}
-        className="top-4 fixed right-4 p-2 rounded-full cursor-pointer dark:bg-yellow-200 bg-gray-600" onClick={toggleDarkMode}>
-        <span
-          role="img"
-          aria-label="dark mode"
-          className="cursor-pointer"
-        >
+      <div
+        style={{ zIndex: 2 }}
+        className="top-4 fixed right-4 p-2 rounded-full cursor-pointer dark:bg-yellow-200 bg-gray-600"
+        onClick={toggleDarkMode}
+      >
+        <span role="img" aria-label="dark mode" className="cursor-pointer">
           {darkMode ? '🌻' : '🌙'}
         </span>
-        <label htmlFor="darkModeToggle" className="cursor-pointer"/>
+        <label htmlFor="darkModeToggle" className="cursor-pointer" />
         <input
           type="checkbox"
           id="darkModeToggle"
@@ -95,7 +93,7 @@ function App() {
           checked={darkMode}
         />
       </div>
-  
+
       <BrowserRouter>
         <Routes>
           <Route
@@ -115,30 +113,10 @@ function App() {
           <Route path="/login/enable-2fa" element={<EnableTwoFA />} />
           <Route path="/login/disable-2fa" element={<DisableTwoFA />} />
           <Route path="/login/verify-2fa" element={<VerifyTwoFA />} />
-          <Route
-            path="/profile"
-            element={
-              <Profile />
-            }
-          />
-          <Route
-            path="/chat"
-            element={
-              <Chat />
-            }
-          />
-          <Route
-            path="/chat/:id"
-            element={
-              <Chat />
-            }
-          />
-          <Route
-            path="/game"
-            element={
-              <Game />
-            }
-          />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/chat" element={<Chat />} />
+          <Route path="/chat/:id" element={<Chat />} />
+          <Route path="/game" element={<Game />} />
           <Route
             path="/game/:uuid"
             element={

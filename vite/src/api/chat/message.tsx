@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios from 'axios';
 import { Socket } from 'socket.io-client';
 
 const API = '/api';

@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import QRCode from 'react-qr-code';
+import { useEffect, useState } from 'react';
 import apiURL from '../api/2fa';
 import apiUser from '../api/user';
 import { useNavigate } from 'react-router-dom';

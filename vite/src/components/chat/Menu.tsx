@@ -22,7 +22,7 @@ function MyMenu(props: {
   {
     const [password, setPassword] = useState('');
     const [passwordDialog, setPasswordDialog] = useState(false);
-    // console.log(props.type);
+
     return (
       <div className="flex">
         <div className="relative inline-block">
@@ -210,7 +210,7 @@ function MyMenu(props: {
                                 await apiChannel.deleteChannel(
                                   props.channel.id,
                                 );
-                                window.location.reload();
+                                props.setLeaveChannelDialog(false);
                               }}
                             >
                               <p className="overflow-hidden overflow-ellipsis">

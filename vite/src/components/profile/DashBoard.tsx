@@ -7,7 +7,6 @@ function Dashboard(props: { user: any }) {
   const [rank, setRank] = useState(0);
   const [matchHistory, setMatchHistory] = useState([]);
   const [winningRatio, setWinningRatio] = useState(0);
-  const [avatar, setAvatar] = useState('/assets/duckie_bg_rm/sticker1.png');
 
   useEffect(() => {
     const fetchUserStats = async () => {

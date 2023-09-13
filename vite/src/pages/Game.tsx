@@ -1,7 +1,6 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import '../styles/game.css';
 import { useEffect, useState } from 'react';
-import LoadingScreen from '../components/LoadingScreen';
 import { GameZone } from '../components/game/GameZone';
 import Navbar2 from '../components/NavBar2';
 import apiUser from '../api/user';
@@ -10,8 +9,6 @@ import { Direction, GameInfo, WsException } from '../utils/game/types';
 import GameFinishedDialog from '../components/game/GameFinishedDialog';
 
 function Game(): JSX.Element {
-  const [score, setScore] = useState<number[]>([0, 0]);
-  const [isLoading, setIsLoading] = useState(true);
   const [socket, setSocket] = useState(io('/game', { autoConnect: false }));
   const navigate = useNavigate();
   const [isWaiting, setIsWaiting] = useState(false);
@@ -68,7 +65,6 @@ function Game(): JSX.Element {
       const user = await apiUser.getMe();
       if (user) setUserMe(user);
       else navigate('/login');
-      setIsLoading(false);
     };
     getUser();
   }, []);

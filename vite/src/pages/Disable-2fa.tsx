@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import apiTwoFA from '../api/2fa';
 import apiUser from '../api/user';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -16,8 +15,7 @@ function DisableTwoFA() {
         const user = await apiUser.getMe();
 
         if (user) {
-          if (!user.isTwoFAEnabled)
-            return navigate('/settings');
+          if (!user.isTwoFAEnabled) return navigate('/settings');
           setUserEmail(user.email);
         } else {
           navigate('/settings');
@@ -40,7 +38,7 @@ function DisableTwoFA() {
     };
 
     axios
-    .post(`http://${domainName}/api/auth/2fa/turn-off`, formData)
+      .post(`http://${domainName}/api/auth/2fa/turn-off`, formData)
       .then((res) => {
         console.log(res);
         return navigate('/settings');
@@ -49,7 +47,7 @@ function DisableTwoFA() {
         console.log(res);
         // return navigate('/');
       });
-  }
+  };
 
   return (
     <div className="flex h-screen w-screen justify-center items-center">
