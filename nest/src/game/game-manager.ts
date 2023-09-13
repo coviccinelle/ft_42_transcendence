@@ -47,6 +47,9 @@ export class GameManager {
     if (!this.games.get(uuid)) {
       throw new WsException("Game doesn't exist");
     }
+    if (this.isInLobby(userId)) {
+      throw new WsException('You are already in a game');
+    }
     if (
       this.games.get(uuid).getNbPlayers() === 2 ||
       this.games.get(uuid).getStatus() !== GameStatus.WAITING
