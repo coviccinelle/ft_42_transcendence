@@ -161,7 +161,6 @@ export class AuthController {
   @Get('logout')
   logout(@Request() req, @Res() response: Response): any {
     req.session.destroy();
-    console.log('Successful logout');
     response.redirect('/');
     // return { msg: 'The user session ended'};
   }

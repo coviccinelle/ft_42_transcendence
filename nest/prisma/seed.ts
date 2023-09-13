@@ -137,7 +137,6 @@ async function main() {
     },
   });
 
-  console.log({ user1 });
 }
 
 main()

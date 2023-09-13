@@ -34,7 +34,6 @@ export class FtStrategy extends PassportStrategy(Strategy, 'ft') {
     const user = await this.usersService.findOneByEmail(profileData.email);
 
     if (user) {
-      console.log(user);
       return user;
     } else {
       // If no user => Create new user
@@ -46,7 +45,6 @@ export class FtStrategy extends PassportStrategy(Strategy, 'ft') {
         nickname: null,
         password: null,
       };
-      console.log(newUserDto);
       return this.usersService.create(newUserDto);
     }
   }

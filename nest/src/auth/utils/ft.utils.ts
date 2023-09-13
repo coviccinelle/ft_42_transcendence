@@ -13,7 +13,6 @@ export async function getTokenFt(code: string): Promise<any> {
     redirect_uri: redirect_uri,
   };
 
-  console.log('Posting to oauth/token...');
   try {
     const response = await axios.post(
       'https://api.intra.42.fr/oauth/token',
@@ -29,7 +28,6 @@ export async function getProfileFt(token: string): Promise<any> {
   // !! 2 requests par secondes
   const auth_value = 'Bearer ' + token;
 
-  console.log('Getting profile from api...');
   try {
     const profileResponse = await axios.get('https://api.intra.42.fr/v2/me', {
       headers: { Authorization: auth_value },

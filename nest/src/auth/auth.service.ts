@@ -23,7 +23,6 @@ export class AuthService {
     email: string,
     password: string,
   ): Promise<UserEntity> {
-    console.log('Signup request: creating new user...');
     const lowerEmail = email.toLowerCase();
     if (!email || !validateEmail(email)) {
       throw new BadRequestException("Email is not valid.");
@@ -76,7 +75,6 @@ export class AuthService {
     await this.usersService.setTwoFASecret(user.id, secret);
 
     const otpAuthUrl = authenticator.keyuri(user.email, "Duckie Pong", secret);
-    // console.log(otpAuthUrl);
 
     return toDataURL(otpAuthUrl);
   }

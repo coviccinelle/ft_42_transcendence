@@ -28,11 +28,9 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     done: VerifyCallback,
   ): Promise<UserEntity> {
     const { name, emails, photos } = profile;
-    console.log(profile);
 
     const user = await this.usersService.findOneByEmail(emails[0].value);
     if (user) {
-      console.log(user);
       return user;
     } else {
       // If no user -> Create new user
@@ -44,7 +42,6 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
         nickname: null,
         password: null,
       };
-      console.log(newUserDto);
       return this.usersService.create(newUserDto);
     }
   }
