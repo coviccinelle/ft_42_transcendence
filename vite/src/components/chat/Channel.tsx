@@ -179,9 +179,9 @@ function Channel(props: {
         })}
       </div>
       <div className="flex flex-row w-full">
-        <div className="mx-2 flex flex-row">
+        <div className="mx-2 py-5 flex flex-row">
           <button
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            className="bg-blue-400 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded-2xl"
             onClick={async () => {
               const idGame = await apiGame.getIdGame();
               apiMessage.sendMessage(
@@ -196,10 +196,10 @@ function Channel(props: {
             Invite for game
           </button>
         </div>
-        <div className="pt-auto pb-3 px-4 w-full">
+        <div className="pt-auto px-2 pr-8 w-full">
           <form action="submit" onSubmit={handleSubmit}>
             <input
-              className="w-full dark:border dark:border-gray-700 dark:border-light-blue-300 dark:bg-gray-950 bg-rose-100 py-5 px-3 rounded-xl dark:text-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-sky-950 focus:border-transparent"
+              className="w-full dark:border dark:border-gray-700 dark:border-light-blue-300 dark:bg-gray-950 bg-rose-100 py-5 mt-5 px-4 rounded-xl dark:text-gray-300 text-black focus:outline-none focus:ring-2 focus:ring-sky-950 focus:border-transparent"
               type="text"
               value={message}
               onChange={handleChange}
