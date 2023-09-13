@@ -195,19 +195,23 @@ function Game(): JSX.Element {
         </div>
       )}
       {params.uuid && isWaiting && (
-        <div className="flex flex-col w-screen h-screen items-center">
-          <Navbar2 />
-          <p className="text-2xl text-black dark:text-white font-bold">
+        <div className="flex flex-col w-screen h-screen">
+          <div className="z-40 py-2 bg-gray-800">
+            <Navbar2 />
+          </div>
+          <p className="text-2xl text-black dark:text-white font-bold items-center">
             Waiting for other player to join...
           </p>
         </div>
       )}
       {params.uuid && !isWaiting && !isStarted && (
         // Join game
-        <div className="flex flex-col w-screen h-screen items-center">
-          <Navbar2 />
+        <div className="flex flex-col w-screen h-screen">
+          <div className="z-40 py-2 bg-gray-800">
+            <Navbar2 />
+          </div>
           <button
-            className="text-2xl text-black dark:text-white font-bold justify-center"
+            className="text-2xl text-black dark:text-white font-bold justify-center items-center"
             onClick={() => joinGame(params.uuid as string)}
           >
             Join game ?
