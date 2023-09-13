@@ -140,7 +140,7 @@ function App() {
             }
           />
           <Route
-            path="/game/:id"
+            path="/game/:uuid"
             element={
               <Game darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
             }
