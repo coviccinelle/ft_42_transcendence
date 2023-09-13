@@ -220,13 +220,17 @@ export class UsersController {
   })
   @UseInterceptors(FileInterceptor('file', {
     fileFilter: function(req, file, cb) {
-      const correctType = !!file.mimetype.match(/\/(jpeg)$/);
+      const correctType = !!file.mimetype.match(/\/(jpeg|png)$/);
       cb(null, correctType);
     },
     storage: diskStorage({
       destination: './avatars',
       filename: function(req: any, file, cb) {
-        cb(null, req.user.id.toString() + '.jpeg');
+        if (!!file.mimetype.match(/\/(jpeg)$/)) {
+          cb(null, req.user.id.toString() + '.jpeg');
+        } else {
+          cb(null, req.user.id.toString() + '.png');
+        }
       },
     }),
   }))
@@ -234,6 +238,8 @@ export class UsersController {
     @UploadedFile() file: Express.Multer.File,
     @User() user: UserEntity,
   ) {
-    await this.usersService.uploadAvatar(user.id);
+    if (file) {
+      await this.usersService.uploadAvatar(user.id, file.filename);
+    }
   }
 }
