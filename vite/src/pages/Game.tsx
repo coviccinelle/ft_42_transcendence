@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import LoadingScreen from '../components/LoadingScreen';
 import { GameZone } from '../components/game/GameZone';
 import Navbar2 from '../components/NavBar2';
-import Navbar from '../components/Navbar';
 import apiUser from '../api/user';
 import { io } from 'socket.io-client';
 import { Direction, GameInfo, WsException } from '../utils/game/types';
@@ -163,7 +162,7 @@ function Game(): JSX.Element {
       {!params.uuid && !isWaiting && !isStarted && (
         <div className="flex flex-col w-screen h-screen">
           <div className="z-40 py-2 bg-gray-800">
-          <Navbar2 />
+            <Navbar2 />
           </div>
           <div className="flex flex-col items-center justify-center h-full">
             <button
@@ -182,8 +181,10 @@ function Game(): JSX.Element {
         </div>
       )}
       {!params.uuid && isWaiting && (
-        <div className="flex flex-col w-screen h-screen items-center">
-          <Navbar2 />
+        <div className="flex flex-col w-screen h-screen">
+          <div className="z-40 py-2 bg-gray-800">
+            <Navbar2 />
+          </div>
           <div className="flex flex-col items-center justify-center h-full">
             <p className="text-2xl text-black dark:text-white font-bold">
               Waiting for other player to join...
