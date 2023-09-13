@@ -168,7 +168,7 @@ function Channel(props: {
               key={message.id}
               role={role}
               message={message.content}
-              author={message.author.user.firstName}
+              author={message.author.user.nickname}
               avatar={message.author.user.picture}
               id={message.author.user.id}
               user={userMe}

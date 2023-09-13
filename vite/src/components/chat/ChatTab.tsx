@@ -65,9 +65,9 @@ function ChatTab(props: {
             {props.name ? props.name : name}
           </p>
         </div>
-        <p className="dark:text-gray-300 text-gray-800 truncate">
+        <div className="dark:text-gray-300 text-gray-800 truncate">
           {displayMessageOrType()}
-        </p>
+        </div>
       </div>
     </div>
   );

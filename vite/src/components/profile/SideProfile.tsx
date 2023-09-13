@@ -45,17 +45,17 @@ function SideProfile(props: { user: any; userMe: any }) {
     <aside className="z-20 flex-shrink-0 hidden w-64 pl-2 overflow-y-auto bg-gray-800 md:block no-scrollbar">
       <div className="text-white">
         <div className="flex p-3 py-4 bg-gray-800">
-            <div className="flex py-4 px-2 items-center">
-              <Link className="text-3xl text-yellow-500 font-bold" to="/">
-                42
-              </Link>
-              <Link
-                className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-2xl font-black"
-                to="/"
-              >
-                Duckie Pooong
-              </Link>
-            </div>
+          <div className="flex py-4 px-2 items-center">
+            <Link className="text-3xl text-yellow-500 font-bold" to="/">
+              42
+            </Link>
+            <Link
+              className="animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-2xl font-black"
+              to="/"
+            >
+              Duckie Pooong
+            </Link>
+          </div>
         </div>
       </div>
 
@@ -83,10 +83,13 @@ function SideProfile(props: { user: any; userMe: any }) {
               ))}
           </div>
           <p className="font-bold text-base text-gray-400 pt-2 text-center w-24">
-            {isMe ? props.userMe.username : props.user.username}
-            {isMe ? ( <p className="font-bold text-base text-gray-400 pt-2 text-center w-24">
-            {props.userMe.nickname}
-            </p>) : (<p></p>)}
+            {isMe ? (
+              <p className="font-bold text-base text-gray-400 pt-2 text-center w-24">
+                {props.userMe.nickname}
+              </p>
+            ) : (
+              <p>{props.user.nickname}</p>
+            )}
           </p>
         </div>
       </div>

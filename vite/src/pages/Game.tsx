@@ -150,11 +150,6 @@ function Game(): JSX.Element {
 
   function joinGame(uuid: string) {
     socket.emit('join', uuid);
-    return (
-      <>
-        <div className="flex flex-col w-screen h-screen items-center">Test</div>
-      </>
-    );
   }
 
   console.log(params);

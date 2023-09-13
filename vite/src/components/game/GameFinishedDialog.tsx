@@ -1,11 +1,13 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 function GameFinishedDialog(props: {
   gameFinishedDialog: any;
   setGameFinishedDialog: any;
   score: string;
 }) {
+  const navigate = useNavigate();
   function closeDialog() {
     props.setGameFinishedDialog(false);
   }
@@ -57,7 +59,7 @@ function GameFinishedDialog(props: {
                     <button
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                       onClick={() => {
-                        window.location.reload();
+                        navigate('/');
                       }}
                     >
                       Play again
@@ -74,7 +76,7 @@ function GameFinishedDialog(props: {
                     <button
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                       onClick={() => {
-                        window.location.reload();
+                        navigate('/');
                       }}
                     >
                       Play again

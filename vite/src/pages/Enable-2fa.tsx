@@ -19,8 +19,7 @@ function EnableTwoFA() {
         const user = await apiUser.getMe();
 
         if (user) {
-          if (user.isTwoFAEnabled)
-            return navigate('/settings');
+          if (user.isTwoFAEnabled) return navigate('/settings');
           setUserEmail(user.email);
         } else {
           navigate('/settings');
@@ -54,14 +53,12 @@ function EnableTwoFA() {
     axios
       .post(`http://${domainName}/api/auth/2fa/turn-on`, formData)
       .then((res) => {
-        console.log(res);
         return navigate('/settings');
       })
       .catch((res) => {
-        console.log(res);
         // return navigate('/');
       });
-  }
+  };
 
   return (
     <div className="flex h-screen w-screen justify-center items-center text-center">
@@ -72,28 +69,27 @@ function EnableTwoFA() {
         >
           X
         </button>
-      <img src={image} alt="Image" className="w-24 h-24 mb-8" />
-      <div className="user-box">
-        <label className="text-gray-200 py-4 text-lg font-semibold ">
-          Enter The 2FA Code To Verify Association
-        </label>
-        <input
-          type="text"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          className="w-1/2 mt-2 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
-        />
+        <img src={image} alt="Image" className="w-24 h-24 mb-8" />
+        <div className="user-box">
+          <label className="text-gray-200 py-4 text-lg font-semibold ">
+            Enter The 2FA Code To Verify Association
+          </label>
+          <input
+            type="text"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            className="w-1/2 mt-2 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+          />
+        </div>
+        <button
+          className="mt-12 px-4 py-2 rounded-md bg-amber-500 text-white hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50"
+          type="button"
+          onClick={handleTurnOnTwoFA}
+        >
+          Activate 2FA
+        </button>
       </div>
-      <button
-        className="mt-12 px-4 py-2 rounded-md bg-amber-500 text-white hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50"
-        type="button"
-        onClick={handleTurnOnTwoFA}
-      >
-        Activate 2FA
-      </button>
     </div>
-    </div >
-
   );
 }
 
