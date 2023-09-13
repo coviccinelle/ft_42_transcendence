@@ -13,11 +13,11 @@ export class UsersGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() wss: Server;
 
   async handleConnection(client: any) {
-    client.data.interval = setInterval(() => {
-      client.conn.close();
-    }, SESSION_RELOAD_INTERVAL);
     const user = client.request.user;
     if (!user) {
+      client.data.interval = setInterval(() => {
+        client.conn.close();
+      }, SESSION_RELOAD_INTERVAL);
       return;
     }
     client.data.user = user;
