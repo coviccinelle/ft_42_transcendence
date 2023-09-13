@@ -100,7 +100,7 @@ function Settings() {
                 value={nickname}
                 onChange={(e) => {
                   setNickname(e.target.value);
-                  if (e.target.value.length > 20) {
+                  if (e.target.value.length > 32) {
                     setNickname(e.target.value.slice(0, 32));
                   }
                 }}
