@@ -141,7 +141,7 @@ export const GameZone = (props: {
     <div className="flex max-w-[95%] max-h-[75%] justify-center items-center">
       <canvas
         id="gamezone"
-        className="flex bg-gray-500 w-full h-full aspect-[16/9]"
+        className="flex bg-gray-500 w-full h-full aspect-[16/9] rounded-xl"
         ref={canvas}
         width={windowSize.width}
         height={windowSize.height}
