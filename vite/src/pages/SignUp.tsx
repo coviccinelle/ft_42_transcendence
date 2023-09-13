@@ -20,20 +20,12 @@ function SignUp() {
 
     axios
       .post(`http://${domainName}/api/auth/local/signup`, formData)
-      .then((res) => {
+      .then(() => {
         return navigate('/login');
       })
-      .catch((e) => {
+      .catch(() => {
         // * when user is already in db (conflictException) or other errors
       });
-  };
-
-  const handleLoginGoogle = () => {
-    location.href = `http://${domainName}/api/auth/google/login`;
-  };
-
-  const handleLoginFt = () => {
-    location.href = `http://${domainName}/api/auth/ft/login`;
   };
 
   return (

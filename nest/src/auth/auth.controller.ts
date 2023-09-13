@@ -14,7 +14,6 @@ import {
 import { AuthService } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
 import { LoginDto } from './dto/login.dto';
-import { GoogleAuthGuard } from './guards/google-auth.guard';
 import { ReportErrors, domainName } from 'src/main';
 import { Response } from 'express';
 import { FtAuthGuard } from './guards/ft-auth.guard';
@@ -53,28 +52,6 @@ export class AuthController {
     @Body() { email, nickname, password }: LoginDto,
   ): Promise<UserEntity | ReportErrors> {
     return await this.authService.signup(nickname, email, password);
-  }
-
-  @Get('google/login')
-  @UseGuards(GoogleAuthGuard)
-  loginGoogle() {}
-
-  @Get('google/redirect')
-  @UseGuards(GoogleAuthGuard)
-  redirectGoogle(@Req() req, @Res() response: Response) {
-    const user = req.user;
-
-    console.log("LOGIN user " + user.email);
-    if (user.isNewUser) {
-      return response.redirect('/registration');
-    }
-    if (user.isTwoFAEnabled) {
-      console.log("LOGIN user " + user.email + " need to do 2fa auth.");
-      req.session.needTwoFA = true;
-      return response.redirect('/login/verify-2fa?userEmail=' + user.email);
-    }
-    req.session.needTwoFA = false;
-    return response.redirect('/');
   }
 
   @Get('ft/login')
