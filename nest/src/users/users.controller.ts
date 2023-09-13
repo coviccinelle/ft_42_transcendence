@@ -220,22 +220,19 @@ export class UsersController {
     },
   })
   @UseInterceptors(FileInterceptor('file', {
+    fileFilter: function(req, file, cb) {
+      const correctType = !!file.mimetype.match(/\/(jpeg)$/);
+      cb(null, correctType);
+    },
     storage: diskStorage({
       destination: './avatars',
       filename: function(req: any, file, cb) {
         cb(null, req.user.id.toString() + '.jpeg');
       },
-    })
+    }),
   }))
   async uploadFile(
-    @UploadedFile(
-      new ParseFilePipe({
-        validators: [
-          new MaxFileSizeValidator({ maxSize: 100000 }),
-          new FileTypeValidator({ fileType: 'image/jpeg' }),
-        ],
-      }),
-    ) file: Express.Multer.File,
+    @UploadedFile() file: Express.Multer.File,
     @User() user: UserEntity,
   ) {
     await this.usersService.uploadAvatar(user.id);
