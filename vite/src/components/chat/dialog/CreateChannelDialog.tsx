@@ -68,7 +68,7 @@ function CreateChannelDialog(props: {
         handleSubmit={async (e: any) => {
           e.preventDefault();
           const res = await apiChannel.joinChannel(channelId, passwordGuess);
-          if (res === 'wrong password') {
+          if (res.error === 'Incorrect password') {
             setPasswordGuess('');
             alert('wrong password');
             return;

@@ -196,10 +196,7 @@ function Dashboard(props: { user: any }) {
             <div className="col-span-12 mt-5">
               <div className="lg:grid-cols-2 ">
                 <div className="bg-slate-700 text-black shadow-lg p-4 px-8 rounded-3xl">
-                  {' '}
-                  <p className="py-3 px-5 text-lg text-white font-bold leading-8 truncate">
-                    Match history
-                  </p>
+                  <p className="text-2xl text-white font-bold">Match History</p>
                   {matchHistory
                     .slice(matchHistory.length - 10, matchHistory.length)
                     .map((match: any) => {

@@ -21,7 +21,6 @@ const sendMessage = (
   socket: Socket,
   type: string,
 ) => {
-  console.log(`Sending message ${message}`);
   socket.emit('message', {
     content: message,
     channelId: channelId,

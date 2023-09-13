@@ -29,6 +29,7 @@ function Settings() {
   const handleFileChange = (event: any) => {
     const file = event.target.files[0];
     const imageUrl = URL.createObjectURL(file);
+    apiUser.uploadAvatar(file);
     setImage(imageUrl);
   };
 
@@ -40,11 +41,6 @@ function Settings() {
     };
     apiUser.updateMe(formData);
     navigate('/profile');
-  };
-  const handleFormAvatarSubmit = (event: any) => {
-    event.preventDefault();
-    apiUser.uploadAvatar(event.target[0].files[0]);
-    // navigate('/profile');
   };
 
   return (
@@ -69,10 +65,7 @@ function Settings() {
             {nickname}
           </p>
         </div>
-        <form
-          className="items-center justify-center text-center"
-          onSubmit={handleFormAvatarSubmit}
-        >
+        <form className="items-center justify-center text-center">
           <div className="flex flex-col text-center items-center justify-center">
             <div className="flex flex-col w-32 justify-center items-center px-1 py-4 relative">
               <img
@@ -93,12 +86,6 @@ function Settings() {
                 onChange={handleFileChange}
               />
             </div>
-            <button
-              className="bg-gray-300 hover:bg-amber-400 text-amber-600 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-3xl"
-              type="submit"
-            >
-              Change avatar
-            </button>
           </div>
         </form>
 
@@ -111,24 +98,32 @@ function Settings() {
               <input
                 type="nickname"
                 value={nickname}
-                onChange={(e) => setNickname(e.target.value)}
+                onChange={(e) => {
+                  setNickname(e.target.value);
+                  if (e.target.value.length > 20) {
+                    setNickname(e.target.value.slice(0, 32));
+                  }
+                }}
                 className="w-full px-4 py-2 border text-amber-300 font-black bg-black bg-opacity-30 rounded-lg"
               />
             </div>
+          </div>
 
-            <div className="flex items-center justify-center w-full py-3">
-              <p className=" text-black dark:text-white font-bold mr-2">2FA</p>
+          <div className="flex flex-row text-center items-center justify-center">
+            <button
+              className="bg-gray-300 hover:bg-amber-400 text-amber-600 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-3xl"
+              type="submit"
+              onClick={handleFormSubmit}
+            >
+              Register
+            </button>
+            <div className="flex items-center justify-center py-3">
+              <p className="text-black dark:text-white font-bold mr-2 ml-2">
+                2FA
+              </p>
               <Toggle2FA />
             </div>
           </div>
-
-          <button
-            className="bg-gray-300 hover:bg-amber-400 text-amber-600 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-3xl"
-            type="submit"
-            onClick={handleFormSubmit}
-          >
-            Register
-          </button>
         </form>
       </div>
     </div>

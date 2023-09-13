@@ -82,13 +82,15 @@ function SideProfile(props: { user: any; userMe: any }) {
                 <div className="absolute bottom-0 right-0 w-4 h-4 bg-red-400 rounded-full border-2 border-gray-800"></div>
               ))}
           </div>
-          <div className="font-bold text-base text-gray-400 pt-2 text-center w-24">
+          <div className="font-bold text-base text-gray-400 pt-2 text-center w-40">
             {isMe ? (
-              <p className="font-bold text-base text-gray-400 pt-2 text-center w-24">
+              <p className="font-bold text-base text-gray-400 pt-2 text-center w-40 overflow-hidden overflow-ellipsis whitespace-nowrap">
                 {props.userMe.nickname}
               </p>
             ) : (
-              <p>{props.user.nickname}</p>
+              <p className="font-bold text-base text-gray-400 pt-2 text-center w-40 overflow-hidden overflow-ellipsis whitespace-nowrap">
+                {props.user.nickname}
+              </p>
             )}
           </div>
         </div>

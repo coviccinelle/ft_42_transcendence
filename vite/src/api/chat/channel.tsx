@@ -34,7 +34,6 @@ const putChannelName = async (channelId: number, name: string) => {
     const response = await axios.patch(`${API}/chat/${channelId}/name`, {
       name: name,
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -44,7 +43,6 @@ const putChannelName = async (channelId: number, name: string) => {
 const leaveChannel = async (channelId: number) => {
   try {
     const response = await axios.get(`${API}/chat/${channelId}/leave`);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -54,7 +52,6 @@ const leaveChannel = async (channelId: number) => {
 const deleteChannel = async (channelId: number) => {
   try {
     const response = await axios.delete(`${API}/chat/${channelId}`);
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -72,7 +69,6 @@ const createChannel = async (
       isPublic: isPublic,
       password: password,
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -85,7 +81,6 @@ const joinChannel = async (channelId: number, password: string) => {
       id: channelId,
       password: password,
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -97,7 +92,6 @@ const changePassword = async (channelId: number, newPassword: string) => {
     const response = await axios.patch(`${API}/chat/${channelId}/password`, {
       password: newPassword,
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);
@@ -109,7 +103,6 @@ const createDm = async (userId: number) => {
     const response = await axios.post(`${API}/chat/newDM`, {
       id: userId,
     });
-    console.log(response.data);
     return response.data;
   } catch (error) {
     console.error(error);
