@@ -18,7 +18,6 @@ export class AuthService {
   constructor(private readonly usersService: UsersService) {}
 
   async signup(
-    nickname: string,
     email: string,
     password: string,
   ): Promise<UserEntity | ReportErrors> {
@@ -33,7 +32,7 @@ export class AuthService {
     }
     const newUserDto: CreateUserDto = {
       email: lowerEmail,
-      nickname: nickname,
+      nickname: null,
       picture: null,
       password: password,
     };

@@ -45,7 +45,6 @@ import { errors } from 'src/main';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  // TODO: general and admin guards or restrict for all
   @Post()
   @ApiCreatedResponse({ type: UserEntity })
   async create(@Body() createUserDto: CreateUserDto) {

@@ -11,6 +11,7 @@ import { ConnectionState } from './dto/user-connection-status.dto';
 import { uniqueNamesGenerator, Config, adjectives, colors, animals } from 'unique-names-generator';
 import { GameGateway } from 'src/game/game.gateway';
 import { errors, limits, validateEmail } from 'src/main';
+import { create } from 'domain';
 
 export const roundsOfHashing = 10;
 
@@ -34,11 +35,15 @@ export class UsersService {
       );
       createUserDto.password = hashedPassword;
     }
-    if (createUserDto.nickname && (createUserDto.nickname.length == 0 || createUserDto.nickname.length > limits.nickname)) {
-      console.log("ERROR UPDATE user invalid new nickname");
-      return errors[8];
+    if (createUserDto.nickname) {
+      const nicknameFound = await this.findOneByNickname(createUserDto.nickname);
+      if (nicknameFound || createUserDto.nickname.length == 0 || !createUserDto.nickname.replace(/\s/g, '').length || createUserDto.nickname.length > limits.nickname) {
+        console.log("ERROR CREATE user invalid new nickname");
+        createUserDto.nickname = null;
+      }
     }
-    else if (!createUserDto.nickname || createUserDto.nickname.length === 0 || this.findOneByNickname(createUserDto.nickname)) {
+    if (!createUserDto.nickname || createUserDto.nickname.length === 0
+        || !createUserDto.nickname.replace('/\s/g', '').length || this.findOneByNickname(createUserDto.nickname)) {
       let nickname: string = '';
       const customConfig: Config = {
         dictionaries: [adjectives, colors],
@@ -57,7 +62,6 @@ export class UsersService {
     if (!createUserDto.picture) {
       createUserDto.picture = 'https://i.pinimg.com/originals/a4/97/d7/a497d78803c0821e1f0cdb8b8b8a6d32.jpg';
     }
-    // TODO: check picture is picture, size...
 
     const newUser = await this.prisma.user.create({ data: createUserDto });
     console.log('CREATING user ' + newUser.email);
@@ -90,10 +94,12 @@ export class UsersService {
         roundsOfHashing,
       );
     }
-    // TODO: check if nickname is in db: || this.findOneByNickname(updateUserDto.nickname)
-    if (updateUserDto.nickname && ((updateUserDto.nickname.length == 0 || updateUserDto.nickname.length > limits.nickname))) {
-      console.log("ERROR UPDATE user invalid new nickname");
-      return errors[8];
+    if (updateUserDto.nickname) {
+      const nicknameFound = await this.findOneByNickname(updateUserDto.nickname);
+      if (nicknameFound || updateUserDto.nickname.length == 0 || !updateUserDto.nickname.replace(/\s/g, '').length || updateUserDto.nickname.length > limits.nickname) {
+        console.log("ERROR UPDATE user invalid new nickname");
+        return errors[8];
+      }
     }
     if (!updateUserDto.email || !validateEmail(updateUserDto.email)) {
       console.log("ERROR UPDATE user invalid email.");
@@ -102,7 +108,6 @@ export class UsersService {
     if (!updateUserDto.picture) {
       updateUserDto.picture = 'https://i.pinimg.com/originals/a4/97/d7/a497d78803c0821e1f0cdb8b8b8a6d32.jpg';
     }
-    // TODO: check picture
 
     return this.prisma.user.update({ where: { id }, data: updateUserDto });
   }

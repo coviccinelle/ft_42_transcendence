@@ -13,7 +13,6 @@ function SignUp() {
   const handleSignup = (event: any) => {
     event.preventDefault();
     const formData = {
-      nickname: nickname,
       email: email,
       password: password,
     };
@@ -23,9 +22,7 @@ function SignUp() {
       .then(() => {
         return navigate('/login');
       })
-      .catch(() => {
-        // * when user is already in db (conflictException) or other errors
-      });
+      .catch(() => {});
   };
 
   return (
@@ -35,11 +32,6 @@ function SignUp() {
           Sign Up
         </h1>
         <form>
-          <div className="user-box">
-            <input type="nickname" value={nickname}
-              onChange={(e) => setNickname(e.target.value)} />
-            <label>Nickname</label>
-          </div>
           <div className="user-box">
             <input
               type="email"

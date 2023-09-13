@@ -34,7 +34,6 @@ export class AuthController {
   @Post('local/login')
   @UseGuards(LocalAuthGuard)
   login(@Request() req) {
-    // TODO: add delay to prevent brute force (https://docs.nestjs.com/security/rate-limiting)
     const user = req.user;
 
     console.log("LOGIN user " + user.email);
@@ -49,9 +48,9 @@ export class AuthController {
 
   @Post('local/signup')
   async signup(
-    @Body() { email, nickname, password }: LoginDto,
+    @Body() { email, password }: LoginDto,
   ): Promise<UserEntity | ReportErrors> {
-    return await this.authService.signup(nickname, email, password);
+    return await this.authService.signup(email, password);
   }
 
   @Get('ft/login')
