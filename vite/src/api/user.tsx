@@ -23,7 +23,10 @@ const getUser = async (id: number) => {
 const getMe = async () => {
   try {
     const response = await axios.get(`${API}/users/me`);
-    return response.data;
+    if (response.data.id) {
+      return response.data;
+    }
+    return null;
   } catch (error) {
     console.error(error);
   }

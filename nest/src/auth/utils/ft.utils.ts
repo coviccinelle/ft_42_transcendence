@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { domainName } from 'src/main';
 
 export async function getProfileFt(token: string): Promise<any> {
   // !! 2 requests par secondes

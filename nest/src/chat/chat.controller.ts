@@ -20,7 +20,6 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiTags,
-  ApiCookieAuth,
   ApiBearerAuth,
   ApiNoContentResponse,
 } from '@nestjs/swagger';
@@ -28,13 +27,11 @@ import { User } from 'src/users/users.decorator';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { Roles } from './roles.decorator';
 import { RolesGuard } from './roles.guard';
-import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
 import { UserIdDto } from '../users/dto/user-id.dto';
 import { JoinChannelDto } from './dto/join-channel.dto';
 import { UserMemberEntity } from './entities/user-member.entity';
 import { MuteUserDto } from './dto/mute-user.dto';
 import { UpdateChannelPasswordDto } from './dto/update-channel-password.dto';
-import { Channel } from '@prisma/client';
 
 @Controller('chat')
 @ApiTags('chat')
@@ -49,7 +46,9 @@ export class ChatController {
     @Body() createChannelDto: CreateChannelDto,
     @User() user: UserEntity,
   ) {
-    return new ChannelEntity(await this.chatService.create(createChannelDto, user.id));
+    return new ChannelEntity(
+      await this.chatService.create(createChannelDto, user.id),
+    );
   }
 
   @Get()
@@ -85,7 +84,7 @@ export class ChatController {
   @Roles('regular')
   @ApiNoContentResponse()
   async leaveChannel(
-    @User   () user: UserEntity,
+    @User() user: UserEntity,
     @Param('id', ParseIntPipe) id: number,
   ) {
     await this.chatService.leaveChannel(id, user);
@@ -100,10 +99,7 @@ export class ChatController {
 
   @Post('newDM')
   @ApiCreatedResponse()
-  async openDM(
-    @Body() other: UserIdDto,
-    @User() user: UserEntity,
-  ) {
+  async openDM(@Body() other: UserIdDto, @User() user: UserEntity) {
     return new ChannelEntity(await this.chatService.openDM(user, other.id));
   }
 
@@ -143,17 +139,16 @@ export class ChatController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateChannelNameDto: UpdateChannelNameDto,
   ) {
-    return new ChannelEntity(await this.chatService.updateName(id, updateChannelNameDto));
+    return new ChannelEntity(
+      await this.chatService.updateName(id, updateChannelNameDto),
+    );
   }
 
   @Post(':id/kick')
   @HttpCode(204)
   @ApiNoContentResponse()
   @Roles('admin')
-  kickUser(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() user: UserIdDto,
-  ) {
+  kickUser(@Param('id', ParseIntPipe) id: number, @Body() user: UserIdDto) {
     this.chatService.kickUser(id, user.id);
   }
 
@@ -172,10 +167,7 @@ export class ChatController {
   @HttpCode(204)
   @ApiNoContentResponse()
   @Roles('admin')
-  unbanUser(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() user: UserIdDto,
-  ) {
+  unbanUser(@Param('id', ParseIntPipe) id: number, @Body() user: UserIdDto) {
     this.chatService.unbanUser(id, user.id);
   }
 
@@ -236,13 +228,18 @@ export class ChatController {
   }
 
   @Patch(':id/password')
-  @ApiOkResponse({ type: ChannelEntity})
+  @ApiOkResponse({ type: ChannelEntity })
   @Roles('owner')
   async updatePassword(
     @Param('id', ParseIntPipe) channelId: number,
     @Body() updateChannelPasswordDto: UpdateChannelPasswordDto,
   ) {
-    return new ChannelEntity(await this.chatService.updatePassword(channelId, updateChannelPasswordDto.password));
+    return new ChannelEntity(
+      await this.chatService.updatePassword(
+        channelId,
+        updateChannelPasswordDto.password,
+      ),
+    );
   }
 
   @Patch(':id/owner')

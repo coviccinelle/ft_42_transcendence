@@ -5,7 +5,6 @@ import { PrismaModule } from 'src/prisma/prisma.module';
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from 'src/users/users.module';
-import { GoogleStrategy } from './strategies/google.strategy';
 import { SessionSerializer } from './session.serializer';
 import { FtStrategy } from './strategies/ft.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
@@ -17,7 +16,6 @@ import { TwoFAStrategy } from './strategies/twofa.strategy';
   providers: [
     AuthService,
     LocalStrategy,
-    GoogleStrategy,
     FtStrategy,
     TwoFAStrategy,
     SessionSerializer,

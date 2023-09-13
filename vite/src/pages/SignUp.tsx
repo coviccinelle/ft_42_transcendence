@@ -13,27 +13,16 @@ function SignUp() {
   const handleSignup = (event: any) => {
     event.preventDefault();
     const formData = {
-      nickname: nickname,
       email: email,
       password: password,
     };
 
     axios
       .post(`http://${domainName}/api/auth/local/signup`, formData)
-      .then((res) => {
+      .then(() => {
         return navigate('/login');
       })
-      .catch((e) => {
-        // * when user is already in db (conflictException) or other errors
-      });
-  };
-
-  const handleLoginGoogle = () => {
-    location.href = `http://${domainName}/api/auth/google/login`;
-  };
-
-  const handleLoginFt = () => {
-    location.href = `http://${domainName}/api/auth/ft/login`;
+      .catch(() => {});
   };
 
   return (
@@ -43,11 +32,6 @@ function SignUp() {
           Sign Up
         </h1>
         <form>
-          <div className="user-box">
-            <input type="nickname" value={nickname}
-              onChange={(e) => setNickname(e.target.value)} />
-            <label>Nickname</label>
-          </div>
           <div className="user-box">
             <input
               type="email"

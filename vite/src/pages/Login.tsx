@@ -19,9 +19,8 @@ function Login() {
     axios
       .post(`http://${domainName}/api/auth/local/login`, formData)
       .then((res) => {
-        console.log('POST OK');
         if (res.data.isNewUser) {
-          return navigate('/registration')
+          return navigate('/registration');
         }
         if (res.data.isTwoFAEnabled) {
           localStorage.removeItem('userEmail');
@@ -30,12 +29,12 @@ function Login() {
         }
         return navigate('/profile');
       })
-      .catch((e) => {});
+      .catch(() => {});
   };
 
-  const handleLoginGoogle = () => {
-    location.href = `http://${domainName}/api/auth/google/login`;
-  };
+  // const handleLoginGoogle = () => {
+  //   location.href = `http://${domainName}/api/auth/google/login`;
+  // };
 
   const handleLoginFt = () => {
     location.href = `http://${domainName}/api/auth/ft/login`;
@@ -74,13 +73,13 @@ function Login() {
         <br></br>
       </form>
 
-      <button
+      {/* <button
         className="mx-3 px-2 py-2 rounded-md border border-transparent cursor-pointer hover:border-amber-200 focus:outline-4 focus:ring-amber-500 focus:border-amber-500 focus:ring-opacity-50"
         type="button"
         onClick={handleLoginGoogle}
       >
         Google
-      </button>
+      </button> */}
       <button
         className="mx-3 px-2 py-2 rounded-md border border-transparent cursor-pointer hover:border-amber-200 focus:outline-4 focus:ring-amber-500 focus:border-amber-500 focus:ring-opacity-50"
         type="button"

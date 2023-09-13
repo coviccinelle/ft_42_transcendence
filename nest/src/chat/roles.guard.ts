@@ -1,6 +1,5 @@
 import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { Observable } from 'rxjs';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { CreateMessageDto } from './dto/create-message.dto';

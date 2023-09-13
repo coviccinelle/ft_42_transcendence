@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 
-export const domainName = "localhost:8080";
+export const domainName = 'localhost:8080';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
@@ -12,7 +12,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
 );
 
 export const client = axios.create({
-    baseURL: `http://${domainName}/api`
+  baseURL: `http://${domainName}/api`,
 });
 
 export interface UserEntity {

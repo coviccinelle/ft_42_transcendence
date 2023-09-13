@@ -3,7 +3,6 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport-oauth2';
 import { ConfigService } from '@nestjs/config';
 import { VerifyCallback } from 'passport-oauth2';
-import { UserEntity } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { domainName } from 'src/main';
