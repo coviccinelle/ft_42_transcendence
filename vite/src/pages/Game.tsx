@@ -184,11 +184,14 @@ function Game(): JSX.Element {
         </div>
       )}
       {isStarted && (
-        <div className="flex flex-col w-screen h-screen items-center">
-          <p className="text-2xl text-black dark:text-white font-bold">
+        <div className="flex flex-col w-screen h-screen">
+          <div className="z-40 py-2 bg-gray-800">
+            <Navbar2 />
+          </div>
+          <p className="text-2xl text-black dark:text-white font-bold items-center text-center">
             {gameInfos.players[0].name} vs {gameInfos.players[1].name}
           </p>
-          <p className="text-2xl text-black dark:text-white font-bold">
+          <p className="text-2xl text-black dark:text-white font-bold items-center text-center">
             {gameInfos.players[0].score} - {gameInfos.players[1].score}
           </p>
           <GameZone sendInput={sendInput} gameInfos={gameInfos}></GameZone>
