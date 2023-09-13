@@ -45,7 +45,7 @@ function Settings() {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen">
+        <div className="flex flex-col items-center justify-center h-screen overflow-hidden">
             <div className="flex flex-col relative px-3 py-3 items-center justify-center w-4/5 h-4/5 bg-slate-100 bg-opacity-10 rounded-lg shadow-lg">
 
                 {/* //an exist X button to close the Settings page and go back to the profile page */}
@@ -81,8 +81,8 @@ function Settings() {
                             />
                         </div>
 
-                        <div className="flex flex-raw justify-self-center w-full">
-                            <p className="flex text-white font-bold mr-2">2FA</p>
+                        <div className="flex items-center justify-center w-full py-3">
+                            <p className=" text-white font-bold mr-2">2FA</p>
                             <Toggle2FA />
                         </div>
                     </div>
