@@ -50,7 +50,15 @@ function Message(props: {
         />
         <div className="ml-2 py-3 px-4 bg-purple-200 dark:bg-gray-400 rounded-br-3xl rounded-tr-3xl rounded-tl-xl dark:text-white text-black max-w-[50%]">
           {props.author}
-          <p className="break-words">{props.message}</p>
+          {props.type === 'REGULAR' ? (
+            <p className="break-all">{props.message}</p>
+          ) : (
+            <Link to={props.message}>
+              <p className="break-all text-blue-500 hover:text-blue-700 cursor-pointer hover:underline">
+                Join me
+              </p>
+            </Link>
+          )}
         </div>
       </div>
     );
