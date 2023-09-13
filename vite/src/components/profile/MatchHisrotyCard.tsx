@@ -32,16 +32,16 @@ function MatchHistoryCard({
   }, [otherPlayerId]);
   return (
     <div className="w-24 h-52 p-4 flex-col justify-center items-center gap-4 inline-flex hover:bg-gray-400 hover:bg-opacity-10 rounded-lg shadow">
-      <div className="w-24 h-40 p-2 bg-gray-400 bg-opacity-10 rounded-lg flex-col justify-center items-center gap-4 flex">
+      <div className="w-full h-full flex flex-col justify-center items-center gap-4">
         <img
-          className="w-16 h-16 rounded-3xl shadow cursor-pointer"
+          className="w-16 h-16 rounded-full shadow cursor-pointer hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out"
           src={avatar}
           alt={`${nickname}'s Avatar`}
           onClick={() => {
             return navigate(`/profile/${otherPlayerId}`);
           }}
         />
-        <div className="text-white text-base font-semibold leading-normal tracking-tight">
+        <div className="text-white text-base font-semibold leading-normal tracking-tight w-24 overflow-hidden overflow-ellipsis whitespace-nowrap">
           {nickname}
         </div>
         <div className="text-white text-base font-semibold leading-normal tracking-tight">
