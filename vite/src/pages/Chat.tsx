@@ -7,7 +7,7 @@ import { io } from 'socket.io-client';
 import ChatTabAdd from '../components/chat/ChatTabAdd';
 import Navbar2 from '../components/NavBar2';
 import LeaveChannelDialog from '../components/chat/dialog/LeaveChannelDialog';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import apiUser from '../api/user';
 
 function ChatPage() {
@@ -44,10 +44,8 @@ function ChatPage() {
 
   useEffect(() => {
     if (userExist === false) return;
-    console.log('fetching channels');
     const fetchChannels = async () => {
       const channels = await apiChannel.getChannels();
-      console.log(channels);
       setChannels(channels);
     };
     fetchChannels();

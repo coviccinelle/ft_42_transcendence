@@ -64,6 +64,7 @@ function FriendsListDialog(props: {
                   as="h3"
                   className="text-lg font-medium leading-6 dark:text-gray-200 text-gray-900"
                 >
+                  <button></button>
                   List of Friends
                 </Dialog.Title>
                 <div className="mt-2 no-scrollbar h-full overflow-y-scroll">

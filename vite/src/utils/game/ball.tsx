@@ -7,7 +7,7 @@ function ball(
   if (ctx != null) {
     ctx.fillStyle = 'white';
     ctx.beginPath();
-    ctx.rect(x, y, ballWidth, ballWidth);
+    ctx.rect(x - ballWidth / 2, y - ballWidth / 2, ballWidth, ballWidth);
     ctx.fill();
   }
 }

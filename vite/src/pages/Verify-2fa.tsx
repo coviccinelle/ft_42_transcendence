@@ -11,12 +11,9 @@ function VerifyTwoFA() {
   useEffect(() => {
     const emailInParams = searchParams.get('userEmail');
 
-    if (emailInParams)
-      localStorage.setItem('userEmail', emailInParams);
-    if (!localStorage.getItem('userEmail'))
-      return navigate('/login');
-  })
-
+    if (emailInParams) localStorage.setItem('userEmail', emailInParams);
+    if (!localStorage.getItem('userEmail')) return navigate('/login');
+  });
 
   const handleLoginTotp = (event: any) => {
     event.preventDefault();
@@ -25,37 +22,47 @@ function VerifyTwoFA() {
       code: code,
     };
 
-    axios.post('/api/auth/2fa/login', formData)
+    axios
+      .post('/api/auth/2fa/login', formData)
       .then((res) => {
-        console.log(res);
         return navigate('/');
       })
       .catch((res) => {
-        console.log(res);
         return navigate('/login');
       });
     localStorage.removeItem('userEmail');
-  }
+  };
 
   return (
-    <div className="flex h-screen w-screen justify-center items-center">
-      <div className="user-box">
-        <label>Enter Your 2FA Code To Login</label>
-        <input
-          type="code"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-        />
+    <div className="flex h-screen w-screen justify-center items-center text-center">
+      <div className="flex flex-col items-center bg-white rounded-lg shadow-lg p-6 bg-opacity-5 relative">
+        <button
+          className="absolute top-0 right-0 mt-4 mr-4 m-5 w-8 h-8 bg-yellow-700 dark:bg-yellow-200 bg-opacity-40 rounded-xl hover:rounded-3xl hover:bg-yellow-600 transition-all duration-300 text-white dark:text-black"
+          onClick={() => navigate('/profile')}
+        >
+          X
+        </button>
+        <div className="user-box">
+          <label className="text-black dark:text-gray-200 py-4 text-lg font-semibold ">
+            Enter The 2FA Code To Verify Association
+          </label>
+          <input
+            type="text"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            className="w-1/2 mt-2 px-3 py-2 text-black dark:text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+          />
+        </div>
+        <button
+          className="mt-12 px-4 py-2 rounded-md bg-amber-500 text-black darK:text-white hover:bg-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:ring-opacity-50"
+          type="button"
+          onClick={handleLoginTotp}
+        >
+          Send Code
+        </button>
       </div>
-      <button
-        className="mx-3 px-2 py-2 rounded-md border border-transparent cursor-pointer hover:border-amber-200 focus:outline-4 focus:ring-amber-500 focus:border-amber-500 focus:ring-opacity-50"
-        type="button"
-        onClick={handleLoginTotp}
-      >
-        Send Code
-      </button>
     </div>
-  )
+  );
 }
 
 export default VerifyTwoFA;

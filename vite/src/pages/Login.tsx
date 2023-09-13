@@ -1,9 +1,8 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { domainName } from '../main';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
-import apiUser from '../api/user';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -31,9 +30,7 @@ function Login() {
         }
         return navigate('/profile');
       })
-      .catch((e) => {
-        console.log(e);
-      });
+      .catch((e) => {});
   };
 
   const handleLoginGoogle = () => {

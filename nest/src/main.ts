@@ -6,6 +6,7 @@ import * as session from 'express-session';
 import * as passport from 'passport';
 import { ConfigService } from '@nestjs/config';
 import PassportIoAdapter from './passport.adapter';
+import * as bodyParser from 'body-parser';
 
 export const domainName = 'localhost:8080';
 
@@ -86,6 +87,8 @@ async function bootstrap() {
   app.use(sessionMiddleware);
   app.use(passport.initialize());
   app.use(passport.session());
+  app.use(bodyParser.json({limit: '50mb'}));
+  app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 
   const config = new DocumentBuilder()
     .setTitle('pong')

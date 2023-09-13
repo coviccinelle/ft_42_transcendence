@@ -1,7 +1,6 @@
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import '../styles/game.css';
 import { useEffect, useState } from 'react';
-import LoadingScreen from '../components/LoadingScreen';
 import { GameZone } from '../components/game/GameZone';
 import Navbar2 from '../components/NavBar2';
 import apiUser from '../api/user';
@@ -10,8 +9,6 @@ import { Direction, GameInfo, WsException } from '../utils/game/types';
 import GameFinishedDialog from '../components/game/GameFinishedDialog';
 
 function Game(): JSX.Element {
-  const [score, setScore] = useState<number[]>([0, 0]);
-  const [isLoading, setIsLoading] = useState(true);
   const [socket, setSocket] = useState(io('/game', { autoConnect: false }));
   const navigate = useNavigate();
   const [isWaiting, setIsWaiting] = useState(false);
@@ -68,18 +65,13 @@ function Game(): JSX.Element {
       const user = await apiUser.getMe();
       if (user) setUserMe(user);
       else navigate('/login');
-      setIsLoading(false);
     };
     getUser();
   }, []);
 
   useEffect(() => {
-    function handleConnection() {
-      console.log('Game socket connected');
-    }
-    function handleDisconnect() {
-      console.log('Game socket disconnected');
-    }
+    function handleConnection() {}
+    function handleDisconnect() {}
     socket.connect();
     socket.on('connect', handleConnection);
     socket.on('disconnect', handleDisconnect);
@@ -92,24 +84,19 @@ function Game(): JSX.Element {
 
   useEffect(() => {
     function handleWaiting() {
-      console.log(`Waiting for other player to join`);
       setIsWaiting(true);
       //Todo: display waiting for other player screen/dialog
     }
     function handleStart(uuid: string) {
-      console.log(`Starting game ${uuid}`);
       setIsWaiting(false);
       setIsStarted(true);
       //Todo: display game
     }
     function handleUpdateGame(gameInfo: GameInfo) {
-      console.log(`Received game update`);
-      console.log(gameInfo);
       setGameInfos(gameInfo);
       //Todo: update canvas with new info
     }
     async function handleWinner(winnerId: number) {
-      console.log(`Winner: ${winnerId}`);
       const res = await apiUser.getMe();
       if (res.id === winnerId) {
         setWin(true);
@@ -120,7 +107,6 @@ function Game(): JSX.Element {
       //Todo: Display loss or win
     }
     function handleException(error: WsException) {
-      console.log(`Websocket exception: ${error.message}`);
       //Tried joining a full game
       //Todo: redirect to homepage
       navigate('/');
@@ -151,7 +137,6 @@ function Game(): JSX.Element {
     socket.emit('join', uuid);
   }
 
-  console.log(params);
   return (
     <>
       {!params.uuid && !isWaiting && !isStarted && (
@@ -180,8 +165,8 @@ function Game(): JSX.Element {
           <div className="z-40 py-2 bg-gray-800">
             <Navbar2 />
           </div>
-          <div className="flex flex-col items-center justify-center h-full">
-            <p className="text-2xl text-black dark:text-white font-bold">
+          <div className="flex flex-col items-center justify-center h-full text-center">
+            <p className="text-2xl py-36 text-black dark:text-white font-bold">
               Waiting for other player to join...
             </p>
           </div>
@@ -189,30 +174,36 @@ function Game(): JSX.Element {
       )}
       {isStarted && (
         <div className="flex flex-col w-screen h-screen items-center">
-          <Navbar2 />
-          <p className="text-2xl text-black dark:text-white font-bold">
+          <div className="z-40 py-2 bg-gray-800 w-full">
+            <Navbar2 />
+          </div>
+          <p className="text-2xl text-black  dark:text-white font-bold items-center text-center">
             {gameInfos.players[0].name} vs {gameInfos.players[1].name}
           </p>
-          <p className="text-2xl text-black dark:text-white font-bold">
+          <p className="text-2xl text-black dark:text-white font-bold items-center text-center">
             {gameInfos.players[0].score} - {gameInfos.players[1].score}
           </p>
           <GameZone sendInput={sendInput} gameInfos={gameInfos}></GameZone>
         </div>
       )}
       {params.uuid && isWaiting && (
-        <div className="flex flex-col w-screen h-screen items-center">
-          <Navbar2 />
-          <p className="text-2xl text-black dark:text-white font-bold">
+        <div className="flex flex-col w-screen h-screen">
+          <div className="z-40 py-2 bg-gray-800">
+            <Navbar2 />
+          </div>
+          <p className="text-2xl text-black py-36 dark:text-white font-bold items-center text-center">
             Waiting for other player to join...
           </p>
         </div>
       )}
       {params.uuid && !isWaiting && !isStarted && (
         // Join game
-        <div className="flex flex-col w-screen h-screen items-center">
-          <Navbar2 />
+        <div className="flex flex-col w-screen h-screen">
+          <div className="z-40 py-2 bg-gray-800">
+            <Navbar2 />
+          </div>
           <button
-            className="text-2xl text-black dark:text-white font-bold justify-center"
+            className="text-2xl text-black py-36 dark:text-white font-bold justify-center items-center"
             onClick={() => joinGame(params.uuid as string)}
           >
             Join game ?

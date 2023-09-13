@@ -68,6 +68,7 @@ function ListOfUsersDialog(props: {
                   className="text-lg font-medium leading-6 dark:text-gray-200 text-gray-900"
                 >
                   List of users in this channel
+                  <button></button>
                 </Dialog.Title>
                 <div className="mt-2 no-scrollbar h-full overflow-y-scroll">
                   {listOfUsers.map((user: any) => (

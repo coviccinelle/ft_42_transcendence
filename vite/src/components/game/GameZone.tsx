@@ -59,18 +59,20 @@ export const GameZone = (props: {
         paddleSize.height / 2,
     ]);
     setPlayerTwoPaddlePos([
-      windowSize.width,
+      windowSizeGame.width + paddleSize.width,
       (props.gameInfos.players[1].paddle.position * windowSize.height) /
         props.gameInfos.courtSize.y -
         paddleSize.height / 2,
     ]);
     setBallWidth(
-      (window.innerWidth * props.gameInfos.ball.size) /
-        props.gameInfos.courtSize.x,
+      ((windowSizeGame.width * props.gameInfos.ball.size) /
+        props.gameInfos.courtSize.x) *
+        2,
     );
     setBallPos([
       (windowSizeGame.width * props.gameInfos.ball.position.x) /
-        props.gameInfos.courtSize.x,
+        props.gameInfos.courtSize.x +
+        paddleSize.width,
       (windowSizeGame.height * props.gameInfos.ball.position.y) /
         props.gameInfos.courtSize.y,
     ]);
@@ -88,13 +90,12 @@ export const GameZone = (props: {
       );
       paddle(
         ctx,
-        playerTwoPaddlePos[0] - paddleSize.width,
+        playerTwoPaddlePos[0],
         playerTwoPaddlePos[1],
         paddleSize.width,
         paddleSize.height,
       );
       ball(ctx, ballPos[0], ballPos[1], ballWidth);
-      console.log('ballPos', props.gameInfos.ball.position);
     }
   }
 

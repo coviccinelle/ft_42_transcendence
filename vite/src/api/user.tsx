@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios from 'axios';
 
 const API = '/api';
 
@@ -51,6 +51,22 @@ const updateMe = async (updateUserDto: UpdateUserDto) => {
     const updatedUserDto = Object.assign({}, user, updateUserDto);
 
     const response = await axios.patch(`${API}/users/me`, updatedUserDto);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const uploadAvatar = async (file: any) => {
+  try {
+    const form = new FormData();
+
+    form.append('file', file);
+    const response = await axios.post(`${API}/users/avatar`, form, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
     return response.data;
   } catch (error) {
     console.error(error);
@@ -232,6 +248,7 @@ export default {
   getMe,
   getUser,
   updateMe,
+  uploadAvatar,
   muteUser,
   kickUser,
   banUser,

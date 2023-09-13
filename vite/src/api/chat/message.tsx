@@ -1,4 +1,4 @@
-import axios, { AxiosError, AxiosResponse } from 'axios';
+import axios from 'axios';
 import { Socket } from 'socket.io-client';
 
 const API = '/api';
@@ -21,7 +21,6 @@ const sendMessage = (
   socket: Socket,
   type: string,
 ) => {
-  console.log(`Sending message ${message}`);
   socket.emit('message', {
     content: message,
     channelId: channelId,

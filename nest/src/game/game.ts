@@ -57,6 +57,8 @@ export class Game {
   private startInterval: NodeJS.Timer;
   private courtSize: Vector2d;
   private paddleMaxSpeed: number;
+  private paddleInitialSize: number;
+  private paddleInitialSpeed: number;
   private paddleMinSize: number;
   private ballInitialSpeed: number;
   private ballMaxSpeed: number;
@@ -78,7 +80,12 @@ export class Game {
       x: 2000,
       y: 900,
     };
-    this.ballInitialSpeed = 5;
+    this.paddleMaxSpeed = 30;
+    this.paddleInitialSize = 200;
+    this.paddleInitialSpeed = 10;
+    this.paddleMinSize = 80;
+    this.ballMaxSpeed = 25;
+    this.ballInitialSpeed = 12;
     this.pointsToWin = 5;
     this.ball = {
       position: {
@@ -96,8 +103,8 @@ export class Game {
       this.players.push({
         paddle: {
           position: this.courtSize.y / 2,
-          size: 200,
-          speed: 10,
+          size: this.paddleInitialSize,
+          speed: this.paddleInitialSpeed,
           movement: Direction.NONE,
         },
         score: 0,
@@ -187,7 +194,17 @@ export class Game {
   }
 
   private startRound() {
+    this.resetPaddles();
     this.launchBall();
+  }
+
+  private resetPaddles() {
+    this.players[0].paddle.position = this.courtSize.y / 2;
+    this.players[1].paddle.position = this.courtSize.y / 2;
+    this.players[0].paddle.size = this.paddleInitialSize;
+    this.players[1].paddle.size = this.paddleInitialSize;
+    this.players[0].paddle.speed = this.paddleInitialSpeed;
+    this.players[1].paddle.speed = this.paddleInitialSpeed;
   }
 
   private async endGame() {
@@ -333,7 +350,11 @@ export class Game {
   private launchBall() {
     this.ball.position.x = this.courtSize.x / 2;
     this.ball.position.y = this.courtSize.y / 2;
-    const angle = ((Math.random() - 0.5) * Math.PI) / 12.0; //Angle between +15 -15°
+    let angle: number = 0;
+    //Generate angle between 5° and 15° off center
+    while (angle > -Math.PI / 36 && angle < Math.PI / 36) {
+      angle = ((Math.random() - 0.5) * Math.PI) / 6.0; //Angle between +15 -15°
+    }
     this.ball.velocity.x = Math.cos(angle) * this.ballInitialSpeed;
     this.ball.velocity.y = Math.sin(angle) * this.ballInitialSpeed;
     if ((this.players[0].score + this.players[1].score) % 2) {

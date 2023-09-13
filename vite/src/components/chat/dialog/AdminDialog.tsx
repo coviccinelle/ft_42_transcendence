@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import User from './User';
 import apiUser from '../../../api/user';
@@ -66,6 +66,7 @@ function AdminDialog(props: {
                   className="text-lg font-medium leading-6 dark:text-gray-200 text-gray-900"
                 >
                   Manage admins
+                  <button></button>
                 </Dialog.Title>
                 <div className="mt-2 no-scrollbar h-64 overflow-y-scroll ">
                   {listOfUsers.map((user: any) => (
