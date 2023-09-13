@@ -1,6 +1,5 @@
 import { Message, MessageType } from '@prisma/client';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Timestamp } from 'rxjs';
 import { UserEntity } from 'src/users/entities/user.entity';
 
 class Member {

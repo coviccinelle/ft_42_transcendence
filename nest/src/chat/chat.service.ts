@@ -16,7 +16,7 @@ import { roundsOfHashing } from 'src/users/users.service';
 import { ChannelEntity } from './entities/channel.entity';
 import { JoinChannelDto } from './dto/join-channel.dto';
 import { MuteUserDto } from './dto/mute-user.dto';
-import { errors, limits } from 'src/main';
+import { limits } from 'src/main';
 
 @Injectable()
 export class ChatService {

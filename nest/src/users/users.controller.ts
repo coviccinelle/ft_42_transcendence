@@ -12,9 +12,6 @@ import {
   HttpStatus,
   UseInterceptors,
   UploadedFile,
-  ParseFilePipe,
-  MaxFileSizeValidator,
-  FileTypeValidator,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -30,7 +27,6 @@ import {
 import { UserEntity } from './entities/user.entity';
 import { User } from './users.decorator';
 import { AuthenticatedGuard } from 'src/auth/guards/authenticated.guard';
-import { ChannelEntity } from '../chat/entities/channel.entity';
 import { UserIdDto } from './dto/user-id.dto';
 import { MatchResultEntity } from './entities/match-result.entity';
 import { UserStatsDto } from './dto/user-stats.dto';
@@ -38,7 +34,6 @@ import { UserConnectionStatusDto } from './dto/user-connection-status.dto';
 import { UserIsBlockedDto } from './dto/user-is-blocked';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
-import { errors } from 'src/main';
 
 @Controller('users')
 @ApiTags('users')
@@ -61,7 +56,6 @@ export class UsersController {
   }
 
   @Get('me')
-  // @UseGuards(AuthenticatedGuard)
   @ApiBearerAuth()
   @ApiOkResponse({ type: UserEntity })
   async findMe(@User() user: UserEntity) {
@@ -164,7 +158,7 @@ export class UsersController {
     @User() user: UserEntity,
   ): Promise<UserIsBlockedDto> {
     const isBlocked = await this.usersService.getIsBlocked(user.id, blockedId);
-    return({ isBlocked: isBlocked });
+    return { isBlocked: isBlocked };
   }
 
   @Get(':id')
@@ -217,22 +211,24 @@ export class UsersController {
       },
     },
   })
-  @UseInterceptors(FileInterceptor('file', {
-    fileFilter: function(req, file, cb) {
-      const correctType = !!file.mimetype.match(/\/(jpeg|png)$/);
-      cb(null, correctType);
-    },
-    storage: diskStorage({
-      destination: './avatars',
-      filename: function(req: any, file, cb) {
-        if (!!file.mimetype.match(/\/(jpeg)$/)) {
-          cb(null, req.user.id.toString() + '.jpeg');
-        } else {
-          cb(null, req.user.id.toString() + '.png');
-        }
+  @UseInterceptors(
+    FileInterceptor('file', {
+      fileFilter: function (req, file, cb) {
+        const correctType = !!file.mimetype.match(/\/(jpeg|png)$/);
+        cb(null, correctType);
       },
+      storage: diskStorage({
+        destination: './avatars',
+        filename: function (req: any, file, cb) {
+          if (!!file.mimetype.match(/\/(jpeg)$/)) {
+            cb(null, req.user.id.toString() + '.jpeg');
+          } else {
+            cb(null, req.user.id.toString() + '.png');
+          }
+        },
+      }),
     }),
-  }))
+  )
   async uploadFile(
     @UploadedFile() file: Express.Multer.File,
     @User() user: UserEntity,
