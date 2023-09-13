@@ -8,7 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import PassportIoAdapter from './passport.adapter';
 import * as bodyParser from 'body-parser';
 
-export const domainName = 'made-f0br8s6:8080';
+export const domainName = 'localhost:8080';
 
 export const validateEmail = (email: string) => {
   return String(email)

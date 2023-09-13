@@ -23,7 +23,7 @@ export class ChatGateway implements OnGatewayConnection {
   async handleConnection(client: any, ...args: any[]) {
     const user = client.request.user;
     if (!user) {
-      client.disconnect();
+      client.conn.close();
       return;
     }
     client.data = {

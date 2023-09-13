@@ -6,7 +6,6 @@ import { GameManager } from './game-manager';
 import { Direction, GameInfo, GameStatus } from './game';
 
 @WebSocketGateway({ namespace: 'game' })
-@UseGuards(AuthenticatedGuard)
 export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() wss: Server;
 
@@ -18,7 +17,7 @@ export class GameGateway implements OnGatewayConnection, OnGatewayDisconnect {
   handleConnection(client: any) {
     const user = client.request.user;
     if (!user) {
-      client.disconnect();
+      client.conn.close();
       return;
     }
     client.data = {
