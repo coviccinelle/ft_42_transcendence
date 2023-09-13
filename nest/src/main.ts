@@ -98,8 +98,10 @@ async function bootstrap() {
     .addServer('/api')
     .build();
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('api', app, document);
+  if (configService.get<string>('NODE_ENV') === 'development') {
+    const document = SwaggerModule.createDocument(app, config);
+    SwaggerModule.setup('api', app, document);
+  }
 
   const passportIoAdapter = new PassportIoAdapter(app, sessionMiddleware);
   app.useWebSocketAdapter(passportIoAdapter);
