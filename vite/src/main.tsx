@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 
-export const domainName = 'made-f0br8s6:8080';
+export const domainName = import.meta.env.VITE_DOMAIN_NAME;
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>

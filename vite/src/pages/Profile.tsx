@@ -19,13 +19,13 @@ function Profile() {
       if (res) {
         setUserMe(res);
       } else {
-        navigate('/login');
+        return navigate('/login');
       }
       if (id.id === undefined) {
         setUser(res);
       }
     };
-
+    
     const fetchUser = async () => {
       const res = await apiUser.getUser(id.id as unknown as number);
       if (res && res.id) {
@@ -37,6 +37,9 @@ function Profile() {
 
     const fetchData = async () => {
       fetchUserMe();
+      if (!userMe && userMe !== undefined) {
+        return navigate('/');
+      }
       if (id.id !== undefined) {
         fetchUser();
       }

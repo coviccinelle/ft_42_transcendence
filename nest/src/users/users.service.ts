@@ -54,7 +54,7 @@ export class UsersService {
     } else if (
       !createUserDto.nickname ||
       createUserDto.nickname.length === 0 ||
-      this.findOneByNickname(createUserDto.nickname)
+      await this.findOneByNickname(createUserDto.nickname)
     ) {
       let nickname: string = '';
       const customConfig: Config = {
@@ -110,11 +110,11 @@ export class UsersService {
         roundsOfHashing,
       );
     }
-    // TODO: check if nickname is in db: || this.findOneByNickname(updateUserDto.nickname)
     if (
       updateUserDto.nickname &&
       (updateUserDto.nickname.length == 0 ||
-        updateUserDto.nickname.length > limits.nickname)
+        updateUserDto.nickname.length > limits.nickname ||
+        await this.findOneByNickname(updateUserDto.nickname))
     ) {
       console.log('ERROR UPDATE user invalid new nickname');
       return errors[8];

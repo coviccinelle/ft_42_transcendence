@@ -15,6 +15,7 @@ function Registration() {
           setImage('../assets/duckie_bg_rm/sticker1.png');
         } else {
           setImage(user.picture);
+          setNickname(user.nickname);
         }
       } else {
         navigate('/login');
@@ -34,11 +35,13 @@ function Registration() {
   // Handle form submit
   const handleFormSubmit = (event: any) => {
     event.preventDefault();
+    if (!nickname)
+      return navigate('/');
     const formData: UpdateUserDto = {
       nickname: nickname,
     };
     apiUser.updateMe(formData);
-    navigate('/profile');
+    navigate('/');
   };
 
   return (
@@ -47,7 +50,7 @@ function Registration() {
         {/* //an exist X button to close the registration page and go back to the profile page */}
         <button
           className="absolute top-0 right-0 mt-4 mr-4 m-5 w-8 h-8 bg-yellow-300 bg-opacity-40 rounded-xl hover:rounded-3xl hover:bg-yellow-600 transition-all duration-300 text-white"
-          onClick={() => navigate('/profile')}
+          onClick={() => navigate('/')}
         >
           X
         </button>

@@ -36,6 +36,8 @@ function Settings() {
   // Handle form submit
   const handleFormSubmit = (event: any) => {
     event.preventDefault();
+    if (!nickname)
+      return navigate('/');
     const formData: UpdateUserDto = {
       nickname: nickname,
     };

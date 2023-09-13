@@ -53,8 +53,8 @@ export type GameInfo = {
 export class Game {
   private id: string;
   private status: GameStatus;
-  private updateInterval: NodeJS.Timer;
-  private startInterval: NodeJS.Timer;
+  private updateInterval: NodeJS.Timeout;
+  private startInterval: NodeJS.Timeout;
   private courtSize: Vector2d;
   private paddleMaxSpeed: number;
   private paddleInitialSize: number;
@@ -210,7 +210,7 @@ export class Game {
   private async endGame() {
     this.status = GameStatus.FINISHED;
     if (this.updateInterval) {
-      clearInterval(this.updateInterval);
+      // clearInterval(this.updateInterval);
     }
     let winnerId: number;
     if (this.players[0].score === this.pointsToWin) {

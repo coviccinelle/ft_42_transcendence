@@ -8,7 +8,7 @@ import { ConfigService } from '@nestjs/config';
 import PassportIoAdapter from './passport.adapter';
 import * as bodyParser from 'body-parser';
 
-export const domainName = 'made-f0br8s6:8080';
+export const domainName = process.env["VITE_DOMAIN_NAME"];
 
 export const validateEmail = (email: string) => {
   return String(email)
@@ -57,7 +57,7 @@ export const errors: ReportErrors[] = [
 
 function checkEnvVariables(configService: ConfigService) {
   const envVariables = [
-    'DOMAIN_NAME',
+    'VITE_DOMAIN_NAME',
     'NODE_ENV',
     'POSTGRES_DB',
     'POSTGRES_USER',
@@ -73,12 +73,17 @@ function checkEnvVariables(configService: ConfigService) {
 
   for (let index = 0; index < envVariables.length; index++) {
     const varName = envVariables[index];
-    if (configService.get<string>(varName).length === 0)
+    if (configService.get<string>(varName)
+      && configService.get<string>(varName).length === 0)
       console.log(`WARNING ENV: '${varName}' is undefined`);
   }
 }
 
 async function bootstrap() {
+  if (!domainName || domainName == undefined) {
+    console.log("ERROR DOMAIN NAME IS UNDEFINED");
+    return ;
+  }
   const app = await NestFactory.create(AppModule);
 
   const configService = app.get(ConfigService);

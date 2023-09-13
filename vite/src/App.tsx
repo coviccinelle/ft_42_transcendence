@@ -9,7 +9,7 @@ import P404 from './pages/P404';
 import Registration from './pages/Registration';
 import Settings from './pages/Settings';
 import './styles/App.css';
-import { UserEntity, client } from './main';
+import { UserEntity, client, domainName } from './main';
 import TwoFa from './pages/Enable-2fa';
 import { io } from 'socket.io-client';
 import VerifyTwoFA from './pages/Verify-2fa';
@@ -27,6 +27,10 @@ export async function handleLogout() {
 }
 
 function App() {
+  if (!domainName || domainName == undefined) {
+    console.log("ERROR DOMAIN NAME IS UNDEFINED");
+    return;
+  }
   // set darkmode to true by default
   const [darkMode, setDarkMode] = useState(false);
   // const location = useLocation();
