@@ -188,7 +188,7 @@ function SideProfile(props: { user: any; userMe: any }) {
                 x-on:click="Open = !Open"
                 onClick={async () => {
                   const channel = await apiChannel.createDm(props.user.id);
-                  return navigate(`/chat/${channel}`);
+                  return navigate(`/chat`);
                 }}
               >
                 <span className="inline-flex items-center  text-sm font-semibold text-white hover:text-green-400">
