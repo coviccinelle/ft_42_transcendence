@@ -52,7 +52,7 @@ function Settings() {
       <div className="flex flex-col relative px-3 py-3 items-center justify-center w-4/5 h-4/5 bg-slate-100 bg-opacity-10 rounded-lg shadow-lg">
         {/* //an exist X button to close the Settings page and go back to the profile page */}
         <button
-          className="absolute top-0 right-0 mt-4 mr-4 m-5 w-8 h-8 bg-yellow-300 bg-opacity-40 rounded-xl hover:rounded-3xl hover:bg-yellow-600 transition-all duration-300 text-white"
+          className="absolute top-0 right-0 mt-4 mr-4 m-5 w-8 h-8 bg-yellow-700 dark:bg-yellow-300 bg-opacity-40 rounded-xl hover:rounded-3xl hover:bg-yellow-600 transition-all duration-300 text-black dark:text-white"
           onClick={() => navigate('/profile')}
         >
           X
@@ -64,7 +64,7 @@ function Settings() {
 
         {/* //show the current nickname of the user */}
         <div className=" relative ">
-          <p className="text-center text-3xl text-white font-bold py-2">
+          <p className="text-center text-3xl text-black dark:text-white font-bold py-2">
             {'#'}
             {nickname}
           </p>
@@ -105,7 +105,7 @@ function Settings() {
         <form className="items-center justify-center text-center">
           <div>
             <div className="col-span-2 px-4 py-8 relative ">
-              <p className="text-center text-white font-bold py-2">
+              <p className="text-center text-black dark:text-white font-bold py-2">
                 Change your nickname
               </p>
               <input
@@ -117,7 +117,7 @@ function Settings() {
             </div>
 
             <div className="flex items-center justify-center w-full py-3">
-              <p className=" text-white font-bold mr-2">2FA</p>
+              <p className=" text-black dark:text-white font-bold mr-2">2FA</p>
               <Toggle2FA />
             </div>
           </div>
