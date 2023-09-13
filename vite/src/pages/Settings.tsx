@@ -104,25 +104,26 @@ function Settings() {
                     setNickname(e.target.value.slice(0, 32));
                   }
                 }}
-                className="w-full px-4 py-2 border text-amber-300 font-black bg-black bg-opacity-30 rounded-lg"
+                className="w-full px-4 py-2 border text-amber-300 font-black bg-black bg-opacity-30 rounded-lg text-center"
               />
             </div>
           </div>
 
-          <div className="flex flex-row text-center items-center justify-center">
-            <button
-              className="bg-gray-300 hover:bg-amber-400 text-amber-600 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-3xl"
-              type="submit"
-              onClick={handleFormSubmit}
-            >
-              Register
-            </button>
-            <div className="flex items-center justify-center py-3">
+          <div className="grid grid-col-1 flex-row text-center items-center justify-center">
+            <div className="flex items-center justify-center py-3 mr-3">
               <p className="text-black dark:text-white font-bold mr-2 ml-2">
                 2FA
               </p>
               <Toggle2FA />
             </div>
+            <button
+              className="bg-gray-300 hover:bg-amber-400 text-amber-600 font-semibold hover:text-white py-2 px-8 border border-blue-500 hover:border-transparent rounded-3xl"
+              type="submit"
+              onClick={handleFormSubmit}
+            >
+              Register
+            </button>
+
           </div>
         </form>
       </div>
