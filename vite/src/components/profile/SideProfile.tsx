@@ -32,7 +32,6 @@ function SideProfile(props: { user: any; userMe: any }) {
     };
     const fetchIsNotBlocked = async () => {
       const res = await apiUser.isBlocked(props.user.id);
-      console.log(res);
       setIsNotBlocked(!res.isBlocked);
     };
     fetchIsNotBlocked();

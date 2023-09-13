@@ -23,12 +23,10 @@ function SignUp() {
     axios
       .post(`http://${domainName}/api/auth/local/signup`, formData)
       .then((res) => {
-        console.log('Sign up OK !');
         return navigate('/login');
       })
       .catch((e) => {
         // * when user is already in db (conflictException) or other errors
-        console.log(e);
       });
   };
 

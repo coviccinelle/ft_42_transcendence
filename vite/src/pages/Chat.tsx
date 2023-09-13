@@ -44,10 +44,8 @@ function ChatPage() {
 
   useEffect(() => {
     if (userExist === false) return;
-    console.log('fetching channels');
     const fetchChannels = async () => {
       const channels = await apiChannel.getChannels();
-      console.log(channels);
       setChannels(channels);
     };
     fetchChannels();

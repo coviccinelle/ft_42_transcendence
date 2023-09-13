@@ -73,7 +73,6 @@ function CreateChannelDialog(props: {
             alert('wrong password');
             return;
           }
-          console.log(res);
           setPasswordGuess('');
           setPasswordDialog(false);
         }}
@@ -186,7 +185,6 @@ function CreateChannelDialog(props: {
                     >
                       {allChannels.map((channel: any) => {
                         let type = 'Public';
-                        console.log(channel);
                         if (!channel.isPublic) {
                           type = 'Private';
                         } else if (channel.isPasswordProtected) {

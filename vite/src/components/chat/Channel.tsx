@@ -77,7 +77,6 @@ function Channel(props: {
     const fetchMessages = async () => {
       const messages = await apiMessage.getMessages(props.channelId);
       props.setMessages(messages);
-      console.log(messages);
     };
     if (props.channelId) {
       fetchMessages();

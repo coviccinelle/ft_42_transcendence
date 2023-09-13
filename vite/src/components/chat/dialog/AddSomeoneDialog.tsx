@@ -91,7 +91,6 @@ function AddSomeoneDialog(props: {
                           props.channelId,
                           user.id,
                         );
-                        console.log('someone added');
                         props.setAddSomeoneDialog(false);
                       }}
                       listOfUsersDialog={false}

@@ -40,11 +40,9 @@ function DisableTwoFA() {
     axios
       .post(`http://${domainName}/api/auth/2fa/turn-off`, formData)
       .then((res) => {
-        console.log(res);
         return navigate('/settings');
       })
       .catch((res) => {
-        console.log(res);
         // return navigate('/');
       });
   };

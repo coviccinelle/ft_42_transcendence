@@ -70,12 +70,8 @@ function Game(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    function handleConnection() {
-      console.log('Game socket connected');
-    }
-    function handleDisconnect() {
-      console.log('Game socket disconnected');
-    }
+    function handleConnection() {}
+    function handleDisconnect() {}
     socket.connect();
     socket.on('connect', handleConnection);
     socket.on('disconnect', handleDisconnect);
@@ -88,24 +84,19 @@ function Game(): JSX.Element {
 
   useEffect(() => {
     function handleWaiting() {
-      console.log(`Waiting for other player to join`);
       setIsWaiting(true);
       //Todo: display waiting for other player screen/dialog
     }
     function handleStart(uuid: string) {
-      console.log(`Starting game ${uuid}`);
       setIsWaiting(false);
       setIsStarted(true);
       //Todo: display game
     }
     function handleUpdateGame(gameInfo: GameInfo) {
-      console.log(`Received game update`);
-      console.log(gameInfo);
       setGameInfos(gameInfo);
       //Todo: update canvas with new info
     }
     async function handleWinner(winnerId: number) {
-      console.log(`Winner: ${winnerId}`);
       const res = await apiUser.getMe();
       if (res.id === winnerId) {
         setWin(true);
@@ -116,7 +107,6 @@ function Game(): JSX.Element {
       //Todo: Display loss or win
     }
     function handleException(error: WsException) {
-      console.log(`Websocket exception: ${error.message}`);
       //Tried joining a full game
       //Todo: redirect to homepage
       navigate('/');
@@ -147,7 +137,6 @@ function Game(): JSX.Element {
     socket.emit('join', uuid);
   }
 
-  console.log(params);
   return (
     <>
       {!params.uuid && !isWaiting && !isStarted && (

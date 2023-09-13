@@ -19,7 +19,6 @@ function Login() {
     axios
       .post(`http://${domainName}/api/auth/local/login`, formData)
       .then((res) => {
-        console.log('POST OK');
         if (res.data.isTwoFAEnabled) {
           localStorage.removeItem('userEmail');
           localStorage.setItem('userEmail', res.data.email);
@@ -27,9 +26,7 @@ function Login() {
         }
         return navigate('/profile');
       })
-      .catch((e) => {
-        console.log(e);
-      });
+      .catch((e) => {});
   };
 
   const handleLoginGoogle = () => {

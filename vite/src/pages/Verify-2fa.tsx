@@ -11,12 +11,9 @@ function VerifyTwoFA() {
   useEffect(() => {
     const emailInParams = searchParams.get('userEmail');
 
-    if (emailInParams)
-      localStorage.setItem('userEmail', emailInParams);
-    if (!localStorage.getItem('userEmail'))
-      return navigate('/login');
-  })
-
+    if (emailInParams) localStorage.setItem('userEmail', emailInParams);
+    if (!localStorage.getItem('userEmail')) return navigate('/login');
+  });
 
   const handleLoginTotp = (event: any) => {
     event.preventDefault();
@@ -25,17 +22,16 @@ function VerifyTwoFA() {
       code: code,
     };
 
-    axios.post('/api/auth/2fa/login', formData)
+    axios
+      .post('/api/auth/2fa/login', formData)
       .then((res) => {
-        console.log(res);
         return navigate('/');
       })
       .catch((res) => {
-        console.log(res);
         return navigate('/login');
       });
     localStorage.removeItem('userEmail');
-  }
+  };
 
   return (
     <div className="flex h-screen w-screen justify-center items-center">
@@ -55,7 +51,7 @@ function VerifyTwoFA() {
         Send Code
       </button>
     </div>
-  )
+  );
 }
 
 export default VerifyTwoFA;
