@@ -19,9 +19,8 @@ function Login() {
     axios
       .post(`http://${domainName}/api/auth/local/login`, formData)
       .then((res) => {
-        console.log('POST OK');
         if (res.data.isNewUser) {
-          return navigate('/registration')
+          return navigate('/registration');
         }
         if (res.data.isTwoFAEnabled) {
           localStorage.removeItem('userEmail');

@@ -8,41 +8,51 @@ import { ConfigService } from '@nestjs/config';
 import PassportIoAdapter from './passport.adapter';
 import * as bodyParser from 'body-parser';
 
-export const domainName = 'made-f0br8s6:8080';
+export const domainName = 'localhost:8080';
 
 export const validateEmail = (email: string) => {
   return String(email)
     .toLowerCase()
     .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
     );
 };
 
 export interface LimitsObject {
-  [x: string]: number
+  [x: string]: number;
 }
 
 export const limits: LimitsObject = {
   nickname: 15,
   password: 64,
-}
-
-export interface ReportErrors {
-  errorCode: number,
-  message: string,
-  other?: any,
 };
 
+export interface ReportErrors {
+  errorCode: number;
+  message: string;
+  other?: any;
+}
+
 export const errors: ReportErrors[] = [
-  { errorCode: 0, message: "Unknown error." },
-  { errorCode: 1, message: "User not found." },
-  { errorCode: 2, message: "User do not need 2FA." },
-  { errorCode: 3, message: "Email is invalid." },
-  { errorCode: 4, message: "Email is already registred." },
-  { errorCode: 5, message: String("Password should be " + limits.password.toString() + " characters max.") },
-  { errorCode: 6, message: "Password is invalid." },
-  { errorCode: 7, message: "2FA code is invalid." },
-  { errorCode: 8, message: String("Nickname should be " + limits.password.toString() + " characters max.") },
+  { errorCode: 0, message: 'Unknown error.' },
+  { errorCode: 1, message: 'User not found.' },
+  { errorCode: 2, message: 'User do not need 2FA.' },
+  { errorCode: 3, message: 'Email is invalid.' },
+  { errorCode: 4, message: 'Email is already registred.' },
+  {
+    errorCode: 5,
+    message: String(
+      'Password should be ' + limits.password.toString() + ' characters max.',
+    ),
+  },
+  { errorCode: 6, message: 'Password is invalid.' },
+  { errorCode: 7, message: '2FA code is invalid.' },
+  {
+    errorCode: 8,
+    message: String(
+      'Nickname should be ' + limits.password.toString() + ' characters max.',
+    ),
+  },
 ];
 
 function checkEnvVariables(configService: ConfigService) {
@@ -87,8 +97,8 @@ async function bootstrap() {
   app.use(sessionMiddleware);
   app.use(passport.initialize());
   app.use(passport.session());
-  app.use(bodyParser.json({limit: '50mb'}));
-  app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
+  app.use(bodyParser.json({ limit: '50mb' }));
+  app.use(bodyParser.urlencoded({ limit: '50mb', extended: true }));
 
   const config = new DocumentBuilder()
     .setTitle('pong')
