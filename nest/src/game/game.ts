@@ -83,8 +83,8 @@ export class Game {
     this.paddleMaxSpeed = 30;
     this.paddleInitialSize = 200;
     this.paddleInitialSpeed = 10;
-    this.paddleMinSize = 50;
-    this.ballMaxSpeed = 40;
+    this.paddleMinSize = 80;
+    this.ballMaxSpeed = 25;
     this.ballInitialSpeed = 12;
     this.pointsToWin = 5;
     this.ball = {

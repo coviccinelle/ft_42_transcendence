@@ -65,8 +65,8 @@ export class GameManager {
     }
   }
 
-  public playerDisconnect(uuid: string, userId: number) {
-    this.games.get(uuid).removePlayer(userId);
+  public async playerDisconnect(uuid: string, userId: number) {
+    await this.games.get(uuid).removePlayer(userId);
     if (this.games.get(uuid).getNbPlayers() === 0) {
       this.games.delete(uuid);
     }
