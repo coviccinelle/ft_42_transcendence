@@ -61,7 +61,7 @@ export class GameManager {
 
   public playerInput(uuid: string, userId: number, direction: Direction) {
     if (!this.games.get(uuid)) {
-      console.log(uuid);
+      // console.log(uuid);
       return;
     }
     if (this.games.get(uuid).getStatus() === GameStatus.PLAYING) {

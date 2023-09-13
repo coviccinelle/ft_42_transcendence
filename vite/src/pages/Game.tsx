@@ -71,7 +71,7 @@ function Game(): JSX.Element {
 
   useEffect(() => {
     function handleConnection() {
-      console.log(socket.id);
+      // console.log(socket.id);
     }
     // function handleDisconnect() {
     // }
