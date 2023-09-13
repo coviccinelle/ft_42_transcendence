@@ -8,6 +8,7 @@ import apiUser from '../api/user';
 import { io } from 'socket.io-client';
 import { Direction, GameInfo, WsException } from '../utils/game/types';
 import GameFinishedDialog from '../components/game/GameFinishedDialog';
+import Navbar from '../components/Navbar';
 
 function Game(): JSX.Element {
   const [score, setScore] = useState<number[]>([0, 0]);
@@ -160,10 +161,7 @@ function Game(): JSX.Element {
     <>
       {!params.uuid && !isWaiting && !isStarted && (
         <div className="flex flex-col w-screen h-screen items-center">
-          <Navbar
-            darkMode={props.darkMode}
-            toggleDarkMode={props.toggleDarkMode}
-          />
+          <Navbar2 />
           <div className="flex flex-col items-center justify-center h-full">
             <button
               className="mb-4 text-2xl dark:text-white text-black font-bold hover:text-gray-700 dark:hover:text-gray-300"
@@ -182,10 +180,7 @@ function Game(): JSX.Element {
       )}
       {!params.uuid && isWaiting && (
         <div className="flex flex-col w-screen h-screen items-center">
-          <Navbar
-            darkMode={props.darkMode}
-            toggleDarkMode={props.toggleDarkMode}
-          />
+          <Navbar2 />
           <div className="flex flex-col items-center justify-center h-full">
             <p className="text-2xl text-black dark:text-white font-bold">
               Waiting for other player to join...
@@ -195,10 +190,7 @@ function Game(): JSX.Element {
       )}
       {isStarted && (
         <div className="flex flex-col w-screen h-screen items-center">
-          <Navbar
-            darkMode={props.darkMode}
-            toggleDarkMode={props.toggleDarkMode}
-          />
+          <Navbar2 />
           <p className="text-2xl text-black dark:text-white font-bold">
             {gameInfos.players[0].name} vs {gameInfos.players[1].name}
           </p>
@@ -210,10 +202,7 @@ function Game(): JSX.Element {
       )}
       {params.uuid && (
         <div className="flex flex-col w-screen h-screen items-center">
-          <Navbar
-            darkMode={props.darkMode}
-            toggleDarkMode={props.toggleDarkMode}
-          />
+          <Navbar2 />
           <button onClick={() => joinGame(params.uuid as string)}>
             Join game
           </button>

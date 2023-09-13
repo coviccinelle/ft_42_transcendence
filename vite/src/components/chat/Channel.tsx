@@ -10,6 +10,7 @@ import ListOfUsersDialog from './dialog/ListOfUsersDialog';
 import { Socket } from 'socket.io-client';
 import AdminDialog from './dialog/AdminDialog';
 import apiGame from '../../api/game';
+import { useNavigate } from 'react-router-dom';
 
 function Channel(props: {
   channelId: number;
@@ -31,6 +32,8 @@ function Channel(props: {
   const [userMe, setUserMe] = useState<any>();
   const [role, setRole] = useState('');
   const [type, setType] = useState('');
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchChannel = async () => {
@@ -92,8 +95,7 @@ function Channel(props: {
     if (message.length === 0) {
       return;
     }
-    console.log(message);
-    apiMessage.sendMessage(message, props.channelId, props.socket);
+    apiMessage.sendMessage(message, props.channelId, props.socket, 'REGULAR');
     setMessage('');
   };
 
@@ -170,6 +172,7 @@ function Channel(props: {
               avatar={message.author.user.picture}
               id={message.author.user.id}
               user={userMe}
+              type={message.type}
             />
           );
         })}
@@ -179,13 +182,14 @@ function Channel(props: {
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             onClick={async () => {
-              // send a message to invite someone to the game and make it clickable
               const idGame = await apiGame.getIdGame();
               apiMessage.sendMessage(
-                `Hey, join me for a game at localhost:8080/game/${idGame.uuid}`,
+                `/game/${idGame.uuid}`,
                 props.channelId,
                 props.socket,
+                'INVITE',
               );
+              navigate(`/game/${idGame.uuid}`);
             }}
           >
             Invite for game

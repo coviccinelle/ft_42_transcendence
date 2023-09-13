@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Message(props: {
   role: string;
@@ -7,6 +7,7 @@ function Message(props: {
   avatar: string;
   id: number;
   user: any;
+  type: string;
 }) {
   const navigate = useNavigate();
   let avatar = props.avatar;
@@ -18,7 +19,15 @@ function Message(props: {
       <div className="flex justify-end mb-4">
         <div className="mr-2 py-3 px-4 dark:bg-blue-800 bg-rose-100 rounded-bl-3xl rounded-tl-3xl rounded-tr-xl dark:text-white text-black max-w-[50%]">
           {props.author}
-          <p className="break-all">{props.message}</p>
+          {props.type === 'REGULAR' ? (
+            <p className="break-all">{props.message}</p>
+          ) : (
+            <Link to={props.message}>
+              <p className="break-all text-blue-500 hover:text-blue-700 cursor-pointer hover:underline">
+                Join me
+              </p>
+            </Link>
+          )}
         </div>
         <img
           src={avatar}

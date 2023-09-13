@@ -72,27 +72,20 @@ function ChatPage() {
   useEffect(() => {
     if (userExist === false) return;
     function handleIncomingMessage(message: any) {
-      console.log(`New message : ${message.content}`);
       if (message.channelId === currentChannel) {
         setMessages([...messages, message]);
       }
     }
     function handleLeaveChannel(channelId: number) {
-      console.log(`Leaving channel ${channelId}`);
       const fetchChannels = async () => {
         const channels = await apiChannel.getChannels();
-        console.log(channels);
         setChannels(channels);
       };
       setCurrentChannel(0);
       fetchChannels();
     }
-    function handleConnection() {
-      console.log('Chat socket connected');
-    }
-    function handleDisconnect() {
-      console.log('Chat socket disconnected');
-    }
+    function handleConnection() {}
+    function handleDisconnect() {}
     socket.on('message', handleIncomingMessage);
     socket.on('Leave channel', handleLeaveChannel);
     socket.on('connect', handleConnection);
@@ -141,10 +134,10 @@ function ChatPage() {
                       tab.isPublic && !tab.isPasswordProtected
                         ? 'Public'
                         : tab.isPasswordProtected
-                          ? 'Protected'
-                          : !tab.isGroup
-                            ? 'DM'
-                            : 'Private'
+                        ? 'Protected'
+                        : !tab.isGroup
+                        ? 'DM'
+                        : 'Private'
                     }
                     createChannel={false}
                   />

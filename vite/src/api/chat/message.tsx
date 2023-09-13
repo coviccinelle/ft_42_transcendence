@@ -15,11 +15,17 @@ const postMessage = async (message: string, channelId: number) => {
   }
 };
 
-const sendMessage = (message: string, channelId: number, socket: Socket) => {
+const sendMessage = (
+  message: string,
+  channelId: number,
+  socket: Socket,
+  type: string,
+) => {
   console.log(`Sending message ${message}`);
   socket.emit('message', {
     content: message,
     channelId: channelId,
+    type: type,
   });
 };
 
