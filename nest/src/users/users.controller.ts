@@ -62,7 +62,7 @@ export class UsersController {
     if (user) {
       return new UserEntity(user);
     } else {
-      return null;
+      return {};
       // throw new Error("USERS ERROR: No user found user/me (findMe())");
     }
   }
