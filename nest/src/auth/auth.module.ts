@@ -7,7 +7,6 @@ import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from 'src/users/users.module';
 import { SessionSerializer } from './session.serializer';
 import { FtStrategy } from './strategies/ft.strategy';
-import { LocalStrategy } from './strategies/local.strategy';
 import { TwoFAStrategy } from './strategies/twofa.strategy';
 
 @Module({
@@ -15,7 +14,6 @@ import { TwoFAStrategy } from './strategies/twofa.strategy';
   controllers: [AuthController],
   providers: [
     AuthService,
-    LocalStrategy,
     FtStrategy,
     TwoFAStrategy,
     SessionSerializer,

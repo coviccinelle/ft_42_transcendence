@@ -41,12 +41,12 @@ services:
       - ./nginx/avatars:/usr/src/app/avatars
     networks:
       - tr
-    # healthcheck:
-    #   test: ["CMD-SHELL", "wget --spider http://localhost:3000"]
-    #   interval: 5s
-    #   timeout: 5s
-    #   retries: 10
-    #   start_period: 10s
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider http://${DOMAIN_NAME}:3000"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
 
   nginx:
     container_name: nginx

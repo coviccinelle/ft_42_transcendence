@@ -10,11 +10,8 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { ApiTags } from '@nestjs/swagger';
-import { LoginDto } from './dto/login.dto';
-import { ReportErrors } from 'src/main';
 import { Response } from 'express';
 import { FtAuthGuard } from './guards/ft-auth.guard';
-import { LocalAuthGuard } from './guards/local-auth.guard';
 import { UserEntity } from 'src/users/entities/user.entity';
 import { AuthenticatedGuard } from './guards/authenticated.guard';
 import { User } from 'src/users/users.decorator';
@@ -29,28 +26,6 @@ export class AuthController {
     private readonly authService: AuthService,
     private readonly usersService: UsersService,
   ) {}
-
-  @Post('local/login')
-  @UseGuards(LocalAuthGuard)
-  login(@Request() req) {
-    const user = req.user;
-
-    console.log('LOGIN user ' + user.email);
-    if (user.isTwoFAEnabled) {
-      console.log('LOGIN user ' + user.email + ' need to do 2fa auth.');
-      req.session.needTwoFA = true;
-    } else {
-      req.session.needTwoFA = false;
-    }
-    return user;
-  }
-
-  @Post('local/signup')
-  async signup(
-    @Body() { email, password }: LoginDto,
-  ): Promise<UserEntity | ReportErrors> {
-    return await this.authService.signup(email, password);
-  }
 
   @Get('ft/login')
   @UseGuards(FtAuthGuard)

@@ -1,41 +1,7 @@
-import axios from 'axios';
-import { useEffect, useState } from 'react';
 import { domainName } from '../main';
-import { useNavigate } from 'react-router-dom';
 import '../styles/Login.css';
 
 function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const navigate = useNavigate();
-
-  const handleLogin = (event: any) => {
-    event.preventDefault();
-    const formData = {
-      email: email,
-      password: password,
-    };
-
-    axios
-      .post(`http://${domainName}/api/auth/local/login`, formData)
-      .then((res) => {
-        if (res.data.isNewUser) {
-          return navigate('/registration');
-        }
-        if (res.data.isTwoFAEnabled) {
-          localStorage.removeItem('userEmail');
-          localStorage.setItem('userEmail', res.data.email);
-          return navigate('/login/verify-2fa');
-        }
-        return navigate('/profile');
-      })
-      .catch(() => {});
-  };
-
-  // const handleLoginGoogle = () => {
-  //   location.href = `http://${domainName}/api/auth/google/login`;
-  // };
-
   const handleLoginFt = () => {
     location.href = `http://${domainName}/api/auth/ft/login`;
   };
@@ -46,40 +12,6 @@ function Login() {
         Login
       </h1>
 
-      <form onSubmit={handleLogin}>
-        <div className="user-box">
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <label>Email</label>
-        </div>
-        <div className="user-box">
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <label>Password</label>
-        </div>
-        <a style={{ cursor: 'pointer' }} type="submit" onClick={handleLogin}>
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-          Log in
-        </a>
-        <br></br>
-      </form>
-
-      {/* <button
-        className="mx-3 px-2 py-2 rounded-md border border-transparent cursor-pointer hover:border-amber-200 focus:outline-4 focus:ring-amber-500 focus:border-amber-500 focus:ring-opacity-50"
-        type="button"
-        onClick={handleLoginGoogle}
-      >
-        Google
-      </button> */}
       <button
         className="mx-3 px-2 py-2 rounded-md border border-transparent cursor-pointer hover:border-amber-200 focus:outline-4 focus:ring-amber-500 focus:border-amber-500 focus:ring-opacity-50"
         type="button"
@@ -88,12 +20,6 @@ function Login() {
         42
       </button>
       <br></br>
-      <div className="mt-12 flex items-center">
-        <p className="mr-20">Don't have an account?</p>
-        <a href="/signup" className="py-1 px-1 text-blue-500">
-          Sign Up
-        </a>
-      </div>
     </div>
   );
 }

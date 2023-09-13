@@ -11,55 +11,6 @@ import { ReportErrors, errors, limits, validateEmail } from 'src/main';
 export class AuthService {
   constructor(private readonly usersService: UsersService) {}
 
-  async signup(
-    email: string,
-    password: string,
-  ): Promise<UserEntity | ReportErrors> {
-    const lowerEmail = email.toLowerCase();
-    if (!email || !validateEmail(email)) {
-      return errors[3];
-    }
-    const user = await this.usersService.findOneByEmail(lowerEmail);
-
-    if (user) {
-      return errors[4];
-    }
-    const newUserDto: CreateUserDto = {
-      email: lowerEmail,
-      nickname: null,
-      picture: null,
-      password: password,
-    };
-    return new UserEntity(await this.usersService.create(newUserDto));
-  }
-
-  async login(
-    email: string,
-    password: string,
-  ): Promise<UserEntity | ReportErrors> {
-    const lowerEmail = email.toLowerCase();
-    if (!email || !validateEmail(email)) {
-      return errors[3];
-    }
-
-    const user = await this.usersService.findOneByEmail(lowerEmail);
-
-    if (password.length == 0 || password.length > limits.password) {
-      return errors[5];
-    }
-    if (!user) {
-      return errors[1];
-    }
-
-    const isPasswordValid = await compare(password, (await user).password);
-
-    if (!isPasswordValid) {
-      return errors[6];
-    }
-
-    return user;
-  }
-
   async generateQrCodeDataURL(user: UserEntity): Promise<string> {
     const secret = authenticator.generateSecret();
     await this.usersService.setTwoFASecret(user.id, secret);
