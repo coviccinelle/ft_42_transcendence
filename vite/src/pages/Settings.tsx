@@ -12,7 +12,7 @@ function Settings() {
     const fetchUser = async () => {
       const user = await apiUser.getMe();
       if (user) {
-        if (user.image === null) {
+        if (!user.picture) {
           setImage('../assets/duckie_bg_rm/sticker1.png');
         } else {
           setImage(user.picture);
@@ -37,9 +37,13 @@ function Settings() {
     event.preventDefault();
     const formData: UpdateUserDto = {
       nickname: nickname,
-      picture: img,
     };
     apiUser.updateMe(formData);
+    navigate('/profile');
+  };
+  const handleFormAvatarSubmit = (event: any) => {
+    event.preventDefault();
+    apiUser.uploadAvatar(event.target[0].files[0]);
     navigate('/profile');
   };
 
@@ -57,7 +61,18 @@ function Settings() {
         <p className="flex flex-col pb-8 font-bold animate-text bg-gradient-to-r from-teal-500 via-purple-500 to-orange-500 bg-clip-text text-transparent text-5xl">
           Settings
         </p>
-        <form className="items-center justify-center text-center">
+
+        {/* //show the current nickname of the user */}
+        <div className=" relative ">
+          <p className="text-center text-3xl text-white font-bold py-2">
+            {' '}
+            {nickname}
+          </p>
+        </div>
+        <form
+          className="items-center justify-center text-center"
+          onSubmit={handleFormAvatarSubmit}
+        >
           <div className="flex flex-col text-center items-center justify-center">
             <div className="flex flex-col w-32 justify-center items-center px-1 py-1 relative">
               <img
@@ -78,15 +93,17 @@ function Settings() {
                 onChange={handleFileChange}
               />
             </div>
+            <button
+              className="bg-gray-300 hover:bg-amber-400 text-amber-600 font-semibold hover:text-white py-2 px-4 border border-blue-500 hover:border-transparent rounded-3xl"
+              type="submit"
+            >
+              Change avatar
+            </button>
+          </div>
+        </form>
 
-            {/* //show the current nickname of the user */}
-            <div className=" relative ">
-              <p className="text-center text-3xl text-white font-bold py-2">
-                {' '}
-                {nickname}
-              </p>
-            </div>
-
+        <form className="items-center justify-center text-center">
+          <div>
             <div className="col-span-2 px-4 py-12 relative ">
               <p className="text-center text-white font-bold py-2">
                 Change your nickname
