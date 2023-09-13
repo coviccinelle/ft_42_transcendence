@@ -108,10 +108,6 @@ export class UsersService {
     return this.prisma.user.update({ where: { id }, data: updateUserDto });
   }
 
-  remove(id: number) {
-    return this.prisma.user.delete({ where: { id } });
-  }
-
   async block(user: UserEntity, blockId: number) {
     if (user.id === blockId) {
       throw new HttpException('Can\'t block yourself', HttpStatus.FORBIDDEN);

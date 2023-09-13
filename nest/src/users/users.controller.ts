@@ -193,21 +193,4 @@ export class UsersController {
     }
     return new UserEntity(await this.usersService.update(id, updateUserDto));
   }
-
-  @Delete(':id')
-  @UseGuards(AuthenticatedGuard)
-  @ApiBearerAuth()
-  @ApiOkResponse({ type: UserEntity })
-  async remove(
-    @Param('id', ParseIntPipe) id: number,
-    @User() user: UserEntity,
-  ) {
-    if (user.id !== id) {
-      throw new HttpException(
-        "Can't delete another user",
-        HttpStatus.FORBIDDEN,
-      );
-    }
-    return new UserEntity(await this.usersService.remove(id));
-  }
 }
