@@ -127,6 +127,7 @@ async function main() {
     update: {},
     create: {
       content: 'Hello world',
+      type: 'REGULAR',
       author: {
         connect: { id: memberGeneral.id },
       },

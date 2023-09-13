@@ -324,6 +324,7 @@ export class ChatService {
     }
     const message = await this.prisma.message.create({
       data: {
+        type: createMessageDto.type,
         content: createMessageDto.content,
         authorId: member.id,
         channelId: id,

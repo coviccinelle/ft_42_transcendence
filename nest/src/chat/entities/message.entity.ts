@@ -1,4 +1,4 @@
-import { Message } from '@prisma/client';
+import { Message, MessageType } from '@prisma/client';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Timestamp } from 'rxjs';
 import { UserEntity } from 'src/users/entities/user.entity';
@@ -15,6 +15,9 @@ export class MessageEntity implements Message {
 
   @ApiProperty()
   id: number;
+
+  @ApiProperty()
+  type: MessageType;
 
   @ApiProperty()
   content: string;

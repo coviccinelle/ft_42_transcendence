@@ -60,6 +60,7 @@ model Channel {
 
 model Message {
   id          Int       @id @default(autoincrement())
+  type        MessageType
   content     String
   author      Member    @relation(fields: [authorId], references: [id], onDelete: Cascade)
   authorId    Int
@@ -77,6 +78,11 @@ model MatchResult {
   otherPlayerName String
   myScore         Int
   otherScore      Int
+}
+
+enum MessageType {
+  REGULAR
+  INVITE
 }
 
 enum Role {
