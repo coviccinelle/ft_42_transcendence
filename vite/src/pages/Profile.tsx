@@ -18,6 +18,9 @@ function Profile() {
       const res = await apiUser.getMe();
       if (res) {
         setUserMe(res);
+        if (id.id !== undefined) {
+          fetchUser();
+        }
       } else {
         return navigate('/login');
       }
@@ -37,19 +40,13 @@ function Profile() {
 
     const fetchData = async () => {
       fetchUserMe();
-      if (!userMe && userMe !== undefined) {
-        return navigate('/');
-      }
-      if (id.id !== undefined) {
-        fetchUser();
-      }
       if (!dataLoaded)
         setTimeout(() => {
           setDataLoaded(true);
         }, 500);
     };
     fetchData();
-  }, [id.id, navigate, dataLoaded]);
+  }, [id.id, navigate, dataLoaded, userMe, setUserMe]);
 
   if (!dataLoaded) {
     return <LoadingScreen isLoading={true} />;
