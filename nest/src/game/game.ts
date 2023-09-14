@@ -210,7 +210,7 @@ export class Game {
   private async endGame() {
     this.status = GameStatus.FINISHED;
     if (this.updateInterval) {
-      // clearInterval(this.updateInterval);
+      clearInterval(this.updateInterval);
     }
     let winnerId: number;
     if (this.players[0].score === this.pointsToWin) {
