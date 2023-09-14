@@ -46,7 +46,7 @@ function Profile() {
         }, 500);
     };
     fetchData();
-  }, [id.id, navigate, dataLoaded, userMe, setUserMe]);
+  }, [id.id, navigate, dataLoaded]);
 
   if (!dataLoaded) {
     return <LoadingScreen isLoading={true} />;
